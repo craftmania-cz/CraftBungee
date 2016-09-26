@@ -1,0 +1,9 @@
+image: maven:3-jdk-8
+validate:
+  script: "mvn validate"
+
+build:
+  script: "mvn install"
+  artifacts:
+    paths:
+    - target/*.jar
