@@ -24,7 +24,7 @@ public class Main extends Plugin {
         sql.onDisable();
     }
 
-    public Main getInstance(){
+    public static Main getInstance(){
         return instance;
     }
 
