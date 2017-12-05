@@ -1,4 +1,4 @@
-name: CraftBans
-main:  cz.wake.craftbans.Main
+name: CraftBungee
+main:  cz.wake.craftbungee.Main
 version: 1.0
 author: MrWakeCZ

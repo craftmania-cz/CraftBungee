@@ -1,8 +1,8 @@
-package cz.wake.craftbans.sql;
+package cz.wake.craftbungee.sql;
 
 import com.zaxxer.hikari.HikariConfig;
 import com.zaxxer.hikari.HikariDataSource;
-import cz.wake.craftbans.Main;
+import cz.wake.craftbungee.Main;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -32,30 +32,41 @@ public class ConnectionPoolManager {
     }
 
     private void init() {
-        host = plugin.getConfig().getString("sql.hostname");
-        port = plugin.getConfig().getString("sql.port");
-        database = plugin.getConfig().getString("sql.database");
-        username = plugin.getConfig().getString("sql.username");
-        password = plugin.getConfig().getString("sql.password");
-        minimumConnections = plugin.getConfig().getInt("settings.minimumConnections");
-        maximumConnections = plugin.getConfig().getInt("settings.maximumConnections");
-        connectionTimeout = plugin.getConfig().getInt("settings.timeout");
+        //TODO: Config
+        host = "xxx";
+        port = "xx";
+        database = "xx";
+        username = "xx";
+        password = "xx";
+        minimumConnections = 5;
+        maximumConnections = 20;
+        connectionTimeout = 30000;
     }
 
-    private void setupPool() {
+    public void setupPool() {
         HikariConfig config = new HikariConfig();
-        config.setJdbcUrl("jdbc:mysql://" + host + ":" + port + "/" + database);
+        config.setJdbcUrl("jdbc:mysql://" + host + ":" + port + "/" + database + "?autoReconnect=true&useSSL=false");
         config.setDriverClassName("com.mysql.jdbc.Driver");
+        config.addDataSourceProperty("cachePrepStmts", "true");
+        config.addDataSourceProperty("useServerPrepStmts", "true");
+        config.addDataSourceProperty("prepStmtCacheSize", "250");
+        config.addDataSourceProperty("prepStmtCacheSqlLimit", "2048");
+        config.addDataSourceProperty("characterEncoding", "utf8");
+        config.addDataSourceProperty("encoding", "UTF-8");
+        config.addDataSourceProperty("useUnicode", "true");
         config.setUsername(username);
         config.setPassword(password);
         config.setMinimumIdle(minimumConnections);
         config.setMaximumPoolSize(maximumConnections);
         config.setConnectionTimeout(connectionTimeout);
+        config.setMaxLifetime(60000);
+        config.setIdleTimeout(30000);
+        config.setLeakDetectionThreshold(30000);
+        config.validate();
         dataSource = new HikariDataSource(config);
     }
 
-    public Connection getConnection() throws SQLException
-    {
+    public Connection getConnection() throws SQLException {
         return dataSource.getConnection();
     }
     public void closePool() {
@@ -63,9 +74,14 @@ public class ConnectionPoolManager {
             dataSource.close();
         }
     }
+
     public void close(Connection conn, PreparedStatement ps, ResultSet res) {
         if (conn != null) try { conn.close(); } catch (SQLException ignored) {}
         if (ps != null) try { ps.close(); } catch (SQLException ignored) {}
         if (res != null) try { res.close(); } catch (SQLException ignored) {}
+    }
+
+    public HikariDataSource getDataSource() {
+        return dataSource;
     }
 }

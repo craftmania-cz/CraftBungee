@@ -1,4 +1,4 @@
-package cz.wake.craftbans.utils;
+package cz.wake.craftbungee.utils;
 
 import net.md_5.bungee.api.ProxyServer;
 import net.md_5.bungee.api.connection.ProxiedPlayer;
@@ -19,6 +19,9 @@ public class BungeeUtils {
     }
 
     public static String getPlayerServer(final ProxiedPlayer p){
+        if(p.getServer() == null){
+            return "hub";
+        }
         return p.getServer().getInfo().getName();
     }
 

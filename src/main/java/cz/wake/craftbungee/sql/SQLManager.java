@@ -1,0 +1,89 @@
+package cz.wake.craftbungee.sql;
+
+import com.zaxxer.hikari.HikariDataSource;
+import cz.wake.craftbungee.Main;
+import cz.wake.craftbungee.utils.BungeeUtils;
+import net.md_5.bungee.api.connection.ProxiedPlayer;
+
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+
+public class SQLManager {
+
+    private final Main plugin;
+    private final ConnectionPoolManager pool;
+    private HikariDataSource dataSource;
+
+    public SQLManager(Main plugin) {
+        this.plugin = plugin;
+        pool = new ConnectionPoolManager(plugin);
+    }
+    public void onDisable() {
+        pool.closePool();
+    }
+
+    public ConnectionPoolManager getPool() {
+        return pool;
+    }
+
+    public final void updateStats(final ProxiedPlayer p, final boolean online) {
+        Main.getInstance().getProxy().getScheduler().runAsync(Main.getInstance(), () -> {
+            Connection conn = null;
+            PreparedStatement ps = null;
+            try {
+                conn = pool.getConnection();
+                ps = conn.prepareStatement("UPDATE player_profile SET last_server = ?, last_online = ?, is_online = ? WHERE nick = '" + p.getName() + "';");
+                ps.setString(1, BungeeUtils.getPlayerServer(p));
+                ps.setLong(2, System.currentTimeMillis());
+                if(online){
+                    ps.setString(3, "1");
+                } else {
+                    ps.setString(3, "0");
+                }
+                ps.executeUpdate();
+            } catch (Exception e) {
+                e.printStackTrace();
+            } finally {
+                pool.close(conn, ps, null);
+            }
+        });
+    }
+
+    public final void updateTime(final ProxiedPlayer p) {
+        Main.getInstance().getProxy().getScheduler().runAsync(Main.getInstance(), () -> {
+            Connection conn = null;
+            PreparedStatement ps = null;
+            try {
+                conn = pool.getConnection();
+                ps = conn.prepareStatement("UPDATE player_profile SET played_time = ?, last_server = ? WHERE nick = ?;");
+                ps.setInt(1, getTime(p) + 1);
+                ps.setString(2, BungeeUtils.getPlayerServer(p));
+                ps.setString(3, p.getName());
+                ps.executeUpdate();
+            } catch (Exception e) {
+                e.printStackTrace();
+            } finally {
+                pool.close(conn, ps, null);
+            }
+        });
+    }
+
+    public final int getTime(final ProxiedPlayer p) {
+        Connection conn = null;
+        PreparedStatement ps = null;
+        try {
+            conn = pool.getConnection();
+            ps = conn.prepareStatement("SELECT played_time FROM player_profile WHERE nick = ?;");
+            ps.setString(1, p.getName());
+            ps.executeQuery();
+            if (ps.getResultSet().next()) {
+                return ps.getResultSet().getInt("played_time");
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            pool.close(conn, ps, null);
+        }
+        return 0;
+    }
+}
