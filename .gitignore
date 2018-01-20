@@ -1,2 +1,6 @@
 CraftBans.iml
 target
+
+CraftBungee.iml
+dependency-reduced-pom.xml
+src/test/
