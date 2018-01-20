@@ -55,10 +55,9 @@ public class SQLManager {
             PreparedStatement ps = null;
             try {
                 conn = pool.getConnection();
-                ps = conn.prepareStatement("UPDATE player_profile SET played_time = ?, last_server = ? WHERE nick = ?;");
-                ps.setInt(1, getTime(p) + 1);
-                ps.setString(2, BungeeUtils.getPlayerServer(p));
-                ps.setString(3, p.getName());
+                ps = conn.prepareStatement("UPDATE player_profile SET played_time = played_time + 1, last_server = ? WHERE nick = ?;");
+                ps.setString(1, BungeeUtils.getPlayerServer(p));
+                ps.setString(2, p.getName());
                 ps.executeUpdate();
             } catch (Exception e) {
                 e.printStackTrace();
@@ -66,24 +65,5 @@ public class SQLManager {
                 pool.close(conn, ps, null);
             }
         });
-    }
-
-    public final int getTime(final ProxiedPlayer p) {
-        Connection conn = null;
-        PreparedStatement ps = null;
-        try {
-            conn = pool.getConnection();
-            ps = conn.prepareStatement("SELECT played_time FROM player_profile WHERE nick = ?;");
-            ps.setString(1, p.getName());
-            ps.executeQuery();
-            if (ps.getResultSet().next()) {
-                return ps.getResultSet().getInt("played_time");
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-        } finally {
-            pool.close(conn, ps, null);
-        }
-        return 0;
     }
 }
