@@ -32,15 +32,14 @@ public class ConnectionPoolManager {
     }
 
     private void init() {
-        //TODO: Config
-        host = "xxx";
-        port = "xx";
-        database = "xx";
-        username = "xx";
-        password = "xx";
-        minimumConnections = 5;
-        maximumConnections = 20;
-        connectionTimeout = 30000;
+        host = Main.getConfig().getString("sql.hostname");
+        port = Main.getConfig().getString("sql.port");
+        database = Main.getConfig().getString("sql.database");
+        username = Main.getConfig().getString("sql.username");
+        password = Main.getConfig().getString("sql.password");
+        minimumConnections = Main.getConfig().getInt("settings.minimumConnections");
+        maximumConnections = Main.getConfig().getInt("settings.maximumConnections");
+        connectionTimeout = Main.getConfig().getLong("settings.timeout");
     }
 
     public void setupPool() {
