@@ -44,7 +44,7 @@ public class ConnectionPoolManager {
 
     public void setupPool() {
         HikariConfig config = new HikariConfig();
-        config.setJdbcUrl("jdbc:mysql://" + host + ":" + port + "/" + database + "?autoReconnect=true&useSSL=false");
+        config.setJdbcUrl("jdbc:mysql://" + host + ":3306/" + database + "?autoReconnect=true&useSSL=false");
         config.setDriverClassName("com.mysql.jdbc.Driver");
         config.addDataSourceProperty("cachePrepStmts", "true");
         config.addDataSourceProperty("useServerPrepStmts", "true");

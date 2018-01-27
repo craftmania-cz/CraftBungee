@@ -2,6 +2,7 @@ package cz.wake.craftbungee;
 
 import com.google.common.io.Files;
 import cz.wake.craftbungee.listeners.PlayerListener;
+import cz.wake.craftbungee.listeners.VPNListener;
 import cz.wake.craftbungee.managers.PlayerUpdateTask;
 import cz.wake.craftbungee.managers.SQLChecker;
 import cz.wake.craftbungee.sql.SQLManager;
@@ -23,6 +24,7 @@ public class Main extends Plugin {
     private static File configFile;
     private SQLManager sql;
     private static HashSet<ProxiedPlayer> online_players = new HashSet<>();
+    private static String iphubKey = "";
 
     @Override
     public void onEnable(){
@@ -32,12 +34,14 @@ public class Main extends Plugin {
 
         // Nacteni configu
         loadConfig();
+        iphubKey = getConfig().getString("iphub-key");
 
         // Napojeni na MySQL
         initDatabase();
 
         // Registrace eventu
         ProxyServer.getInstance().getPluginManager().registerListener(this, new PlayerListener(this));
+        ProxyServer.getInstance().getPluginManager().registerListener(this, new VPNListener());
 
         // Tasks
         ProxyServer.getInstance().getScheduler().schedule(Main.getInstance(), new SQLChecker(), 1L, 1L, TimeUnit.MINUTES);
@@ -99,5 +103,9 @@ public class Main extends Plugin {
             getInstance().getLogger().warning("Config could not be saved!");
             e.printStackTrace();
         }
+    }
+
+    public static String getIphubKey() {
+        return iphubKey;
     }
 }

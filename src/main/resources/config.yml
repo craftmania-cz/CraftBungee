@@ -11,3 +11,6 @@ settings:
  minimumConnections: 2
  maximumConnections: 10
  timeout: 30000
+
+# Klic k API na detekci VPN
+iphub-key: key
