@@ -5,6 +5,7 @@ import cz.wake.craftbungee.listeners.PlayerListener;
 import cz.wake.craftbungee.listeners.VPNListener;
 import cz.wake.craftbungee.managers.PlayerUpdateTask;
 import cz.wake.craftbungee.managers.SQLChecker;
+import cz.wake.craftbungee.managers.WhitelistTask;
 import cz.wake.craftbungee.sql.SQLManager;
 import net.md_5.bungee.api.ProxyServer;
 import net.md_5.bungee.api.connection.ProxiedPlayer;
@@ -14,8 +15,11 @@ import net.md_5.bungee.config.ConfigurationProvider;
 import net.md_5.bungee.config.YamlConfiguration;
 
 import java.io.*;
+import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.List;
 import java.util.concurrent.TimeUnit;
+import java.util.regex.Pattern;
 
 public class Main extends Plugin {
 
@@ -25,6 +29,7 @@ public class Main extends Plugin {
     private SQLManager sql;
     private static HashSet<ProxiedPlayer> online_players = new HashSet<>();
     private static String iphubKey = "";
+    public List<Pattern> allowedIps = new ArrayList<>();
 
     @Override
     public void onEnable(){
@@ -46,6 +51,7 @@ public class Main extends Plugin {
         // Tasks
         ProxyServer.getInstance().getScheduler().schedule(Main.getInstance(), new SQLChecker(), 1L, 1L, TimeUnit.MINUTES);
         ProxyServer.getInstance().getScheduler().schedule(Main.getInstance(), new PlayerUpdateTask(), 1L, 1L,  TimeUnit.MINUTES);
+        ProxyServer.getInstance().getScheduler().schedule(Main.getInstance(), new WhitelistTask(), 10L, 300L, TimeUnit.SECONDS);
     }
 
     @Override

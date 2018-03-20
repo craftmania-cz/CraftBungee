@@ -4,7 +4,6 @@ import cz.wake.craftbungee.Main;
 import net.md_5.bungee.api.ChatColor;
 
 import java.sql.Connection;
-import java.sql.SQLException;
 import java.util.logging.Level;
 
 public class SQLChecker implements Runnable {
@@ -26,7 +25,7 @@ public class SQLChecker implements Runnable {
             } finally {
                 c.close();
             }
-        } catch (SQLException ex) {
+        } catch (Exception ex) {
             Main.getInstance().getLogger().log(Level.INFO, ChatColor.RED + "Pripojeni do SQL je NULL! Chyba:");
             ex.printStackTrace();
         }

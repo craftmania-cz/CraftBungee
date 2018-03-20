@@ -7,6 +7,8 @@ import net.md_5.bungee.api.connection.ProxiedPlayer;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
+import java.util.ArrayList;
+import java.util.List;
 
 public class SQLManager {
 
@@ -66,4 +68,24 @@ public class SQLManager {
             }
         });
     }
+
+    public final List<String> getWhitelistedIPs() {
+        List<String> list = new ArrayList<>();
+        Connection conn = null;
+        PreparedStatement ps = null;
+        try {
+            conn = pool.getConnection();
+            ps = conn.prepareStatement("SELECT address FROM ip_whitelist;");
+            ps.executeQuery();
+            while (ps.getResultSet().next()) {
+                ps.getResultSet().getString(2);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            pool.close(conn, ps, null);
+        }
+        return list;
+    }
+
 }
