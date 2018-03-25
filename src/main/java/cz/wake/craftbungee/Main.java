@@ -1,5 +1,6 @@
 package cz.wake.craftbungee;
 
+import com.github.markusbernhardt.proxy.ProxySearch;
 import com.google.common.io.Files;
 import cz.wake.craftbungee.listeners.PlayerListener;
 import cz.wake.craftbungee.listeners.VPNListener;
@@ -15,6 +16,7 @@ import net.md_5.bungee.config.ConfigurationProvider;
 import net.md_5.bungee.config.YamlConfiguration;
 
 import java.io.*;
+import java.net.ProxySelector;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
@@ -51,7 +53,12 @@ public class Main extends Plugin {
         // Tasks
         ProxyServer.getInstance().getScheduler().schedule(Main.getInstance(), new SQLChecker(), 1L, 1L, TimeUnit.MINUTES);
         ProxyServer.getInstance().getScheduler().schedule(Main.getInstance(), new PlayerUpdateTask(), 1L, 1L,  TimeUnit.MINUTES);
-        ProxyServer.getInstance().getScheduler().schedule(Main.getInstance(), new WhitelistTask(), 10L, 300L, TimeUnit.SECONDS);
+        ProxyServer.getInstance().getScheduler().schedule(Main.getInstance(), new WhitelistTask(), 1L, 300L, TimeUnit.SECONDS);
+
+        ProxySearch proxySearch = ProxySearch.getDefaultProxySearch();
+        ProxySelector proxySelector = proxySearch.getProxySelector();
+        ProxySelector.setDefault(proxySelector);
+
     }
 
     @Override
