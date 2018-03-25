@@ -5,10 +5,11 @@ import net.md_5.bungee.api.ChatColor;
 import net.md_5.bungee.api.event.PreLoginEvent;
 import net.md_5.bungee.api.plugin.Listener;
 import net.md_5.bungee.event.EventHandler;
-import okhttp3.*;
 import org.json.JSONObject;
 
-import java.io.IOException;
+import java.net.HttpURLConnection;
+import java.net.URL;
+import java.util.Scanner;
 import java.util.logging.Level;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -21,33 +22,28 @@ public class VPNListener implements Listener {
 
         Main.getInstance().getLogger().log(Level.INFO, ChatColor.YELLOW + "Kontrola hrace s IP: " + address);
 
+        HttpURLConnection localHttpURLConnection = null;
+        Scanner localScanner = null;
+
         try {
-            OkHttpClient caller = new OkHttpClient();
-            Request request = new Request.Builder().url("http://v2.api.iphub.info/ip/" + address).addHeader("X-Key", Main.getIphubKey()).build();
+            URL localURL = new URL("http://v2.api.iphub.info/ip/" + address);
+            localHttpURLConnection = (HttpURLConnection) localURL.openConnection();
+            localHttpURLConnection.setRequestProperty("X-Key", Main.getIphubKey());
+            localHttpURLConnection.setConnectTimeout(3000);
+            localHttpURLConnection.setReadTimeout(3000);
 
-            caller.newCall(request).enqueue(new Callback() {
+            localScanner = new Scanner(localHttpURLConnection.getInputStream());
+            if (localScanner.hasNextLine()) {
+                String str = localScanner.nextLine();
+                System.out.println(str);
+                JSONObject json = new JSONObject(str);
+                String state = (String) json.get("countryCode");
+                int validCheck = (int) json.get("block");
 
-                @Override
-                public void onFailure(Call call, IOException e) {
-                    e.printStackTrace();
-                }
+                Main.getInstance().getLogger().log(Level.INFO,"STATE: " + state + ", CHECK: " + String.valueOf(validCheck));
 
-                @Override
-                public void onResponse(Call call, Response response) throws IOException {
-                    try {
-                        JSONObject json = new JSONObject(response.body().string());
-                        String state = (String) json.get("countryCode");
-                        int validCheck = (int) json.get("block");
-
-                        Main.getInstance().getLogger().log(Level.INFO,"STATE: " + state + ", CHECK: " + String.valueOf(validCheck));
-
-                        finalCheck(e,address,state,validCheck);
-
-                    } catch (NullPointerException exp){
-                        exp.printStackTrace();
-                    }
-                }
-            });
+                finalCheck(e,address,state,validCheck);
+            }
 
         } catch (Exception ex){
             ex.printStackTrace();
