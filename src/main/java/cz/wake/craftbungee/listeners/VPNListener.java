@@ -9,12 +9,16 @@ import org.json.JSONObject;
 
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Scanner;
 import java.util.logging.Level;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class VPNListener implements Listener {
+
+    private static List<Pattern> allowedIps = new ArrayList<>();
 
     @EventHandler
     public void onLogin(PreLoginEvent e) {
@@ -40,8 +44,6 @@ public class VPNListener implements Listener {
                 String state = (String) json.get("countryCode");
                 int validCheck = (int) json.get("block");
 
-                Main.getInstance().getLogger().log(Level.INFO,"STATE: " + state + ", CHECK: " + String.valueOf(validCheck));
-
                 finalCheck(e,address,state,validCheck);
             }
 
@@ -60,8 +62,8 @@ public class VPNListener implements Listener {
         }
 
         // Kontrola whitelisted IPs
-        if(!Main.getInstance().allowedIps.isEmpty()){
-            for (Pattern pattern : Main.getInstance().allowedIps) {
+        if(!allowedIps.isEmpty()){
+            for (Pattern pattern : allowedIps) {
                 Matcher matcher = pattern.matcher(address);
                 if (matcher.find()) {
                     Main.getInstance().getLogger().log(Level.INFO, ChatColor.GREEN + "IP nalezena ve whitelistu!");
@@ -83,5 +85,13 @@ public class VPNListener implements Listener {
         e.setCancelReason("§c§lDetekce VPN/IP nebo zahranicni IP!\n§fTvoje IP je zahranicni, nebo se jedna o VPN.\n§fV takovem pripade se za normalnich podminek nelze pripojit.");
         e.setCancelled(true);
 
+    }
+
+    public static void setAllowedIps(List<Pattern> allowedIps) {
+        VPNListener.allowedIps = allowedIps;
+    }
+
+    public static List<Pattern> getAllowedIps() {
+        return allowedIps;
     }
 }

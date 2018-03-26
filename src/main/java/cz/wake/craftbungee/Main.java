@@ -29,7 +29,6 @@ public class Main extends Plugin {
     private SQLManager sql;
     private static HashSet<ProxiedPlayer> online_players = new HashSet<>();
     private static String iphubKey = "";
-    public List<Pattern> allowedIps = new ArrayList<>();
 
     @Override
     public void onEnable(){
@@ -51,8 +50,7 @@ public class Main extends Plugin {
         // Tasks
         ProxyServer.getInstance().getScheduler().schedule(Main.getInstance(), new SQLChecker(), 1L, 1L, TimeUnit.MINUTES);
         ProxyServer.getInstance().getScheduler().schedule(Main.getInstance(), new PlayerUpdateTask(), 1L, 1L,  TimeUnit.MINUTES);
-        ProxyServer.getInstance().getScheduler().schedule(Main.getInstance(), new WhitelistTask(), 1L, 300L, TimeUnit.SECONDS);
-
+        ProxyServer.getInstance().getScheduler().schedule(Main.getInstance(), new WhitelistTask(), 10L, 60L, TimeUnit.SECONDS);
     }
 
     @Override

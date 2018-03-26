@@ -9,6 +9,7 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.logging.Level;
 
 public class SQLManager {
 
@@ -75,10 +76,10 @@ public class SQLManager {
         PreparedStatement ps = null;
         try {
             conn = pool.getConnection();
-            ps = conn.prepareStatement("SELECT address FROM ip_whitelist;");
+            ps = conn.prepareStatement("SELECT * FROM ip_whitelist;");
             ps.executeQuery();
             while (ps.getResultSet().next()) {
-                ps.getResultSet().getString(2);
+                list.add(ps.getResultSet().getString("address"));
             }
         } catch (Exception e) {
             e.printStackTrace();
