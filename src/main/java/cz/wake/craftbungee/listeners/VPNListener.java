@@ -29,22 +29,22 @@ public class VPNListener implements Listener {
         HttpURLConnection localHttpURLConnection = null;
         Scanner localScanner = null;
 
+        boolean vpn;
         try {
-            URL localURL = new URL("http://v2.api.iphub.info/ip/" + address);
+            URL localURL = new URL("http://api.vpnblocker.net/v2/json/" + address + "/" + Main.getIphubKey());
             localHttpURLConnection = (HttpURLConnection) localURL.openConnection();
-            localHttpURLConnection.setRequestProperty("X-Key", Main.getIphubKey());
             localHttpURLConnection.setConnectTimeout(3000);
             localHttpURLConnection.setReadTimeout(3000);
 
             localScanner = new Scanner(localHttpURLConnection.getInputStream());
             if (localScanner.hasNextLine()) {
                 String str = localScanner.nextLine();
-                System.out.println(str);
                 JSONObject json = new JSONObject(str);
-                String state = (String) json.get("countryCode");
-                int validCheck = (int) json.get("block");
+                vpn = (boolean) json.get("host-ip");
+                JSONObject countyObject = json.getJSONObject("country");
+                String state = (String) countyObject.get("code");
 
-                finalCheck(e,address,state,validCheck);
+                finalCheck(e,address,state, vpn);
             }
 
         } catch (Exception ex){
@@ -52,11 +52,11 @@ public class VPNListener implements Listener {
         }
     }
 
-    private void finalCheck(PreLoginEvent e, String address, String state, int validCheck){
+    private void finalCheck(PreLoginEvent e, String address, String state, boolean vpn){
 
         // Ignorovani ceskych a slovensky VPN
         // Kvuli tomu, ze maly poskytovatele (zvlaste na slovensku) maji mene IP, takze je to detekuje jako VPN.
-        if(state.equalsIgnoreCase("CZ") || state.equalsIgnoreCase("SK") || state.equalsIgnoreCase("AT") || state.equalsIgnoreCase("PL")){
+        if(state.equalsIgnoreCase("CZ") || state.equalsIgnoreCase("SK")){
             Main.getInstance().getLogger().log(Level.INFO, ChatColor.GREEN + "IP je z CZ/SK kraje, hrac pusten na server.");
             return;
         }
@@ -72,17 +72,16 @@ public class VPNListener implements Listener {
             }
         }
 
-        // 0 -> safe IP
-        // 1 -> host/proxy/vpn
-        // 2 -> providers (UPC atd.)
-        if(validCheck == 1){
-            Main.getInstance().getLogger().log(Level.INFO, ChatColor.RED + "Zahranicni VPN/Proxy (IP: " + address  + "). Hrac zablokovan!");
+        // If true player has VPN
+        if(vpn){
+            Main.getInstance().getLogger().log(Level.INFO, ChatColor.RED + "Detekce VPN/Proxy (IP: " + address  + "). Hrac zablokovan!");
             e.setCancelReason("§c§lDetekce VPN/IP nebo zahranicni IP!\n§fTvoje IP je zahranicni, nebo se jedna o VPN.\n§fV takovem pripade se za normalnich podminek nelze pripojit.");
             e.setCancelled(true);
             return;
         }
 
-        e.setCancelReason("§c§lDetekce VPN/IP nebo zahranicni IP!\n§fTvoje IP je zahranicni, nebo se jedna o VPN.\n§fV takovem pripade se za normalnich podminek nelze pripojit.");
+        // Nu jinak ma zahranicni, jiny zpusob neni...
+        e.setCancelReason("§c§lDetekce zahranicni IP!\n§fTvoje IP je zahranicni, nebo se jedna o VPN.\n§fV takovem pripade se za normalnich podminek nelze pripojit.");
         e.setCancelled(true);
 
     }
