@@ -26,25 +26,31 @@ public class VPNListener implements Listener {
 
         Main.getInstance().getLogger().log(Level.INFO, ChatColor.YELLOW + "Kontrola hrace s IP: " + address);
 
-        HttpURLConnection localHttpURLConnection = null;
-        Scanner localScanner = null;
+        HttpURLConnection localHttpURLConnection;
+        Scanner localScanner;
 
         try {
-            URL localURL = new URL("http://v2.api.iphub.info/ip/" + address);
+            URL localURL = new URL("https://api.vpnblocker.net/v2/json/" + address + "/" + Main.getAPIKey());
             localHttpURLConnection = (HttpURLConnection) localURL.openConnection();
-            localHttpURLConnection.setRequestProperty("X-Key", Main.getIphubKey());
             localHttpURLConnection.setConnectTimeout(3000);
             localHttpURLConnection.setReadTimeout(3000);
 
             localScanner = new Scanner(localHttpURLConnection.getInputStream());
             if (localScanner.hasNextLine()) {
-                String str = localScanner.nextLine();
-                System.out.println(str);
-                JSONObject json = new JSONObject(str);
-                String state = (String) json.get("countryCode");
-                int validCheck = (int) json.get("block");
 
-                finalCheck(e,address,state,validCheck);
+                boolean vpn;
+                String countryCode;
+
+                String str = localScanner.nextLine();
+                JSONObject json = new JSONObject(str);
+
+                vpn = (boolean) json.get("host-ip"); // boolean
+
+                JSONObject countyObject = json.getJSONObject("country");
+                countryCode = (String) countyObject.get("code"); // cz, sk atd.
+
+                // Finalni kontrola IP
+                finalCheck(e,address,countryCode,vpn);
             }
 
         } catch (Exception ex){
@@ -52,11 +58,11 @@ public class VPNListener implements Listener {
         }
     }
 
-    private void finalCheck(PreLoginEvent e, String address, String state, int validCheck){
+    private void finalCheck(PreLoginEvent e, String address, String state, boolean validCheck){
 
         // Ignorovani ceskych a slovensky VPN
         // Kvuli tomu, ze maly poskytovatele (zvlaste na slovensku) maji mene IP, takze je to detekuje jako VPN.
-        if(state.equalsIgnoreCase("CZ") || state.equalsIgnoreCase("SK") || state.equalsIgnoreCase("AT") || state.equalsIgnoreCase("PL")){
+        if(state.equalsIgnoreCase("CZ") || state.equalsIgnoreCase("SK")){
             Main.getInstance().getLogger().log(Level.INFO, ChatColor.GREEN + "IP je z CZ/SK kraje, hrac pusten na server.");
             return;
         }
@@ -72,19 +78,17 @@ public class VPNListener implements Listener {
             }
         }
 
-        // 0 -> safe IP
-        // 1 -> host/proxy/vpn
-        // 2 -> providers (UPC atd.)
-        if(validCheck == 1){
+        // Pokud true, tak ma VPN
+        if(validCheck){
             Main.getInstance().getLogger().log(Level.INFO, ChatColor.RED + "Zahranicni VPN/Proxy (IP: " + address  + "). Hrac zablokovan!");
-            e.setCancelReason("§c§lDetekce VPN/IP nebo zahranicni IP!\n§fTvoje IP je zahranicni, nebo se jedna o VPN.\n§fV takovem pripade se za normalnich podminek nelze pripojit.");
+            e.setCancelReason("§c§lDetekce VPN!\n§fTvoje IP byla detekovana jako VPN.\n§fV takovem pripade se za normalnich podminek nelze pripojit.");
             e.setCancelled(true);
             return;
         }
 
-        e.setCancelReason("§c§lDetekce VPN/IP nebo zahranicni IP!\n§fTvoje IP je zahranicni, nebo se jedna o VPN.\n§fV takovem pripade se za normalnich podminek nelze pripojit.");
+        // Jinak je z zahranici...
+        e.setCancelReason("§c§lDetekce zahranicni IP!\n§fTvoje IP je zahranicni.\n§fV takovem pripade se za normalnich podminek nelze pripojit.");
         e.setCancelled(true);
-
     }
 
     public static void setAllowedIps(List<Pattern> allowedIps) {

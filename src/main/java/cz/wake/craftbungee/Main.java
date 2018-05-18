@@ -110,7 +110,7 @@ public class Main extends Plugin {
         }
     }
 
-    public static String getIphubKey() {
+    public static String getAPIKey() {
         return iphubKey;
     }
 }
