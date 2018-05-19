@@ -29,7 +29,6 @@ public class VPNListener implements Listener {
         HttpURLConnection localHttpURLConnection;
         Scanner localScanner;
 
-        boolean vpn;
         try {
             URL localURL = new URL("https://api.vpnblocker.net/v2/json/" + address + "/" + Main.getAPIKey());
             localHttpURLConnection = (HttpURLConnection) localURL.openConnection();
