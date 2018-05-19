@@ -1,6 +1,7 @@
 package cz.wake.craftbungee;
 
 import com.google.common.io.Files;
+import cz.wake.craftbungee.listeners.PingListener;
 import cz.wake.craftbungee.listeners.PlayerListener;
 import cz.wake.craftbungee.listeners.VPNListener;
 import cz.wake.craftbungee.managers.PlayerUpdateTask;
@@ -46,6 +47,7 @@ public class Main extends Plugin {
         // Registrace eventu
         ProxyServer.getInstance().getPluginManager().registerListener(this, new PlayerListener(this));
         ProxyServer.getInstance().getPluginManager().registerListener(this, new VPNListener());
+        ProxyServer.getInstance().getPluginManager().registerListener(this, new PingListener());
 
         // Tasks
         ProxyServer.getInstance().getScheduler().schedule(Main.getInstance(), new SQLChecker(), 1L, 1L, TimeUnit.MINUTES);
