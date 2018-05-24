@@ -5,6 +5,9 @@ import net.md_5.bungee.api.ChatColor;
 import net.md_5.bungee.api.event.PreLoginEvent;
 import net.md_5.bungee.api.plugin.Listener;
 import net.md_5.bungee.event.EventHandler;
+import okhttp3.OkHttpClient;
+import okhttp3.Request;
+import okhttp3.Response;
 import org.json.JSONObject;
 
 import java.net.HttpURLConnection;
@@ -26,32 +29,23 @@ public class VPNListener implements Listener {
 
         Main.getInstance().getLogger().log(Level.INFO, ChatColor.YELLOW + "Kontrola hrace s IP: " + address);
 
-        HttpURLConnection localHttpURLConnection;
-        Scanner localScanner;
+        OkHttpClient caller = new OkHttpClient();
+        Request request = new Request.Builder().url("https://api.vpnblocker.net/v2/json/" + address + "/" + Main.getAPIKey()).build();
 
         try {
-            URL localURL = new URL("https://api.vpnblocker.net/v2/json/" + address + "/" + Main.getAPIKey());
-            localHttpURLConnection = (HttpURLConnection) localURL.openConnection();
-            localHttpURLConnection.setConnectTimeout(3000);
-            localHttpURLConnection.setReadTimeout(3000);
+            Response response = caller.newCall(request).execute();
+            JSONObject json = new JSONObject(response.body().string());
 
-            localScanner = new Scanner(localHttpURLConnection.getInputStream());
-            if (localScanner.hasNextLine()) {
+            boolean vpn;
+            String countryCode;
 
-                boolean vpn;
-                String countryCode;
+            vpn = (boolean) json.get("host-ip");
 
-                String str = localScanner.nextLine();
-                JSONObject json = new JSONObject(str);
+            JSONObject countyObject = json.getJSONObject("country");
+            countryCode = (String) countyObject.get("code"); // cz, sk atd.
 
-                vpn = (boolean) json.get("host-ip"); // boolean
-
-                JSONObject countyObject = json.getJSONObject("country");
-                countryCode = (String) countyObject.get("code"); // cz, sk atd.
-
-                // Finalni kontrola IP
-                finalCheck(e,address,countryCode,vpn);
-            }
+            // Finalni kontrola IP
+            finalCheck(e,address,countryCode,vpn);
 
         } catch (Exception ex){
             ex.printStackTrace();
