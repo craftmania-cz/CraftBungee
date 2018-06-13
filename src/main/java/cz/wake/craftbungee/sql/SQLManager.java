@@ -9,7 +9,6 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.logging.Level;
 
 public class SQLManager {
 
@@ -21,6 +20,7 @@ public class SQLManager {
         this.plugin = plugin;
         pool = new ConnectionPoolManager(plugin);
     }
+
     public void onDisable() {
         pool.closePool();
     }
@@ -38,7 +38,7 @@ public class SQLManager {
                 ps = conn.prepareStatement("UPDATE player_profile SET last_server = ?, last_online = ?, is_online = ? WHERE nick = '" + p.getName() + "';");
                 ps.setString(1, BungeeUtils.getPlayerServer(p));
                 ps.setLong(2, System.currentTimeMillis());
-                if(online){
+                if (online) {
                     ps.setString(3, "1");
                 } else {
                     ps.setString(3, "0");

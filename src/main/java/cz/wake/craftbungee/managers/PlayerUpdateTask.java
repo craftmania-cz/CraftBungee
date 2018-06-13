@@ -7,8 +7,8 @@ public class PlayerUpdateTask implements Runnable {
 
     @Override
     public void run() {
-        for(ProxiedPlayer p : Main.getInstance().getOnlinePlayers()){
-            if(p.isConnected()){
+        for (ProxiedPlayer p : Main.getInstance().getOnlinePlayers()) {
+            if (p.isConnected()) {
                 Main.getInstance().getSQLManager().updateTime(p);
             }
         }

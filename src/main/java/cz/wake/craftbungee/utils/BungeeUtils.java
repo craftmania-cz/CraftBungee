@@ -10,7 +10,7 @@ public class BungeeUtils {
     private static Pattern ipPattern =
             Pattern.compile("(?:(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\\.){3}(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)");
 
-    public static String getPlayerIP(final ProxiedPlayer p){
+    public static String getPlayerIP(final ProxiedPlayer p) {
         return p.getAddress().getAddress().getHostAddress();
     }
 
@@ -18,8 +18,8 @@ public class BungeeUtils {
         return ipPattern.matcher(ip).matches();
     }
 
-    public static String getPlayerServer(final ProxiedPlayer p){
-        if(p.getServer() == null){
+    public static String getPlayerServer(final ProxiedPlayer p) {
+        if (p.getServer() == null) {
             return "hub";
         }
         return p.getServer().getInfo().getName();

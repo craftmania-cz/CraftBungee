@@ -42,26 +42,26 @@ public class VPNListener implements Listener {
             countryCode = (String) countyObject.get("code"); // cz, sk atd.
 
             // Finalni kontrola IP
-            finalCheck(e,address,countryCode,vpn);
+            finalCheck(e, address, countryCode, vpn);
 
-        } catch (Exception ex){
+        } catch (Exception ex) {
             ex.printStackTrace();
         }
     }
 
-    private void finalCheck(PreLoginEvent e, String address, String state, boolean validCheck){
+    private void finalCheck(PreLoginEvent e, String address, String state, boolean validCheck) {
 
         // Ignorovani ceskych a slovensky VPN
         // Kvuli tomu, ze maly poskytovatele (zvlaste na slovensku) maji mene IP, takze je to detekuje jako VPN.
-        if(Main.isBlockCountry()){
-            if(state.equalsIgnoreCase("CZ") || state.equalsIgnoreCase("SK")){
+        if (Main.isBlockCountry()) {
+            if (state.equalsIgnoreCase("CZ") || state.equalsIgnoreCase("SK")) {
                 Main.getInstance().getLogger().log(Level.INFO, ChatColor.GREEN + "IP je z CZ/SK kraje, hrac pusten na server.");
                 return;
             }
         }
 
         // Kontrola whitelisted IPs
-        if(!allowedIps.isEmpty()){
+        if (!allowedIps.isEmpty()) {
             for (Pattern pattern : allowedIps) {
                 Matcher matcher = pattern.matcher(address);
                 if (matcher.find()) {
@@ -72,8 +72,8 @@ public class VPNListener implements Listener {
         }
 
         // Pokud true, tak ma VPN
-        if(validCheck){
-            Main.getInstance().getLogger().log(Level.INFO, ChatColor.RED + "Zahranicni VPN/Proxy (IP: " + address  + "). Hrac zablokovan!");
+        if (validCheck) {
+            Main.getInstance().getLogger().log(Level.INFO, ChatColor.RED + "Zahranicni VPN/Proxy (IP: " + address + "). Hrac zablokovan!");
             e.setCancelReason("§c§lDetekce VPN!\n§fTvoje IP byla detekovana jako VPN.\n§fV takovem pripade se za normalnich podminek nelze pripojit.");
             e.setCancelled(true);
             return;

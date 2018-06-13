@@ -3,7 +3,6 @@ package cz.wake.craftbungee.managers;
 import cz.wake.craftbungee.Main;
 import cz.wake.craftbungee.listeners.VPNListener;
 import net.md_5.bungee.api.ChatColor;
-import net.md_5.bungee.api.ProxyServer;
 
 import java.util.List;
 import java.util.logging.Level;
@@ -21,7 +20,7 @@ public class WhitelistTask implements Runnable {
         VPNListener.getAllowedIps().clear();
 
         //Build patterns
-        for(String text : list){
+        for (String text : list) {
             Pattern p = Pattern.compile(text);
             VPNListener.getAllowedIps().add(p);
         }

@@ -16,11 +16,8 @@ import net.md_5.bungee.config.ConfigurationProvider;
 import net.md_5.bungee.config.YamlConfiguration;
 
 import java.io.*;
-import java.util.ArrayList;
 import java.util.HashSet;
-import java.util.List;
 import java.util.concurrent.TimeUnit;
-import java.util.regex.Pattern;
 
 public class Main extends Plugin {
 
@@ -33,7 +30,7 @@ public class Main extends Plugin {
     private static boolean blockCountry = false;
 
     @Override
-    public void onEnable(){
+    public void onEnable() {
 
         // Instance
         instance = this;
@@ -53,17 +50,17 @@ public class Main extends Plugin {
 
         // Tasks
         ProxyServer.getInstance().getScheduler().schedule(Main.getInstance(), new SQLChecker(), 1L, 1L, TimeUnit.MINUTES);
-        ProxyServer.getInstance().getScheduler().schedule(Main.getInstance(), new PlayerUpdateTask(), 1L, 1L,  TimeUnit.MINUTES);
+        ProxyServer.getInstance().getScheduler().schedule(Main.getInstance(), new PlayerUpdateTask(), 1L, 1L, TimeUnit.MINUTES);
         ProxyServer.getInstance().getScheduler().schedule(Main.getInstance(), new WhitelistTask(), 10L, 60L, TimeUnit.SECONDS);
     }
 
     @Override
-    public void onDisable(){
+    public void onDisable() {
         sql.onDisable();
         instance = null;
     }
 
-    public static Main getInstance(){
+    public static Main getInstance() {
         return instance;
     }
 
@@ -107,8 +104,7 @@ public class Main extends Plugin {
     public static void saveConfig() {
         try {
             ConfigurationProvider.getProvider(YamlConfiguration.class).save(Main.config, Main.configFile);
-        }
-        catch (IOException e) {
+        } catch (IOException e) {
             getInstance().getLogger().warning("Config could not be saved!");
             e.printStackTrace();
         }
