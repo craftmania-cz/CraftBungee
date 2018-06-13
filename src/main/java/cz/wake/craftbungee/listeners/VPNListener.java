@@ -10,11 +10,8 @@ import okhttp3.Request;
 import okhttp3.Response;
 import org.json.JSONObject;
 
-import java.net.HttpURLConnection;
-import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Scanner;
 import java.util.logging.Level;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -56,9 +53,11 @@ public class VPNListener implements Listener {
 
         // Ignorovani ceskych a slovensky VPN
         // Kvuli tomu, ze maly poskytovatele (zvlaste na slovensku) maji mene IP, takze je to detekuje jako VPN.
-        if(state.equalsIgnoreCase("CZ") || state.equalsIgnoreCase("SK")){
-            Main.getInstance().getLogger().log(Level.INFO, ChatColor.GREEN + "IP je z CZ/SK kraje, hrac pusten na server.");
-            return;
+        if(Main.isBlockCountry()){
+            if(state.equalsIgnoreCase("CZ") || state.equalsIgnoreCase("SK")){
+                Main.getInstance().getLogger().log(Level.INFO, ChatColor.GREEN + "IP je z CZ/SK kraje, hrac pusten na server.");
+                return;
+            }
         }
 
         // Kontrola whitelisted IPs

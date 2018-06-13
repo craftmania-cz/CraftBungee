@@ -14,9 +14,6 @@ public class WhitelistTask implements Runnable {
     @Override
     public void run() {
 
-        // Info
-        Main.getInstance().getLogger().log(Level.INFO, ChatColor.YELLOW + "Probehne update whitelistu IP:");
-
         // Ziskani z SQL
         List<String> list = Main.getInstance().getSQLManager().getWhitelistedIPs();
 
@@ -27,7 +24,6 @@ public class WhitelistTask implements Runnable {
         for(String text : list){
             Pattern p = Pattern.compile(text);
             VPNListener.getAllowedIps().add(p);
-            Main.getInstance().getLogger().log(Level.INFO, text + " pridano na whitelist.");
         }
 
         Main.getInstance().getLogger().log(Level.INFO, ChatColor.GREEN + "Update Whitelistu dokoncen.");

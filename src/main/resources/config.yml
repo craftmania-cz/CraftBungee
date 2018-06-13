@@ -14,3 +14,6 @@ settings:
 
 # Klic k API na detekci VPN
 iphub-key: key
+
+# Zda-li se pujde jenom pripojit z CZ/SK
+block-country: false

@@ -30,6 +30,7 @@ public class Main extends Plugin {
     private SQLManager sql;
     private static HashSet<ProxiedPlayer> online_players = new HashSet<>();
     private static String iphubKey = "";
+    private static boolean blockCountry = false;
 
     @Override
     public void onEnable(){
@@ -40,6 +41,7 @@ public class Main extends Plugin {
         // Nacteni configu
         loadConfig();
         iphubKey = getConfig().getString("iphub-key");
+        blockCountry = getConfig().getBoolean("block-country");
 
         // Napojeni na MySQL
         initDatabase();
@@ -114,5 +116,9 @@ public class Main extends Plugin {
 
     public static String getAPIKey() {
         return iphubKey;
+    }
+
+    public static boolean isBlockCountry() {
+        return blockCountry;
     }
 }
