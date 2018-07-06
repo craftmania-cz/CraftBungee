@@ -17,3 +17,12 @@ iphub-key: key
 
 # Zda-li se pujde jenom pripojit z CZ/SK
 block-country: false
+
+# Seznam serveru na kterych lze hlasovat
+vote-servers:
+ - survival
+ - skyblock
+ - creative
+ - vanilla
+ - vanillasb
+ - prison

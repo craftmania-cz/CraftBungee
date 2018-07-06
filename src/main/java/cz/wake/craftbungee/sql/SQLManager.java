@@ -7,8 +7,10 @@ import net.md_5.bungee.api.connection.ProxiedPlayer;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
 public class SQLManager {
 
@@ -88,5 +90,79 @@ public class SQLManager {
         }
         return list;
     }
+
+    public final long getLastVote(final ProxiedPlayer p) {
+        Connection conn = null;
+        PreparedStatement ps = null;
+        try {
+            conn = pool.getConnection();
+            ps = conn.prepareStatement("SELECT last_vote FROM votes WHERE last_name = ?;");
+            ps.setString(1, p.getName());
+            ps.executeQuery();
+            if (ps.getResultSet().next()) {
+                return ps.getResultSet().getLong("last_vote");
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            pool.close(conn, ps, null);
+        }
+        return 0L;
+    }
+
+    public final long getLastVote(final String p) {
+        Connection conn = null;
+        PreparedStatement ps = null;
+        try {
+            conn = pool.getConnection();
+            ps = conn.prepareStatement("SELECT last_vote FROM votes WHERE last_name = ?;");
+            ps.setString(1, p);
+            ps.executeQuery();
+            if (ps.getResultSet().next()) {
+                return ps.getResultSet().getLong("last_vote");
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            pool.close(conn, ps, null);
+        }
+        return 0L;
+    }
+
+
+    public final void addPlayerVote(final String p) {
+        Main.getInstance().getProxy().getScheduler().runAsync(Main.getInstance(), () -> {
+                Connection conn = null;
+                PreparedStatement ps = null;
+                try {
+                    conn = pool.getConnection();
+                    ps = conn.prepareStatement("UPDATE votes SET votes= votes + 1, week = week + 1, month = month + 1, last_vote = '" + String.valueOf(System.currentTimeMillis() + 3600000L) + "' WHERE last_name = '" + p + "';");
+                    ps.executeUpdate();
+                } catch (Exception e) {
+                    e.printStackTrace();
+                } finally {
+                    pool.close(conn, ps, null);
+                }
+        });
+    }
+
+    public final void addVoteToken(final String p) {
+        Main.getInstance().getProxy().getScheduler().runAsync(Main.getInstance(), () -> {
+            Connection conn = null;
+            PreparedStatement ps = null;
+            try {
+                conn = pool.getConnection();
+                ps = conn.prepareStatement("UPDATE craftmoney_data SET votetoken = votetoken + 1 WHERE nick = ?;");
+                ps.setString(1, p);
+                ps.executeUpdate();
+            } catch (Exception e) {
+                e.printStackTrace();
+            } finally {
+                pool.close(conn, ps, null);
+            }
+        });
+    }
+
+
 
 }

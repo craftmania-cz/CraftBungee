@@ -1,8 +1,12 @@
 package cz.wake.craftbungee.utils;
 
 import net.md_5.bungee.api.ProxyServer;
+import net.md_5.bungee.api.config.ServerInfo;
 import net.md_5.bungee.api.connection.ProxiedPlayer;
 
+import java.io.ByteArrayOutputStream;
+import java.io.DataOutputStream;
+import java.io.IOException;
 import java.util.regex.Pattern;
 
 public class BungeeUtils {
@@ -27,5 +31,18 @@ public class BungeeUtils {
 
     public static boolean isServer(final String serverName) {
         return ProxyServer.getInstance().getServers().containsKey(serverName);
+    }
+
+    public static void sendMessageToBukkit(String channel, String nick, String token, ServerInfo server) {
+        ByteArrayOutputStream stream = new ByteArrayOutputStream();
+        DataOutputStream out = new DataOutputStream(stream);
+        try {
+            out.writeUTF(channel);
+            out.writeUTF(nick);
+            out.writeUTF(token);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        server.sendData("craftbungee", stream.toByteArray());
     }
 }

@@ -4,6 +4,7 @@ import com.google.common.io.Files;
 import cz.wake.craftbungee.listeners.PingListener;
 import cz.wake.craftbungee.listeners.PlayerListener;
 import cz.wake.craftbungee.listeners.VPNListener;
+import cz.wake.craftbungee.listeners.VoteListener;
 import cz.wake.craftbungee.managers.PlayerUpdateTask;
 import cz.wake.craftbungee.managers.SQLChecker;
 import cz.wake.craftbungee.managers.WhitelistTask;
@@ -16,7 +17,9 @@ import net.md_5.bungee.config.ConfigurationProvider;
 import net.md_5.bungee.config.YamlConfiguration;
 
 import java.io.*;
+import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.List;
 import java.util.concurrent.TimeUnit;
 
 public class Main extends Plugin {
@@ -28,6 +31,7 @@ public class Main extends Plugin {
     private static HashSet<ProxiedPlayer> online_players = new HashSet<>();
     private static String iphubKey = "";
     private static boolean blockCountry = false;
+    private static List<String> voteServers = new ArrayList<>();
 
     @Override
     public void onEnable() {
@@ -39,6 +43,9 @@ public class Main extends Plugin {
         loadConfig();
         iphubKey = getConfig().getString("iphub-key");
         blockCountry = getConfig().getBoolean("block-country");
+        voteServers = getConfig().getStringList("vote-servers");
+
+        this.getProxy().registerChannel("craftbungee"); // Channel pro channeling hlasu
 
         // Napojeni na MySQL
         initDatabase();
@@ -47,6 +54,7 @@ public class Main extends Plugin {
         ProxyServer.getInstance().getPluginManager().registerListener(this, new PlayerListener(this));
         ProxyServer.getInstance().getPluginManager().registerListener(this, new VPNListener());
         ProxyServer.getInstance().getPluginManager().registerListener(this, new PingListener());
+        ProxyServer.getInstance().getPluginManager().registerListener(this, new VoteListener());
 
         // Tasks
         ProxyServer.getInstance().getScheduler().schedule(Main.getInstance(), new SQLChecker(), 1L, 1L, TimeUnit.MINUTES);
@@ -116,5 +124,9 @@ public class Main extends Plugin {
 
     public static boolean allowOnlyCZSK() {
         return blockCountry;
+    }
+
+    public static List<String> getVoteServers() {
+        return voteServers;
     }
 }

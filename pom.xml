@@ -115,7 +115,20 @@
             <version>1.4.9</version>
             <scope>compile</scope>
         </dependency>
-
+        <!-- NuVotifier -->
+        <dependency>
+            <groupId>com.vexsoftware</groupId>
+            <artifactId>nuvotifier-universal</artifactId>
+            <version>2.3.4</version>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>net.nifheim.beelzebu</groupId>
+            <artifactId>Coins</artifactId>
+            <version>2.3.2</version>
+            <scope>system</scope>
+            <systemPath>${pom.basedir}/lib/Coins.jar</systemPath>
+        </dependency>
 
     </dependencies>
 
