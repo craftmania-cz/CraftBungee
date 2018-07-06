@@ -120,7 +120,8 @@
             <groupId>com.vexsoftware</groupId>
             <artifactId>nuvotifier-universal</artifactId>
             <version>2.3.4</version>
-            <scope>provided</scope>
+            <scope>system</scope>
+            <systemPath>${pom.basedir}/lib/nuvotifier-universal-2.3.4.jar</systemPath>
         </dependency>
         <dependency>
             <groupId>net.nifheim.beelzebu</groupId>
