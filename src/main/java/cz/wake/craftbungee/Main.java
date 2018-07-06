@@ -114,7 +114,7 @@ public class Main extends Plugin {
         return iphubKey;
     }
 
-    public static boolean isBlockCountry() {
+    public static boolean allowOnlyCZSK() {
         return blockCountry;
     }
 }

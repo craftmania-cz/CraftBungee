@@ -53,7 +53,7 @@ public class VPNListener implements Listener {
 
         // Ignorovani ceskych a slovensky VPN
         // Kvuli tomu, ze maly poskytovatele (zvlaste na slovensku) maji mene IP, takze je to detekuje jako VPN.
-        if (Main.isBlockCountry()) {
+        if (Main.allowOnlyCZSK()) {
             if (state.equalsIgnoreCase("CZ") || state.equalsIgnoreCase("SK")) {
                 Main.getInstance().getLogger().log(Level.INFO, ChatColor.GREEN + "IP je z CZ/SK kraje, hrac pusten na server.");
                 return;
@@ -76,12 +76,7 @@ public class VPNListener implements Listener {
             Main.getInstance().getLogger().log(Level.INFO, ChatColor.RED + "Zahranicni VPN/Proxy (IP: " + address + "). Hrac zablokovan!");
             e.setCancelReason("§c§lDetekce VPN!\n§fTvoje IP byla detekovana jako VPN.\n§fV takovem pripade se za normalnich podminek nelze pripojit.");
             e.setCancelled(true);
-            return;
         }
-
-        // Jinak je z zahranici...
-        e.setCancelReason("§c§lDetekce zahranicni IP!\n§fTvoje IP je zahranicni.\n§fV takovem pripade se za normalnich podminek nelze pripojit.");
-        e.setCancelled(true);
     }
 
     public static void setAllowedIps(List<Pattern> allowedIps) {
