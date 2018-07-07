@@ -18,16 +18,22 @@ public class VoteListener implements Listener {
     @EventHandler
     public void onVote(final VotifierEvent e){
 
-        ProxiedPlayer player = null;
+        ProxiedPlayer player;
 
-        if (ProxyServer.getInstance().getPlayer(e.getVote().getUsername()).isConnected()) {
+        System.out.println("Spusten votifier event!");
+
+        try {
             player = ProxyServer.getInstance().getPlayer(e.getVote().getUsername());
+        } catch (Exception ex) {
+            player = null;
         }
 
         if (player != null) {
 
-            if (Main.getInstance().getSQLManager().getLastVote(player) <= System.currentTimeMillis()) {
-                Main.getInstance().getLogger().log(Level.INFO, ChatColor.YELLOW + "Hrac " + player.getName() + " hlasoval driv nez za 2h.");
+            System.out.println("Hrac je na serveru...");
+
+            if (System.currentTimeMillis() < Main.getInstance().getSQLManager().getLastVote(player.getName())) {
+                Main.getInstance().getLogger().log(Level.INFO, ChatColor.AQUA + "Hrac " + player.getName() + " hlasoval driv nez za 2h.");
                 return;
             }
 

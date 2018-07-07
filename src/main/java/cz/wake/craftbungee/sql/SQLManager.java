@@ -91,25 +91,6 @@ public class SQLManager {
         return list;
     }
 
-    public final long getLastVote(final ProxiedPlayer p) {
-        Connection conn = null;
-        PreparedStatement ps = null;
-        try {
-            conn = pool.getConnection();
-            ps = conn.prepareStatement("SELECT last_vote FROM votes WHERE last_name = ?;");
-            ps.setString(1, p.getName());
-            ps.executeQuery();
-            if (ps.getResultSet().next()) {
-                return ps.getResultSet().getLong("last_vote");
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-        } finally {
-            pool.close(conn, ps, null);
-        }
-        return 0L;
-    }
-
     public final long getLastVote(final String p) {
         Connection conn = null;
         PreparedStatement ps = null;
