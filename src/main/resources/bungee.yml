@@ -2,4 +2,4 @@ name: CraftBungee
 main:  cz.wake.craftbungee.Main
 version: 1.0
 author: MrWakeCZ
-depend: [Coins]
+depend: [Coins,NuVotifier]
