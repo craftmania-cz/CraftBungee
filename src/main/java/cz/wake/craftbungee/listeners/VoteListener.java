@@ -32,7 +32,7 @@ public class VoteListener implements Listener {
 
             System.out.println("Hrac je na serveru...");
 
-            if (System.currentTimeMillis() < Main.getInstance().getSQLManager().getLastVote(player.getName())) {
+            if (!(System.currentTimeMillis() > Main.getInstance().getSQLManager().getLastVote(player.getName()))) {
                 Main.getInstance().getLogger().log(Level.INFO, ChatColor.AQUA + "Hrac " + player.getName() + " hlasoval driv nez za 2h.");
                 return;
             }
@@ -53,8 +53,8 @@ public class VoteListener implements Listener {
                 CoinsAPI.addCoins(player.getName(), (double) coins, false);
             }
         } else {
-            if (Main.getInstance().getSQLManager().getLastVote(e.getVote().getUsername()) <= System.currentTimeMillis()) {
-                Main.getInstance().getLogger().log(Level.INFO, ChatColor.YELLOW + "Hrac " + e.getVote().getUsername() + " hlasoval driv nez za 2h.");
+            if (!(System.currentTimeMillis() > Main.getInstance().getSQLManager().getLastVote(e.getVote().getUsername()))) {
+                Main.getInstance().getLogger().log(Level.INFO, ChatColor.AQUA + "Hrac " + e.getVote().getUsername() + " hlasoval driv nez za 2h.");
                 return;
             }
 
