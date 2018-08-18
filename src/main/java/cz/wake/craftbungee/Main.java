@@ -8,6 +8,7 @@ import cz.wake.craftbungee.listeners.VoteListener;
 import cz.wake.craftbungee.managers.PlayerUpdateTask;
 import cz.wake.craftbungee.managers.SQLChecker;
 import cz.wake.craftbungee.managers.WhitelistTask;
+import cz.wake.craftbungee.prometheus.MetricsController;
 import cz.wake.craftbungee.sql.SQLManager;
 import net.md_5.bungee.api.ProxyServer;
 import net.md_5.bungee.api.connection.ProxiedPlayer;
@@ -15,6 +16,7 @@ import net.md_5.bungee.api.plugin.Plugin;
 import net.md_5.bungee.config.Configuration;
 import net.md_5.bungee.config.ConfigurationProvider;
 import net.md_5.bungee.config.YamlConfiguration;
+import org.eclipse.jetty.server.Server;
 
 import java.io.*;
 import java.util.ArrayList;
@@ -32,6 +34,7 @@ public class Main extends Plugin {
     private static String iphubKey = "";
     private static boolean blockCountry = false;
     private static List<String> voteServers = new ArrayList<>();
+    private Server server;
 
     @Override
     public void onEnable() {
@@ -60,11 +63,38 @@ public class Main extends Plugin {
         ProxyServer.getInstance().getScheduler().schedule(Main.getInstance(), new SQLChecker(), 1L, 1L, TimeUnit.MINUTES);
         ProxyServer.getInstance().getScheduler().schedule(Main.getInstance(), new PlayerUpdateTask(), 1L, 1L, TimeUnit.MINUTES);
         ProxyServer.getInstance().getScheduler().schedule(Main.getInstance(), new WhitelistTask(), 10L, 60L, TimeUnit.SECONDS);
+
+        // Jetty server
+        if (getConfig().getBoolean("prometheus.state")) {
+            int port = getConfig().getInt("prometheus.port");
+            server = new Server(port);
+            server.setHandler(new MetricsController());
+            try {
+                server.start();
+                getLogger().info("Started Prometheus metrics endpoint on port " + port);
+            } catch (Exception e) {
+                getLogger().severe("Could not start embedded Jetty server");
+            }
+        }
+
     }
 
     @Override
     public void onDisable() {
+
+        // MySQL
         sql.onDisable();
+
+        // Jetty server
+        if (server != null) {
+            try {
+                server.stop();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+
+        // Plugi instance
         instance = null;
     }
 

@@ -26,3 +26,8 @@ vote-servers:
  - vanilla
  - vanillasb
  - prison
+
+# Prometheus statistiky
+prometheus:
+ state: true
+ port: 28026
