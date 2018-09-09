@@ -32,7 +32,7 @@ public class GHelp_command extends Command {
 
             p.sendMessage("§6§lGHELP §7| §fZprava byla odeslana vsem pripojenym clenum AT");
         } else {
-            p.sendMessage("§c§l(!) §cSpatna syntaxe! Pouzij /ga <text>");
+            p.sendMessage("§c§l(!) §cNenapsal jsi zpravu);
         }
     }
     public void jsonMessage(ProxiedPlayer player, String message) {
