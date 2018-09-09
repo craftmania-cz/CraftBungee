@@ -33,5 +33,8 @@ public class GA_command extends Command {
         } else {
             p.sendMessage("§c(!) Na tuto akci nemas prava");
         }
+        else {
+            p.sendMessage("§c(!) Na tuto akci nemas prava")
+        }
     }
 }
