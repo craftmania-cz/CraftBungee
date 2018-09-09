@@ -21,13 +21,19 @@ public class GHelp_command extends Command {
     }
     @SuppressWarnings("deprecation")
     public void execute(CommandSender commandSender, String[] strings) {
-        ProxiedPlayer p = plugin.getProxy().getPlayer(commandSender.getName());
-        ArrayList<String> strings1 = new ArrayList<>();
-        for (String s : strings) {
-            strings1.add(s);
-        }
+        ProxiedPlayer p = (ProxiedPlayer) commandSender;
+        if(!(strings.length == 0)) {
+            ArrayList<String> strings1 = new ArrayList<>();
+            for (String s : strings) {
+                strings1.add(s);
+            }
 
-        jsonMessage(p, strings1.toString().replace("[", "").replace("]", "").replace(",", ""));
+            jsonMessage(p, strings1.toString().replace("[", "").replace("]", "").replace(",", ""));
+
+            p.sendMessage("§6§lGHELP §7| §fZprava byla odeslana vsem pripojenym clenum AT");
+        } else {
+            p.sendMessage("§c§l(!) §cSpatna syntaxe! Pouzij /ga <text>");
+        }
     }
     public void jsonMessage(ProxiedPlayer player, String message) {
         TextComponent component = new TextComponent("§6§lGHELP §7⎟ §e" + player.getName() + "§7: §f" + message);
@@ -35,7 +41,12 @@ public class GHelp_command extends Command {
         component.setClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/server " + player.getServer().getInfo().getName()));
 
         for (ProxiedPlayer p : plugin.getOnlinePlayers()) {
-            p.sendMessage(component);
+            if (p.hasPermission("craftbungee.at-ghelp")) {
+                p.sendMessage(component);
+            }
+            else {
+                p.sendMessage("§c§l(!) §cNa tuto akci nemas prava");
+            }
         }
     }
 }
