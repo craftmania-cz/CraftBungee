@@ -26,7 +26,7 @@ public class GA_command extends Command {
                         for (String s : strings) {
                             test.add(s);
                         }
-                        pl.sendMessage("§8§lG§c§lATCHAT §a" + p.getName() + ": §e" + test.toString().replace("[", "").replace("]", "").replace(",", ""));
+                        pl.sendMessage("§4§lGATCHAT §a" + p.getName() + "§7: §e" + test.toString().replace("[", "").replace("]", "").replace(",", ""));
                     }
                 }
             }
