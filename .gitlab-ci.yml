@@ -30,7 +30,7 @@ build:
     paths:
       - target/*.jar
 
-sonar:
+codacy:
   stage: review
   script:
-    - 'mvn $MAVEN_CLI_OPTS sonar:sonar'
+  - curl https://api.codacy.com/events/push/e71b299226614ec6aab0453861ba8a2e
