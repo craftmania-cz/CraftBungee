@@ -6,32 +6,31 @@ import net.md_5.bungee.api.connection.ProxiedPlayer;
 import net.md_5.bungee.api.plugin.Command;
 
 import java.util.ArrayList;
+import java.util.Collections;
 
 public class GA_command extends Command {
+
     Main plugin;
 
     public GA_command(Main pl) {
         super("ga", "craftbungee.at-chat");
         this.plugin = pl;
     }
-    @SuppressWarnings("deprecation")
+
     public void execute(CommandSender commandSender, String[] strings) {
         ProxiedPlayer p = plugin.getProxy().getPlayer(commandSender.getName());
 
         if (p.hasPermission("craftbungee.at-chat")) {
             for (ProxiedPlayer pl : plugin.getProxy().getPlayers()) {
-                if (pl instanceof ProxiedPlayer) {
+                if (pl != null) {
                     if (pl.hasPermission("craftbungee.at-chat")) {
                         ArrayList<String> test = new ArrayList<>();
-                        for (String s : strings) {
-                            test.add(s);
-                        }
+                        Collections.addAll(test, strings);
                         pl.sendMessage("§4§lGATCHAT §a" + p.getName() + "§7: §e" + test.toString().replace("[", "").replace("]", "").replace(",", ""));
                     }
                 }
             }
-        }
-        else {
+        } else {
             p.sendMessage("§c(!) Na tuto akci nemas prava");
         }
     }
