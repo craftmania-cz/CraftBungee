@@ -1,7 +1,8 @@
 package cz.wake.craftbungee;
 
 import com.google.common.io.Files;
-import cz.wake.craftbungee.commands.GHelp_command;
+import cz.wake.craftbungee.commands.AT_command;
+import cz.wake.craftbungee.commands.GA_command;
 import cz.wake.craftbungee.listeners.PingListener;
 import cz.wake.craftbungee.listeners.PlayerListener;
 import cz.wake.craftbungee.listeners.VPNListener;
@@ -51,8 +52,8 @@ public class Main extends Plugin {
 
         this.getProxy().registerChannel("craftbungee"); // Channel pro channeling hlasu
 
-
-        this.getProxy().getPluginManager().registerCommand(this, new GHelp_command(this));
+        getProxy().getPluginManager().registerCommand(this, new GA_command(this));
+        getProxy().getPluginManager().registerCommand(this, new AT_command(this));
 
         // Napojeni na MySQL
         initDatabase();

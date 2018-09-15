@@ -7,6 +7,7 @@ import net.md_5.bungee.api.connection.ProxiedPlayer;
 import java.io.ByteArrayOutputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.regex.Pattern;
 
 public class BungeeUtils {
@@ -44,5 +45,37 @@ public class BungeeUtils {
             e.printStackTrace();
         }
         server.sendData("craftbungee", stream.toByteArray());
+    }
+
+    public static String getGroup(ProxiedPlayer p) {
+        if (p.hasPermission("craftmania.at.majitel")) { return "Majitel"; }
+        if (p.hasPermission("craftmania.at.vedeni")) { return "Vedeni"; }
+        if (p.hasPermission("craftmania.at.developer")) { return "Developer"; }
+        if (p.hasPermission("craftmania.at.admin")) { return "Admin"; }
+        if (p.hasPermission("craftmania.at.helper")) { return "Helper"; }
+        if (p.hasPermission("craftmania.at.eventer")) { return "Eventer"; }
+        if (p.hasPermission("craftmania.at.builder")) { return "Builder"; }
+        return "Hrac";
+    }
+
+    public static boolean getGroupBool(ProxiedPlayer p) {
+        if (p.hasPermission("craftmania.at.majitel")) { return true; }
+        if (p.hasPermission("craftmania.at.vedeni")) { return true; }
+        if (p.hasPermission("craftmania.at.developer")) { return true; }
+        if (p.hasPermission("craftmania.at.admin")) { return true; }
+        if (p.hasPermission("craftmania.at.helper")) { return true; }
+        if (p.hasPermission("craftmania.at.eventer")) { return true; }
+        if (p.hasPermission("craftmania.at.builder")) { return true; }
+        return false;
+    }
+
+    public static String getPlayers(ArrayList<ProxiedPlayer> players) {
+        if (players.size() == 1) {
+            return "clen";
+        } else if (players.size() >= 2 && players.size() <= 4) {
+            return "cleni";
+        } else {
+            return "clenu";
+        }
     }
 }
