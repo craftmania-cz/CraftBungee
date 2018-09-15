@@ -1,6 +1,7 @@
 package cz.wake.craftbungee.commands;
 
 import cz.wake.craftbungee.Main;
+import cz.wake.craftbungee.utils.BungeeUtils;
 import net.md_5.bungee.api.CommandSender;
 import net.md_5.bungee.api.chat.ClickEvent;
 import net.md_5.bungee.api.chat.ComponentBuilder;
@@ -10,43 +11,50 @@ import net.md_5.bungee.api.connection.ProxiedPlayer;
 import net.md_5.bungee.api.plugin.Command;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 
 public class GHelp_command extends Command {
 
     Main plugin;
+    public static HashMap<ProxiedPlayer, Integer> cooldowns = new HashMap<>();
+
 
     public GHelp_command(Main pl) {
-        super("ga", "craftbungee.at-chat");
+        super("ghelp");
         this.plugin = pl;
     }
-    @SuppressWarnings("deprecation")
+
     public void execute(CommandSender commandSender, String[] strings) {
-        ProxiedPlayer p = (ProxiedPlayer) commandSender;
-        if(!(strings.length == 0)) {
-            ArrayList<String> strings1 = new ArrayList<>();
-            for (String s : strings) {
-                strings1.add(s);
-            }
+        ProxiedPlayer p = plugin.getProxy().getPlayer(commandSender.getName());
 
-            jsonMessage(p, strings1.toString().replace("[", "").replace("]", "").replace(",", ""));
-
-            p.sendMessage("§6§lGHELP §7| §fZprava byla odeslana vsem pripojenym clenum AT");
-        } else {
-            p.sendMessage("§c§l(!) §cNenapsal jsi zpravu! Pouzij /ga <text>");
+        if (cooldowns.containsKey(p)) {
+            p.sendMessage("§c§l(!) §cMusis pockat jeste " + cooldowns.get(p) + " sekund!");
+            return;
         }
-    }
-    public void jsonMessage(ProxiedPlayer player, String message) {
-        TextComponent component = new TextComponent("§6§lGHELP §7⎟ §e" + player.getName() + "§7: §f" + message);
-        component.setHoverEvent( new HoverEvent( HoverEvent.Action.SHOW_TEXT, new ComponentBuilder("§7Po kliknuti budes teleportovan na server §f" + player.getServer().getInfo().getName()).create() ) );
-        component.setClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/server " + player.getServer().getInfo().getName()));
 
-        for (ProxiedPlayer p : plugin.getOnlinePlayers()) {
-            if (p.hasPermission("craftbungee.at-ghelp")) {
-                p.sendMessage(component);
-            }
-            else {
-                p.sendMessage("§c§l(!) §cNa tuto akci nemas prava");
+        if (strings.length == 0) {
+            p.sendMessage("§c§l(!) §cNespravny format! Pouzij /ghelp <text>");
+            return;
+        }
+
+        if (BungeeUtils.getATOnlinePlayers() == 0) {
+            p.sendMessage("§6§lGHELP §7⎟ §eAktualne neni na serveru online nikdo z AT, kontaktuj cleny AT na Discordu nebo na webu.");
+            return;
+        }
+
+        ArrayList<String> message = new ArrayList<>();
+        for (String s : strings) {
+            message.add(s);
+        }
+        for (ProxiedPlayer pl : plugin.getOnlinePlayers()) {
+            if (pl.hasPermission("craftbungee.at-ghelp")) {
+                TextComponent component = new TextComponent("§6§lGHELP §7⎟ §e" + commandSender.getName() + "§7: §f" + message.toString().replace("[", "").replace("]", "").replace(",", ""));
+                component.setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new ComponentBuilder("§7Po kliknuti budes teleportnut na server §f" + p.getServer().getInfo().getName()).create()));
+                component.setClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/server " + p.getServer().getInfo().getName()));
+                pl.sendMessage(component);
             }
         }
+        p.sendMessage("§6§lGHELP §7⎟ §eZprava byla odeslana vsem pripojenym clenum AT.");
+        cooldowns.put(p, 60);
     }
 }

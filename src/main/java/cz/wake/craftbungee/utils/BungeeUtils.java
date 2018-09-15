@@ -1,5 +1,6 @@
 package cz.wake.craftbungee.utils;
 
+import cz.wake.craftbungee.Main;
 import net.md_5.bungee.api.ProxyServer;
 import net.md_5.bungee.api.config.ServerInfo;
 import net.md_5.bungee.api.connection.ProxiedPlayer;
@@ -77,5 +78,25 @@ public class BungeeUtils {
         } else {
             return "clenu";
         }
+    }
+
+    public static Integer getATOnlinePlayers() {
+        ArrayList<ProxiedPlayer> players = new ArrayList<>();
+        for (ProxiedPlayer p : Main.getInstance().getOnlinePlayers()) {
+            if (getGroupBool(p)) {
+
+                String group = getGroup(p);
+
+                if (group.contains("Majitel")) { players.add(p); }
+                if (group.contains("Vedeni")) { players.add(p); }
+                if (group.contains("Developer")) { players.add(p); }
+                if (group.contains("Admin")) { players.add(p); }
+                if (group.contains("Helper")) { players.add(p); }
+                if (group.contains("Eventer")) { players.add(p); }
+                if (group.contains("Builder")) { players.add(p); }
+
+            }
+        }
+        return players.size();
     }
 }

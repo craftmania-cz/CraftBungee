@@ -7,6 +7,7 @@ import cz.wake.craftbungee.listeners.PingListener;
 import cz.wake.craftbungee.listeners.PlayerListener;
 import cz.wake.craftbungee.listeners.VPNListener;
 import cz.wake.craftbungee.listeners.VoteListener;
+import cz.wake.craftbungee.managers.CooldownUpdateTask;
 import cz.wake.craftbungee.managers.PlayerUpdateTask;
 import cz.wake.craftbungee.managers.SQLChecker;
 import cz.wake.craftbungee.managers.WhitelistTask;
@@ -68,6 +69,7 @@ public class Main extends Plugin {
         ProxyServer.getInstance().getScheduler().schedule(Main.getInstance(), new SQLChecker(), 1L, 1L, TimeUnit.MINUTES);
         ProxyServer.getInstance().getScheduler().schedule(Main.getInstance(), new PlayerUpdateTask(), 1L, 1L, TimeUnit.MINUTES);
         ProxyServer.getInstance().getScheduler().schedule(Main.getInstance(), new WhitelistTask(), 10L, 60L, TimeUnit.SECONDS);
+        ProxyServer.getInstance().getScheduler().schedule(Main.getInstance(), new CooldownUpdateTask(), 1L, 1L, TimeUnit.SECONDS);
 
         // Jetty server
         if (getConfig().getBoolean("prometheus.state")) {
