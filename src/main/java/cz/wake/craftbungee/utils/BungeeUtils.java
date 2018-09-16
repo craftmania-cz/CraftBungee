@@ -52,10 +52,10 @@ public class BungeeUtils {
         if (p.hasPermission("craftmania.at.majitel")) { return "Majitel"; }
         if (p.hasPermission("craftmania.at.vedeni")) { return "Vedeni"; }
         if (p.hasPermission("craftmania.at.developer")) { return "Developer"; }
-        if (p.hasPermission("craftmania.at.admin")) { return "Admin"; }
-        if (p.hasPermission("craftmania.at.helper")) { return "Helper"; }
         if (p.hasPermission("craftmania.at.eventer")) { return "Eventer"; }
+        if (p.hasPermission("craftmania.at.admin")) { return "Admin"; }
         if (p.hasPermission("craftmania.at.builder")) { return "Builder"; }
+        if (p.hasPermission("craftmania.at.helper")) { return "Helper"; }
         return "Hrac";
     }
 
@@ -63,10 +63,10 @@ public class BungeeUtils {
         if (p.hasPermission("craftmania.at.majitel")) { return true; }
         if (p.hasPermission("craftmania.at.vedeni")) { return true; }
         if (p.hasPermission("craftmania.at.developer")) { return true; }
-        if (p.hasPermission("craftmania.at.admin")) { return true; }
-        if (p.hasPermission("craftmania.at.helper")) { return true; }
         if (p.hasPermission("craftmania.at.eventer")) { return true; }
+        if (p.hasPermission("craftmania.at.admin")) { return true; }
         if (p.hasPermission("craftmania.at.builder")) { return true; }
+        if (p.hasPermission("craftmania.at.helper")) { return true; }
         return false;
     }
 
@@ -91,8 +91,8 @@ public class BungeeUtils {
                 if (group.contains("Vedeni")) { players.add(p); }
                 if (group.contains("Developer")) { players.add(p); }
                 if (group.contains("Admin")) { players.add(p); }
-                if (group.contains("Helper")) { players.add(p); }
                 if (group.contains("Eventer")) { players.add(p); }
+                if (group.contains("Helper")) { players.add(p); }
                 if (group.contains("Builder")) { players.add(p); }
 
             }
