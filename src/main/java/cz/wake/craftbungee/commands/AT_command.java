@@ -64,8 +64,14 @@ public class AT_command extends net.md_5.bungee.api.plugin.Command {
         sender.sendMessage("§r");
         if (players.size() == 0) {
             sender.sendMessage(" §7§lAktualne jsou vsichni cleni AT offline :(");
-        } else {
-            sender.sendMessage(" §a§lAktualne je online " + players.size() + " " + BungeeUtils.getPlayers(players) + " AT.");
+        } else if (players.size() == 1){
+            sender.sendMessage(" §a§lAktualne je pripojen " + players.size() + " clen AT.");
+        }
+        else if (players.size() >= 2 && players.size() <= 4) {
+            sender.sendMessage(" §a§lAktualne jsou pripojeni " + players.size() + " cleni AT.");
+        }
+        else {
+            sender.sendMessage(" §a§lAktualne je pripojeno " + players.size() + " clenu AT.");
         }
         sender.sendMessage("§r");
         sender.sendMessage("§7§l§m--------§r§7[ §e§lSeznam clenu Admin Teamu online §7]§m--------");

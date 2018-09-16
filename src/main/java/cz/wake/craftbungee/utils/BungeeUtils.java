@@ -70,16 +70,6 @@ public class BungeeUtils {
         return false;
     }
 
-    public static String getPlayers(ArrayList<ProxiedPlayer> players) {
-        if (players.size() == 1) {
-            return "clen";
-        } else if (players.size() >= 2 && players.size() <= 4) {
-            return "cleni";
-        } else {
-            return "clenu";
-        }
-    }
-
     public static Integer getATOnlinePlayers() {
         ArrayList<ProxiedPlayer> players = new ArrayList<>();
         for (ProxiedPlayer p : Main.getInstance().getOnlinePlayers()) {
