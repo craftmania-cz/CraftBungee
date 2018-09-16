@@ -35,7 +35,6 @@ public class AT_command extends net.md_5.bungee.api.plugin.Command {
         sender.sendMessage("§7§l§m--------§r§7[ §e§lSeznam clenu Admin Teamu online §7]§m--------");
         sender.sendMessage("§r");
         sender.sendMessage("    §7§oStaci najet na nick clena a uvidis na jakem serveru je.");
-        sender.sendMessage("    §7§oKliknutim na nick jej muzes kontaktovat.");
         sender.sendMessage("§r");
 
         for (ProxiedPlayer p : plugin.getOnlinePlayers()) {
@@ -54,13 +53,13 @@ public class AT_command extends net.md_5.bungee.api.plugin.Command {
             }
         }
 
-        jsonMessage(sender, majitel, " §3§lMajitel");
-        jsonMessage(sender, vedeni, " §4§lVedeni");
-        jsonMessage(sender, developer, " §e§lDeveloper");
-        jsonMessage(sender, admin, " §c§lAdmin");
-        jsonMessage(sender, eventer,  " §d§lEventer");
-        jsonMessage(sender, helper, " §2§lHelper");
-        jsonMessage(sender, builder, " §5§lBuilder");
+        jsonMessage(sender, majitel, "§3§lMajitel");
+        jsonMessage(sender, vedeni, "§4§lVedeni");
+        jsonMessage(sender, developer, "§e§lDeveloper");
+        jsonMessage(sender, admin, "§c§lAdmin");
+        jsonMessage(sender, eventer,  "§d§lEventer");
+        jsonMessage(sender, helper, "§2§lHelper");
+        jsonMessage(sender, builder, "§5§lBuilder");
 
         sender.sendMessage("§r");
         if (players.size() == 0) {
@@ -78,20 +77,19 @@ public class AT_command extends net.md_5.bungee.api.plugin.Command {
             ArrayList<TextComponent> components = new ArrayList<>();
             TextComponent component = null;
 
-            for (int x=1; x<=players.size(); x++) {
+            for (int x=1; x<=players.size(); x++) { //TODO: Prejmenovat nejak normalne...
                 if (players.size() > x) {
-                    component = new TextComponent("§a" + players.get(x-1) + ", ");
+                    component = new TextComponent("§7" + players.get(x-1) + ", ");
                 }
                 else if (players.size() == x) {
-                    component = new TextComponent("§a" + players.get(x-1).getName());
+                    component = new TextComponent("§7" + players.get(x-1).getName());
                 }
                 component.setHoverEvent( new HoverEvent( HoverEvent.Action.SHOW_TEXT, new ComponentBuilder("§7Pripojen na serveru §f" + players.get(x-1).getServer().getInfo().getName()).create() ) );
-                component.setClickEvent(new ClickEvent(ClickEvent.Action.SUGGEST_COMMAND, "/ghelp " + players.get(x-1) + " "));
                 components.add(component);
             }
 
             TextComponent serazeni = new TextComponent();
-            serazeni.addExtra(new TextComponent(group + "§7: §a"));
+            serazeni.addExtra(new TextComponent(group + "§7: §7"));
             for (TextComponent componenttt : components) {
                 serazeni.addExtra(componenttt);
             }
