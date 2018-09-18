@@ -31,3 +31,19 @@ vote-servers:
 prometheus:
  state: true
  port: 28026
+
+# Seznam serveru pro /at
+survival-servery:
+  - survival
+  - skyblock
+  - prison
+
+minigames-servery:
+  - bw1
+  - bw2
+  - bw3
+
+lobby:
+  - lobby1
+  - lobby2
+  - ohub

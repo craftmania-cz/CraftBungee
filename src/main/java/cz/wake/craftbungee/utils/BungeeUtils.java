@@ -89,4 +89,18 @@ public class BungeeUtils {
         }
         return players.size();
     }
+
+    public static String getServer(ProxiedPlayer p) {
+        String server = p.getServer().getInfo().getName();
+        if (Main.getConfig().getStringList("survival-servery").contains(server)) {
+            return "Survival serverech";
+        }
+        else if (Main.getConfig().getStringList("minigames-servery").contains(server)){
+            return "Minigames serverech";
+        }
+        else if (Main.getConfig().getStringList("lobby").contains(server)) {
+            return "Lobby";
+        }
+        return null;
+    }
 }
