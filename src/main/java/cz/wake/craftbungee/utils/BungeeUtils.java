@@ -70,16 +70,6 @@ public class BungeeUtils {
         return false;
     }
 
-    public static String getPlayers(ArrayList<ProxiedPlayer> players) {
-        if (players.size() == 1) {
-            return "clen";
-        } else if (players.size() >= 2 && players.size() <= 4) {
-            return "cleni";
-        } else {
-            return "clenu";
-        }
-    }
-
     public static Integer getATOnlinePlayers() {
         ArrayList<ProxiedPlayer> players = new ArrayList<>();
         for (ProxiedPlayer p : Main.getInstance().getOnlinePlayers()) {
@@ -98,5 +88,19 @@ public class BungeeUtils {
             }
         }
         return players.size();
+    }
+
+    public static String getServer(ProxiedPlayer p) {
+        String server = p.getServer().getInfo().getName();
+        if (Main.getConfig().getStringList("survival-servery").contains(server)) {
+            return "Survival serverech";
+        }
+        else if (Main.getConfig().getStringList("minigames-servery").contains(server)){
+            return "Minigames serverech";
+        }
+        else if (Main.getConfig().getStringList("lobby").contains(server)) {
+            return "Lobby";
+        }
+        return null;
     }
 }

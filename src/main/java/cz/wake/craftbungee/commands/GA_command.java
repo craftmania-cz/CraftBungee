@@ -2,9 +2,14 @@ package cz.wake.craftbungee.commands;
 
 import cz.wake.craftbungee.Main;
 import net.md_5.bungee.api.CommandSender;
+import net.md_5.bungee.api.chat.ClickEvent;
+import net.md_5.bungee.api.chat.ComponentBuilder;
+import net.md_5.bungee.api.chat.HoverEvent;
+import net.md_5.bungee.api.chat.TextComponent;
 import net.md_5.bungee.api.connection.ProxiedPlayer;
 import net.md_5.bungee.api.plugin.Command;
 
+import java.awt.*;
 import java.util.ArrayList;
 import java.util.Collections;
 
@@ -26,7 +31,10 @@ public class GA_command extends Command {
                     if (pl.hasPermission("craftbungee.at-chat")) {
                         ArrayList<String> test = new ArrayList<>();
                         Collections.addAll(test, strings);
-                        pl.sendMessage("§4§lGATCHAT §a" + p.getName() + "§7: §e" + test.toString().replace("[", "").replace("]", "").replace(",", ""));
+                        TextComponent component = new TextComponent("§4§lGATCHAT §a" + p.getName() + "§7: §e" + test.toString().replace("[", "").replace("]", "").replace(",", ""));
+                        component.setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new ComponentBuilder("§7Server: §f" + p.getServer().getInfo().getName()).create()));
+                        component.setClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/server " + p.getServer().getInfo().getName()));
+                        pl.sendMessage(component);
                     }
                 }
             }
