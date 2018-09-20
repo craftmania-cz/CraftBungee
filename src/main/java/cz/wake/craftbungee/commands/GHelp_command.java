@@ -11,11 +11,12 @@ import net.md_5.bungee.api.connection.ProxiedPlayer;
 import net.md_5.bungee.api.plugin.Command;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 
 public class GHelp_command extends Command {
 
-    Main plugin;
+    private Main plugin;
     public static HashMap<ProxiedPlayer, Integer> cooldowns = new HashMap<>();
 
 
@@ -43,9 +44,7 @@ public class GHelp_command extends Command {
         }
 
         ArrayList<String> message = new ArrayList<>();
-        for (String s : strings) {
-            message.add(s);
-        }
+        Collections.addAll(message, strings);
         for (ProxiedPlayer pl : plugin.getOnlinePlayers()) {
             if (pl.hasPermission("craftbungee.at-ghelp")) {
                 TextComponent component = new TextComponent("§6§lGHELP §7⎟ §e" + commandSender.getName() + "§7: §f" + message.toString().replace("[", "").replace("]", "").replace(",", ""));

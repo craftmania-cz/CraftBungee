@@ -16,7 +16,7 @@ import java.util.logging.Level;
 public class VoteListener implements Listener {
 
     @EventHandler
-    public void onVote(final VotifierEvent e){
+    public void onVote(final VotifierEvent e) {
 
         ProxiedPlayer player;
 
@@ -42,7 +42,7 @@ public class VoteListener implements Listener {
             int coins = getChanceCoins(randRange(1, 100));
             for (String configServer : Main.getVoteServers()) {
                 if (configServer.equalsIgnoreCase(server)) {
-                    BungeeUtils.sendMessageToBukkit("vote",  player.getName(), String.valueOf(coins), player.getServer().getInfo());
+                    BungeeUtils.sendMessageToBukkit("vote", player.getName(), String.valueOf(coins), player.getServer().getInfo());
                 }
             }
 

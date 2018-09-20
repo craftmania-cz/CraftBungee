@@ -9,13 +9,12 @@ import net.md_5.bungee.api.chat.TextComponent;
 import net.md_5.bungee.api.connection.ProxiedPlayer;
 import net.md_5.bungee.api.plugin.Command;
 
-import java.awt.*;
 import java.util.ArrayList;
 import java.util.Collections;
 
 public class GA_command extends Command {
 
-    Main plugin;
+    private Main plugin;
 
     public GA_command(Main pl) {
         super("ga", "craftbungee.at-chat");

@@ -12,7 +12,7 @@ public class CooldownUpdateTask implements Runnable {
             if (GHelp_command.cooldowns.containsKey(p)) {
                 int cooldown = GHelp_command.cooldowns.get(p);
                 GHelp_command.cooldowns.remove(p);
-                GHelp_command.cooldowns.put(p, cooldown-1);
+                GHelp_command.cooldowns.put(p, cooldown - 1);
 
                 if (cooldown == 0) {
                     GHelp_command.cooldowns.remove(p);
