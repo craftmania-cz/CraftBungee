@@ -24,6 +24,11 @@ public class GA_command extends Command {
     public void execute(CommandSender commandSender, String[] strings) {
         ProxiedPlayer p = plugin.getProxy().getPlayer(commandSender.getName());
 
+        if (strings.length == 0) {
+            p.sendMessage("§c§l(!) §cNespravny format! Pouzij /ga <text>");
+            return;
+        }
+
         if (p.hasPermission("craftbungee.at-chat")) {
             for (ProxiedPlayer pl : plugin.getProxy().getPlayers()) {
                 if (pl != null) {

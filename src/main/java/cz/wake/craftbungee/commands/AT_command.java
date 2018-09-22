@@ -35,7 +35,7 @@ public class AT_command extends net.md_5.bungee.api.plugin.Command {
         sender.sendMessage("§r");
         sender.sendMessage("§7§l§m--------§r§7[ §e§lSeznam clenu Admin Teamu online §7]§m--------");
         sender.sendMessage("§r");
-        sender.sendMessage("    §7§oStaci najet na nick clena a uvidis na jakem serveru je.");
+        sender.sendMessage("    §7§oStaci najet na nick clena a uvidis, na jakem serveru je.");
         sender.sendMessage("§r");
 
         for (ProxiedPlayer p : plugin.getOnlinePlayers()) {
