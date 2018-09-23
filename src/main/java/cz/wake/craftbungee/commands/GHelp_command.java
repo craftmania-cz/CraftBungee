@@ -84,16 +84,16 @@ public class GHelp_command extends Command {
             return;
         }
 
-        if (BungeeUtils.getATOnlinePlayers() == 0) {
+        /*if (BungeeUtils.getATOnlinePlayers() == 0) {
             p.sendMessage("§6§lGHELP §7⎟ §eAktualne neni na serveru online nikdo z AT, kontaktuj cleny AT na Discordu nebo na webu.");
             return;
+        }*/
+
+        StringBuilder zprava = new StringBuilder();
+        for (String s : strings) {
+            zprava.append(s + " §f");
         }
 
-        ArrayList<String> message = new ArrayList<>();
-        for (String s : strings) {
-            message.add(s);
-        }
-        String zprava = message.toString().replace("[", "").replace("]", "").replace(",", "");
         for (ProxiedPlayer pl : plugin.getOnlinePlayers()) {
             if (pl.hasPermission("craftbungee.at-ghelp")) {
                 TextComponent component = new TextComponent("§6§lGHELP §7⎟ §e" + commandSender.getName() + "§7: §f" + zprava);
@@ -103,7 +103,7 @@ public class GHelp_command extends Command {
             }
         }
         p.sendMessage("§6§lGHELP §7⎟ §eZprava byla odeslana vsem pripojenym clenum AT.");
-        GHelp.saveGhelp(p, zprava);
+        GHelp.saveGhelp(p, zprava.toString());
         cooldowns.put(p, 60);
     }
 }
