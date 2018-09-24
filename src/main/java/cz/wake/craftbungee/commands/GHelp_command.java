@@ -47,14 +47,12 @@ public class GHelp_command extends Command {
             p.sendMessage("§r");
 
             for (GHelp help : GHelp.helps) {
-                Calendar calendar = help.getCalendar();
-
                 TextComponent component1 = new TextComponent("§e" + help.getPlayer().getName() + "§7:");
                 component1.setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new ComponentBuilder("§7Odeslano ze serveru: §f" + help.getPlayer().getServer().getInfo().getName()).create()));
                 component1.setClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/server " + help.getPlayer().getServer().getInfo().getName()));
 
                 TextComponent component2 = new TextComponent(" §f" + help.getMessage());
-                component2.setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new ComponentBuilder("§7Odeslano: §f" + calendar.get(Calendar.DAY_OF_MONTH) + "." + (calendar.get(Calendar.MONTH) + 1) + "." + calendar.get(Calendar.YEAR) + " " + calendar.get(Calendar.HOUR_OF_DAY) + ":" + calendar.get(Calendar.MINUTE)).create()));
+                component2.setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new ComponentBuilder("§7Odeslano: §f" + BungeeUtils.getDate(help.getLong()) + "\n§7Po kliknuti budes presunut na server: §f" + help.getPlayer().getServer().getInfo().getName()).create()));
                 component2.setClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/server " + help.getPlayer().getServer().getInfo().getName()));
 
                 TextComponent component = new TextComponent();
@@ -64,7 +62,7 @@ public class GHelp_command extends Command {
                 p.sendMessage(component);
             }
             p.sendMessage("§r");
-            p.sendMessage("§7§l§m--------§r§7[ §e§lSeznam poslednich GHelp zprav §7]§m--------");
+            p.sendMessage("§7§l§m---------------§r§7[ §e§lKonec seznamu §7]§m----------------");
             p.sendMessage("§r");
             return;
         }
@@ -89,11 +87,11 @@ public class GHelp_command extends Command {
             return;
         }
 
-        ArrayList<String> message = new ArrayList<>();
+        StringBuilder zprava = new StringBuilder();
         for (String s : strings) {
-            message.add(s);
+            zprava.append(s + " §f");
         }
-        String zprava = message.toString().replace("[", "").replace("]", "").replace(",", "");
+
         for (ProxiedPlayer pl : plugin.getOnlinePlayers()) {
             if (pl.hasPermission("craftbungee.at-ghelp")) {
                 TextComponent component = new TextComponent("§6§lGHELP §7⎟ §e" + commandSender.getName() + "§7: §f" + zprava);
@@ -103,7 +101,7 @@ public class GHelp_command extends Command {
             }
         }
         p.sendMessage("§6§lGHELP §7⎟ §eZprava byla odeslana vsem pripojenym clenum AT.");
-        GHelp.saveGhelp(p, zprava);
+        GHelp.saveGhelp(p, zprava.toString());
         cooldowns.put(p, 60);
     }
 }

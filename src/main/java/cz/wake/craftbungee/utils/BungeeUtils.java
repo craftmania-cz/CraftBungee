@@ -8,7 +8,9 @@ import net.md_5.bungee.api.connection.ProxiedPlayer;
 import java.io.ByteArrayOutputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.regex.Pattern;
 
 public class BungeeUtils {
@@ -103,4 +105,11 @@ public class BungeeUtils {
         }
         return null;
     }
+
+    public static String getDate(long time) {
+        final Calendar cal = Calendar.getInstance();
+        cal.setTimeInMillis(time);
+        return new SimpleDateFormat("dd.MM.yyyy HH:mm:ss").format(cal.getTime());
+    }
+
 }
