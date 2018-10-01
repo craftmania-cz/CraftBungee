@@ -12,13 +12,13 @@ public class GHelp {
     private Integer id;
     private ProxiedPlayer p;
     private String message;
-    private Calendar calendar;
+    private long ms;
 
-    public GHelp(Integer id, ProxiedPlayer p, String message, Calendar calendar) {
+    public GHelp(Integer id, ProxiedPlayer p, String message, long ms) {
         this.id = id;
         this.p = p;
         this.message = message;
-        this.calendar = calendar;
+        this.ms = ms;
     }
 
     public String getMessage() {
@@ -45,12 +45,12 @@ public class GHelp {
         this.p = p;
     }
 
-    public void setCalendar(Calendar calendar) {
-        this.calendar = calendar;
+    public void setLong(long ms) {
+        this.ms = ms;
     }
 
-    public Calendar getCalendar() {
-        return calendar;
+    public long getLong() {
+        return ms;
     }
 
     public static GHelp getGHelpById(Integer id) {
@@ -73,10 +73,10 @@ public class GHelp {
 
             for (GHelp ghelp : ghelps) {
                 if (ghelp.getId() != 1) {
-                    helps.add(new GHelp(ghelp.getId() -1, p, ghelp.getMessage(), ghelp.getCalendar()));
+                    helps.add(new GHelp(ghelp.getId() -1, p, ghelp.getMessage(), ghelp.getLong()));
                 }
             }
         }
-        helps.add(new GHelp(GHelp.helps.size() +1, p, zprava, Calendar.getInstance()));
+        helps.add(new GHelp(GHelp.helps.size() +1, p, zprava, System.currentTimeMillis()));
     }
 }

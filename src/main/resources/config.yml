@@ -47,3 +47,41 @@ lobby:
   - lobby1
   - lobby2
   - ohub
+
+
+automessages:
+  sendevery: 10 # Jak často se to má poslat v minutách. Tedy pošle se 1. a za 120 minut se pošle 2., za dalších 120 minut 3. atd.
+  minimum-players: 10 # Minimální počet hráčů na serveru k zasílání oznámení
+  list:
+     megaslevy:
+       - " "
+       - "===============[ &c&lGlobalni ozmaneni &f]==============="
+       - " "
+       - "&cDNES JSOU MEGA SLEVY NA STORE, VSE ZLEVNENO O 10%"
+       - "&7&oTak to nepropasnete, akce konci za 10 sekund"
+       - " "
+       - "=================================================="
+       - " "
+     uznejsouslevy:
+       - " "
+       - "===============[ &c&lGlobalni ozmaneni &f]==============="
+       - " "
+       - "&cAle ne! Prosvihl jsi to, slevy na store prave skoncili"
+       - "&7&oNeboj, slevy budou zase brzy, mozna :herold:"
+       - " "
+       - "=================================================="
+       - " "
+
+  server-blacklist:
+      - wejktestserver
+      - krostanemaserver
+      - test
+
+broadcast-format:
+   - " "
+   - "===============[ &c&lGlobalni ozmaneni &f]==============="
+   - " "
+   - "{text}" # Nahradí textem z /gbc <text>
+   - " "
+   - "=================================================="
+   - " "

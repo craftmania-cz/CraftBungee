@@ -1,17 +1,12 @@
 package cz.wake.craftbungee;
 
 import com.google.common.io.Files;
-import cz.wake.craftbungee.commands.AT_command;
-import cz.wake.craftbungee.commands.GA_command;
-import cz.wake.craftbungee.commands.GHelp_command;
+import cz.wake.craftbungee.commands.*;
 import cz.wake.craftbungee.listeners.PingListener;
 import cz.wake.craftbungee.listeners.PlayerListener;
 import cz.wake.craftbungee.listeners.VPNListener;
 import cz.wake.craftbungee.listeners.VoteListener;
-import cz.wake.craftbungee.managers.CooldownUpdateTask;
-import cz.wake.craftbungee.managers.PlayerUpdateTask;
-import cz.wake.craftbungee.managers.SQLChecker;
-import cz.wake.craftbungee.managers.WhitelistTask;
+import cz.wake.craftbungee.managers.*;
 import cz.wake.craftbungee.prometheus.MetricsController;
 import cz.wake.craftbungee.sql.SQLManager;
 import net.md_5.bungee.api.ProxyServer;
@@ -57,6 +52,9 @@ public class Main extends Plugin {
         getProxy().getPluginManager().registerCommand(this, new GA_command(this));
         getProxy().getPluginManager().registerCommand(this, new AT_command(this));
         getProxy().getPluginManager().registerCommand(this, new GHelp_command(this));
+        getProxy().getPluginManager().registerCommand(this, new GBC_command(this));
+        getProxy().getPluginManager().registerCommand(this, new GBP_command(this));
+        getProxy().getPluginManager().registerCommand(this, new CB_command(this));
 
         // Napojeni na MySQL
         initDatabase();
@@ -72,6 +70,7 @@ public class Main extends Plugin {
         ProxyServer.getInstance().getScheduler().schedule(Main.getInstance(), new PlayerUpdateTask(), 1L, 1L, TimeUnit.MINUTES);
         ProxyServer.getInstance().getScheduler().schedule(Main.getInstance(), new WhitelistTask(), 10L, 60L, TimeUnit.SECONDS);
         ProxyServer.getInstance().getScheduler().schedule(Main.getInstance(), new CooldownUpdateTask(), 1L, 1L, TimeUnit.SECONDS);
+        ProxyServer.getInstance().getScheduler().schedule(Main.getInstance(), new BroadcastTask(), 1L, getConfig().getSection("automessages").getLong("sendevery"), TimeUnit.MINUTES);
 
         // Jetty server
         if (getConfig().getBoolean("prometheus.state")) {
