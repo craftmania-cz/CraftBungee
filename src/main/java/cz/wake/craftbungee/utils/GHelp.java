@@ -73,7 +73,7 @@ public class GHelp {
 
             for (GHelp ghelp : ghelps) {
                 if (ghelp.getId() != 1) {
-                    helps.add(new GHelp(ghelp.getId() -1, p, ghelp.getMessage(), ghelp.getLong()));
+                    helps.add(new GHelp(ghelp.getId() -1, ghelp.getPlayer(), ghelp.getMessage(), ghelp.getLong()));
                 }
             }
         }
