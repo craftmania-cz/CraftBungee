@@ -133,7 +133,7 @@ public class SQLManager {
             PreparedStatement ps = null;
             try {
                 conn = pool.getConnection();
-                ps = conn.prepareStatement("UPDATE craftmoney_data SET votetoken = votetoken + 1 WHERE nick = ?;");
+                ps = conn.prepareStatement("UPDATE player_profile SET votetokens = votetokens + 1 WHERE nick = ?;");
                 ps.setString(1, p);
                 ps.executeUpdate();
             } catch (Exception e) {
@@ -144,6 +144,20 @@ public class SQLManager {
         });
     }
 
-
-
+    public final void addCraftCoins(final String p, final int coins) {
+        Main.getInstance().getProxy().getScheduler().runAsync(Main.getInstance(), () -> {
+            Connection conn = null;
+            PreparedStatement ps = null;
+            try {
+                conn = pool.getConnection();
+                ps = conn.prepareStatement("UPDATE player_profile SET craftcoins = craftcoins + " + coins + " WHERE nick = ?;");
+                ps.setString(1, p);
+                ps.executeUpdate();
+            } catch (Exception e) {
+                e.printStackTrace();
+            } finally {
+                pool.close(conn, ps, null);
+            }
+        });
+    }
 }

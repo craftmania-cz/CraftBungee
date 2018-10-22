@@ -8,7 +8,6 @@ import net.md_5.bungee.api.ProxyServer;
 import net.md_5.bungee.api.connection.ProxiedPlayer;
 import net.md_5.bungee.api.plugin.Listener;
 import net.md_5.bungee.event.EventHandler;
-import net.nifheim.beelzebu.coins.CoinsAPI;
 
 import java.util.Random;
 import java.util.logging.Level;
@@ -19,8 +18,6 @@ public class VoteListener implements Listener {
     public void onVote(final VotifierEvent e) {
 
         ProxiedPlayer player;
-
-        System.out.println("Spusten votifier event!");
 
         try {
             player = ProxyServer.getInstance().getPlayer(e.getVote().getUsername());
@@ -45,26 +42,18 @@ public class VoteListener implements Listener {
                     BungeeUtils.sendMessageToBukkit("vote", player.getName(), String.valueOf(coins), player.getServer().getInfo());
                 }
             }
-
+            // Prida hraci Vote za hlas
             Main.getInstance().getSQLManager().addPlayerVote(player.getName());
-            Main.getInstance().getSQLManager().addVoteToken(player.getName());
-
-            if (CoinsAPI.isindb(player.getName())) {
-                CoinsAPI.addCoins(player.getName(), (double) coins, false);
-            }
         } else {
             if (!(System.currentTimeMillis() > Main.getInstance().getSQLManager().getLastVote(e.getVote().getUsername()))) {
                 Main.getInstance().getLogger().log(Level.INFO, ChatColor.AQUA + "Hrac " + e.getVote().getUsername() + " hlasoval driv nez za 2h.");
                 return;
             }
 
-            if (CoinsAPI.isindb(e.getVote().getUsername())) {
-                CoinsAPI.addCoins(e.getVote().getUsername(), (double) 10, false);
-            }
-
+            // Kdyz je offline force to DB (obejit CraftEconomy)
             Main.getInstance().getSQLManager().addPlayerVote(e.getVote().getUsername());
             Main.getInstance().getSQLManager().addVoteToken(e.getVote().getUsername());
-            //todo: zapis zmen
+            Main.getInstance().getSQLManager().addCraftCoins(e.getVote().getUsername(), 20);
         }
 
 
