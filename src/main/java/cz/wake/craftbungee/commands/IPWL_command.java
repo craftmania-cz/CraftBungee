@@ -82,5 +82,20 @@ public class IPWL_command extends Command {
             }
             p.sendMessage("§c§l(!) §cIP Adresa nebyla nalezena!");
         }
+        if(strings[0].equals("check")){
+            if(strings.length < 2){
+                p.sendMessage("§c§l(!) §cNespravne napsane argumenty! Pr. /ipwl check 1.1.1.1");
+                return;
+            }
+
+            for(WhitelistedIP ip : Main.getInstance().getSQLManager().getWhitelistedIPs()){
+                if(strings[1].equals(ip.getAddress())){
+                    p.sendMessage("§eIP: §f" + ip.getAddress() + " §8| §eDuvod: §f" + ip.getDescription());
+                    return;
+                }
+            }
+            p.sendMessage("§c§l(!) §cIP Adresa neni na whitelistu!");
+            return;
+        }
     }
 }
