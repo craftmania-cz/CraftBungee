@@ -3,14 +3,17 @@ package cz.wake.craftbungee.sql;
 import com.zaxxer.hikari.HikariDataSource;
 import cz.wake.craftbungee.Main;
 import cz.wake.craftbungee.utils.BungeeUtils;
+import cz.wake.craftbungee.utils.WhitelistedIP;
 import net.md_5.bungee.api.connection.ProxiedPlayer;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.UUID;
+import java.util.regex.Pattern;
 
 public class SQLManager {
 
@@ -72,8 +75,8 @@ public class SQLManager {
         });
     }
 
-    public final List<String> getWhitelistedIPs() {
-        List<String> list = new ArrayList<>();
+    public final List<WhitelistedIP> getWhitelistedIPs() {
+        List<WhitelistedIP> whitelistedIPS = new ArrayList<>();
         Connection conn = null;
         PreparedStatement ps = null;
         try {
@@ -81,14 +84,14 @@ public class SQLManager {
             ps = conn.prepareStatement("SELECT * FROM ip_whitelist;");
             ps.executeQuery();
             while (ps.getResultSet().next()) {
-                list.add(ps.getResultSet().getString("address"));
+                whitelistedIPS.add(new WhitelistedIP(ps.getResultSet().getString("address"), ps.getResultSet().getString("description")));
             }
         } catch (Exception e) {
             e.printStackTrace();
         } finally {
             pool.close(conn, ps, null);
         }
-        return list;
+        return whitelistedIPS;
     }
 
     public final long getLastVote(final String p) {
