@@ -69,8 +69,8 @@ public class VPNListener implements Listener {
             }
 
             // Hráč není na IP whitelistu a nema CZ / SK IP
-            Main.getInstance().getLogger().log(Level.INFO, ChatColor.RED + "Zahranicni IP / VPN (IP: " + address + "). Hrac zablokovan!");
-            e.setCancelReason("§c§lTvá IP Nepochází z České nebo Slovenské republiky!\n§fTvoje IP pochází z jiného státu, než je česká nebo slovenská republika.\n§fV takovem pripade se za normalnich podminek nelze pripojit.");
+            Main.getInstance().getLogger().log(Level.INFO, ChatColor.RED + "Zahranicni IP / VPN (IP: " + address + ", NICK: " + e.getConnection().getName() + "). Hrac zablokovan!");
+            e.setCancelReason("§c§lTva IP dle overeni nepochazi z CZ/SK.\n§fPokud si myslis, ze to tak neni, napis\n§fna webu nebo na Discordu uzivateli §e§lMrWakeCZ §rnebo §e§lKrosta8");
             e.setCancelled(true);
         }
     }

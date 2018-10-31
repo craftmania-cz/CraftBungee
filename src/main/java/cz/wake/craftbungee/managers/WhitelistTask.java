@@ -12,6 +12,7 @@ import java.util.regex.Pattern;
 
 public class WhitelistTask implements Runnable {
 
+    private boolean started = false;
     @Override
     public void run() {
         List<WhitelistedIP> ips = Main.getInstance().getSQLManager().getWhitelistedIPs();
@@ -19,13 +20,8 @@ public class WhitelistTask implements Runnable {
         // Smazani pred updatem
         VPNListener.getAllowedIps().clear();
 
-        //Build patterns
-        for (WhitelistedIP ip : ips) {
-            Main.getInstance().getLogger().log(Level.INFO, ChatColor.YELLOW + "IP " + ip.getAddress() + " byla pridana na ip whitelist. Duvod pridani: " + ip.getDescription());
-        }
-
         VPNListener.setAllowedIps(ips);
-        Main.getInstance().getLogger().log(Level.INFO, ChatColor.GREEN + "Update Whitelistu dokoncen.");
-
+        Main.getInstance().getLogger().log(Level.INFO, ChatColor.YELLOW + "Byly pridany IP adresy na whitelist. (" + ips.size() + ")");
+        Main.getInstance().getLogger().log(Level.INFO, ChatColor.GREEN + "Update IP Whitelistu dokoncen.");
     }
 }

@@ -75,6 +75,41 @@ public class SQLManager {
         });
     }
 
+    public final void addWhitelistedIP(final String address, final String description) {
+        Main.getInstance().getProxy().getScheduler().runAsync(Main.getInstance(), () -> {
+            Connection conn = null;
+            PreparedStatement ps = null;
+            try {
+                conn = pool.getConnection();
+                ps = conn.prepareStatement("INSERT INTO ip_whitelist (address, description) VALUES (?, ?);");
+                ps.setString(1, address);
+                ps.setString(2, description);
+                ps.executeUpdate();
+            } catch (Exception e) {
+                e.printStackTrace();
+            } finally {
+                pool.close(conn, ps, null);
+            }
+        });
+    }
+
+    public final void removeWhitelistedIP(final String address) {
+        Main.getInstance().getProxy().getScheduler().runAsync(Main.getInstance(), () -> {
+            Connection conn = null;
+            PreparedStatement ps = null;
+            try {
+                conn = pool.getConnection();
+                ps = conn.prepareStatement("DELETE FROM ip_whitelist WHERE address = ?;");
+                ps.setString(1, address);
+                ps.executeUpdate();
+            } catch (Exception e) {
+                e.printStackTrace();
+            } finally {
+                pool.close(conn, ps, null);
+            }
+        });
+    }
+
     public final List<WhitelistedIP> getWhitelistedIPs() {
         List<WhitelistedIP> whitelistedIPS = new ArrayList<>();
         Connection conn = null;
