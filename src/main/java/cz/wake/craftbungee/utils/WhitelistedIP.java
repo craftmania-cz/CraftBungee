@@ -1,19 +1,21 @@
 package cz.wake.craftbungee.utils;
 
+import java.util.regex.Pattern;
+
 public class WhitelistedIP {
 
     // IP (String)
-    private String address;
+    private Pattern address;
 
     // Description
     private String description;
 
-    public WhitelistedIP(String address, String description){
+    public WhitelistedIP(Pattern address, String description){
         this.address = address;
         this.description = description;
     }
 
-    public String getAddress(){
+    public Pattern getAddress(){
         return address;
     }
 

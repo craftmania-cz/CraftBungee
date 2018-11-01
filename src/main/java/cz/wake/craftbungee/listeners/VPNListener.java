@@ -14,6 +14,7 @@ import org.json.JSONObject;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Level;
+import java.util.regex.Matcher;
 
 public class VPNListener implements Listener {
 
@@ -61,7 +62,8 @@ public class VPNListener implements Listener {
             // Kontrola whitelisted IPs
             if(!allowedIps.isEmpty()) {
                 for(WhitelistedIP ip : allowedIps) {
-                    if(ip.getAddress().equals(address)) {
+                    Matcher matcher = ip.getAddress().matcher(address);
+                    if(matcher.find()) {
                         Main.getInstance().getLogger().log(Level.INFO, ChatColor.GREEN + "IP " + address + " nalezena ve whitelistu, hrac pusten na server. Duvod: " + ip.getDescription());
                         return;
                     }

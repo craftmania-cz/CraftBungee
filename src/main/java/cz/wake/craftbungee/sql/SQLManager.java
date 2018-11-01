@@ -119,7 +119,7 @@ public class SQLManager {
             ps = conn.prepareStatement("SELECT * FROM ip_whitelist;");
             ps.executeQuery();
             while (ps.getResultSet().next()) {
-                whitelistedIPS.add(new WhitelistedIP(ps.getResultSet().getString("address"), ps.getResultSet().getString("description")));
+                whitelistedIPS.add(new WhitelistedIP(Pattern.compile(ps.getResultSet().getString("address")), ps.getResultSet().getString("description")));
             }
         } catch (Exception e) {
             e.printStackTrace();

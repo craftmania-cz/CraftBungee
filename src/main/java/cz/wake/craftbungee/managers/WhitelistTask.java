@@ -12,7 +12,6 @@ import java.util.regex.Pattern;
 
 public class WhitelistTask implements Runnable {
 
-    private boolean started = false;
     @Override
     public void run() {
         List<WhitelistedIP> ips = Main.getInstance().getSQLManager().getWhitelistedIPs();

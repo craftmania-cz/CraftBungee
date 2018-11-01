@@ -10,6 +10,7 @@ import net.md_5.bungee.api.plugin.Command;
 
 import java.util.List;
 import java.util.logging.Level;
+import java.util.regex.Pattern;
 
 public class IPWL_command extends Command {
 
@@ -51,7 +52,7 @@ public class IPWL_command extends Command {
             }
             Main.getInstance().getSQLManager().addWhitelistedIP(strings[1], description);
             List<WhitelistedIP> ips = VPNListener.getAllowedIps();
-            ips.add(new WhitelistedIP(strings[1], description));
+            ips.add(new WhitelistedIP(Pattern.compile(strings[1]), description));
             VPNListener.setAllowedIps(ips);
             p.sendMessage("§aAdresa " + strings[1] + " byla uspesne pridana!");
             Main.getInstance().getLogger().log(Level.INFO, ChatColor.YELLOW + "IP adresa " + strings[1] + " byla pridana na ip whitelist");
