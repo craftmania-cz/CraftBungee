@@ -1,6 +1,7 @@
 package cz.wake.craftbungee.listeners;
 
 import cz.wake.craftbungee.Main;
+import cz.wake.craftbungee.utils.WhitelistedIP;
 import net.md_5.bungee.api.ChatColor;
 import net.md_5.bungee.api.event.PreLoginEvent;
 import net.md_5.bungee.api.plugin.Listener;
@@ -14,11 +15,10 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 public class VPNListener implements Listener {
 
-    private static List<Pattern> allowedIps = new ArrayList<>();
+    private static List<WhitelistedIP> allowedIps = new ArrayList<>();
 
     @EventHandler
     public void onLogin(PreLoginEvent e) {
@@ -51,39 +51,37 @@ public class VPNListener implements Listener {
 
     private void finalCheck(PreLoginEvent e, String address, String state, boolean validCheck) {
 
-        // Ignorovani ceskych a slovensky VPN
-        // Kvuli tomu, ze maly poskytovatele (zvlaste na slovensku) maji mene IP, takze je to detekuje jako VPN.
-        if (Main.allowOnlyCZSK()) {
-            if (state.equalsIgnoreCase("CZ") || state.equalsIgnoreCase("SK")) {
-                Main.getInstance().getLogger().log(Level.INFO, ChatColor.GREEN + "IP je z CZ/SK kraje, hrac pusten na server.");
+        // Hrac ma CZ / SK IP
+        if(Main.allowOnlyCZSK()) {
+            if(state.equalsIgnoreCase("CZ") || state.equalsIgnoreCase("SK")) {
+                Main.getInstance().getLogger().log(Level.INFO, ChatColor.GREEN + "IP " + address + " je z CZ/SK kraje, hrac pusten na server.");
                 return;
             }
-        }
 
-        // Kontrola whitelisted IPs
-        if (!allowedIps.isEmpty()) {
-            for (Pattern pattern : allowedIps) {
-                Matcher matcher = pattern.matcher(address);
-                if (matcher.find()) {
-                    Main.getInstance().getLogger().log(Level.INFO, ChatColor.GREEN + "IP nalezena ve whitelistu!");
-                    return;
+            // Hráč nema CZ / SK IP
+            // Kontrola whitelisted IPs
+            if(!allowedIps.isEmpty()) {
+                for(WhitelistedIP ip : allowedIps) {
+                    Matcher matcher = ip.getAddress().matcher(address);
+                    if(matcher.find()) {
+                        Main.getInstance().getLogger().log(Level.INFO, ChatColor.GREEN + "IP " + address + " nalezena ve whitelistu, hrac pusten na server. Duvod: " + ip.getDescription());
+                        return;
+                    }
                 }
             }
-        }
 
-        // Pokud true, tak ma VPN
-        if (validCheck) {
-            Main.getInstance().getLogger().log(Level.INFO, ChatColor.RED + "Zahranicni VPN/Proxy (IP: " + address + "). Hrac zablokovan!");
-            e.setCancelReason("§c§lDetekce VPN!\n§fTvoje IP byla detekovana jako VPN.\n§fV takovem pripade se za normalnich podminek nelze pripojit.");
+            // Hráč není na IP whitelistu a nema CZ / SK IP
+            Main.getInstance().getLogger().log(Level.INFO, ChatColor.RED + "Zahranicni IP / VPN (IP: " + address + ", NICK: " + e.getConnection().getName() + "). Hrac zablokovan!");
+            e.setCancelReason("§c§lTva IP dle overeni nepochazi z CZ/SK.\n§fPokud si myslis, ze to tak neni, napis\n§fna webu nebo na Discordu uzivateli §e§lMrWakeCZ §rnebo §e§lKrosta8");
             e.setCancelled(true);
         }
     }
 
-    public static void setAllowedIps(List<Pattern> allowedIps) {
+    public static void setAllowedIps(List<WhitelistedIP> allowedIps) {
         VPNListener.allowedIps = allowedIps;
     }
 
-    public static List<Pattern> getAllowedIps() {
+    public static List<WhitelistedIP> getAllowedIps() {
         return allowedIps;
     }
 }
