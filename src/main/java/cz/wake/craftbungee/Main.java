@@ -2,10 +2,8 @@ package cz.wake.craftbungee;
 
 import com.google.common.io.Files;
 import cz.wake.craftbungee.commands.*;
-import cz.wake.craftbungee.listeners.PingListener;
-import cz.wake.craftbungee.listeners.PlayerListener;
-import cz.wake.craftbungee.listeners.VPNListener;
-import cz.wake.craftbungee.listeners.VoteListener;
+import cz.wake.craftbungee.commands.internal.Eventserver_tp_command;
+import cz.wake.craftbungee.listeners.*;
 import cz.wake.craftbungee.managers.*;
 import cz.wake.craftbungee.prometheus.MetricsController;
 import cz.wake.craftbungee.sql.SQLManager;
@@ -38,6 +36,9 @@ public class Main extends Plugin {
     private static List<String> voteServers = new ArrayList<>();
     private Server server;
 
+    // Channels
+    public final static String CRAFTEVENTS_CHANNEL = "craftevents:plugin"; // Channel pro zasilani notifikaci pro zacatek eventu
+
     @Override
     public void onEnable() {
 
@@ -51,6 +52,7 @@ public class Main extends Plugin {
         voteServers = getConfig().getStringList("vote-servers");
 
         this.getProxy().registerChannel("craftbungee"); // Channel pro channeling hlasu
+        this.getProxy().registerChannel(CRAFTEVENTS_CHANNEL);
 
         getProxy().getPluginManager().registerCommand(this, new GA_command(this));
         getProxy().getPluginManager().registerCommand(this, new AT_command(this));
@@ -59,6 +61,7 @@ public class Main extends Plugin {
         getProxy().getPluginManager().registerCommand(this, new GBP_command(this));
         getProxy().getPluginManager().registerCommand(this, new CB_command(this));
         getProxy().getPluginManager().registerCommand(this, new IPWL_command(this));
+        getProxy().getPluginManager().registerCommand(this, new Eventserver_tp_command(this));
 
         // Napojeni na MySQL
         initDatabase();
@@ -71,6 +74,7 @@ public class Main extends Plugin {
         ProxyServer.getInstance().getPluginManager().registerListener(this, new VPNListener());
         ProxyServer.getInstance().getPluginManager().registerListener(this, new PingListener());
         ProxyServer.getInstance().getPluginManager().registerListener(this, new VoteListener());
+        ProxyServer.getInstance().getPluginManager().registerListener(this, new EventNotifyListener(this));
 
         // Tasks
         ProxyServer.getInstance().getScheduler().schedule(Main.getInstance(), new SQLChecker(), 1L, 1L, TimeUnit.MINUTES);
