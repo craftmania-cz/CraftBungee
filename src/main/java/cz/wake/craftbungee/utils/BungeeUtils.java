@@ -141,13 +141,15 @@ public class BungeeUtils {
     public static String getServer(ProxiedPlayer p) {
         String server = p.getServer().getInfo().getName();
         if (Main.getConfig().getStringList("survival-servery").contains(server)) {
-            return "Survival serverech";
+            return "survival serveru";
         } else if (Main.getConfig().getStringList("minigames-servery").contains(server)) {
-            return "Minigames serverech";
+            return "minigames serveru";
         } else if (Main.getConfig().getStringList("lobby").contains(server)) {
-            return "Lobby";
+            return "lobby";
+        } else if (Main.getConfig().getStringList("event-servery").contains(server)) {
+            return "eventu";
         }
-        return null;
+        return "tajnem serveru";
     }
 
     public static String getDate(long time) {
