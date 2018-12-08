@@ -81,7 +81,7 @@ public class AT_command extends net.md_5.bungee.api.plugin.Command {
         jsonMessage(sender, admin, "§c§lAdmin");
         jsonMessage(sender, eventer, "§d§lEventer");
         jsonMessage(sender, helper, "§2§lHelper");
-        jsonMessage(sender, builder, "§5§lBuilder");
+        jsonMessage(sender, builder, "§1§lBuilder");
 
         sender.sendMessage("§r");
         if (players.size() == 0) {

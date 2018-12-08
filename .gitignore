@@ -5,4 +5,5 @@ CraftBungee.iml
 dependency-reduced-pom.xml
 src/test/
 .gradle
+.idea
 /build
