@@ -1,6 +1,7 @@
 package cz.wake.craftbungee.listeners;
 
 import cz.wake.craftbungee.Main;
+import cz.wake.craftbungee.utils.Logger;
 import cz.wake.craftbungee.utils.WhitelistedIP;
 import cz.wake.craftbungee.utils.WhitelistedUUID;
 import net.md_5.bungee.api.ChatColor;
@@ -26,8 +27,10 @@ public class VPNListener implements Listener {
     public void onLogin(PreLoginEvent e) {
         final String address = e.getConnection().getAddress().getAddress().getHostAddress();
         final String uuid = e.getConnection().getUniqueId().toString();
+        final String name = e.getConnection().getName();
 
         Main.getInstance().getLogger().log(Level.INFO, ChatColor.YELLOW + "Kontrola hrace s IP: " + address);
+        Logger.info("Whitelist Checker - [name=" + name + ", uuid=" + uuid + ", address=" + address + "]");
 
         try {
 
@@ -55,11 +58,12 @@ public class VPNListener implements Listener {
 
     private void finalCheck(PreLoginEvent e, String address, String uuid, String state, boolean isVPN) {
 
+        // Kdyz je povoleno jenom CZ/SK tak se vše kontroluje, jinak jsou kontroly off!
         if(Main.allowOnlyCZSK()) {
 
             // Hrac ma CZ / SK IP
             if(state.equalsIgnoreCase("CZ") || state.equalsIgnoreCase("SK")) {
-                Main.getInstance().getLogger().log(Level.INFO, ChatColor.GREEN + "IP " + address + " je z CZ/SK, hrac pusten na server.");
+                Logger.success("IP " + address + " je z CZ/SK, hrac pusten na server.");
                 return;
             }
 
@@ -69,7 +73,7 @@ public class VPNListener implements Listener {
                 for(WhitelistedIP ip : allowedIps) {
                     Matcher matcher = ip.getAddress().matcher(address);
                     if(matcher.find()) {
-                        Main.getInstance().getLogger().log(Level.INFO, ChatColor.GREEN + "IP " + address + " nalezena ve whitelistu, hrac pusten na server. Duvod: " + ip.getDescription());
+                        Logger.success("IP " + address + " nalezena ve whitelistu, hrac pusten na server. Duvod: " + ip.getDescription());
                         return;
                     }
                 }
@@ -80,7 +84,7 @@ public class VPNListener implements Listener {
                 for(WhitelistedUUID id : allowedUUIDs) {
                     Matcher matcher = id.getUUID().matcher(uuid);
                     if(matcher.find()) {
-                        Main.getInstance().getLogger().log(Level.INFO, ChatColor.GREEN + "UUID " + uuid + " nalazeno na whitelistu, hrac pusten na server!");
+                        Logger.success("UUID " + uuid + " nalezeno ve whitelistu, hrac pusten na server. Duvod: " + id.getDescription());
                         return;
                     }
                 }
