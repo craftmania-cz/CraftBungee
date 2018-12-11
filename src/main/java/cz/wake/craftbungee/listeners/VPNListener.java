@@ -2,6 +2,7 @@ package cz.wake.craftbungee.listeners;
 
 import cz.wake.craftbungee.Main;
 import cz.wake.craftbungee.utils.WhitelistedIP;
+import cz.wake.craftbungee.utils.WhitelistedUUID;
 import net.md_5.bungee.api.ChatColor;
 import net.md_5.bungee.api.event.PreLoginEvent;
 import net.md_5.bungee.api.plugin.Listener;
@@ -19,17 +20,20 @@ import java.util.regex.Matcher;
 public class VPNListener implements Listener {
 
     private static List<WhitelistedIP> allowedIps = new ArrayList<>();
+    private static List<WhitelistedUUID> allowedUUIDs = new ArrayList<>();
 
     @EventHandler
     public void onLogin(PreLoginEvent e) {
         final String address = e.getConnection().getAddress().getAddress().getHostAddress();
+        final String uuid = e.getConnection().getUniqueId().toString();
 
         Main.getInstance().getLogger().log(Level.INFO, ChatColor.YELLOW + "Kontrola hrace s IP: " + address);
 
-        OkHttpClient caller = new OkHttpClient();
-        Request request = new Request.Builder().url("https://api.vpnblocker.net/v2/json/" + address + "/" + Main.getAPIKey()).build();
-
         try {
+
+            OkHttpClient caller = new OkHttpClient();
+            Request request = new Request.Builder().url("https://api.vpnblocker.net/v2/json/" + address + "/" + Main.getAPIKey()).build();
+
             Response response = caller.newCall(request).execute();
             JSONObject json = new JSONObject(response.body().string());
 
@@ -42,19 +46,20 @@ public class VPNListener implements Listener {
             countryCode = (String) countyObject.get("code"); // cz, sk atd.
 
             // Finalni kontrola IP
-            finalCheck(e, address, countryCode, vpn);
+            finalCheck(e, address, uuid, countryCode, vpn);
 
         } catch (Exception ex) {
-            ex.printStackTrace();
+            //ex.printStackTrace();
         }
     }
 
-    private void finalCheck(PreLoginEvent e, String address, String state, boolean validCheck) {
+    private void finalCheck(PreLoginEvent e, String address, String uuid, String state, boolean isVPN) {
 
-        // Hrac ma CZ / SK IP
         if(Main.allowOnlyCZSK()) {
+
+            // Hrac ma CZ / SK IP
             if(state.equalsIgnoreCase("CZ") || state.equalsIgnoreCase("SK")) {
-                Main.getInstance().getLogger().log(Level.INFO, ChatColor.GREEN + "IP " + address + " je z CZ/SK kraje, hrac pusten na server.");
+                Main.getInstance().getLogger().log(Level.INFO, ChatColor.GREEN + "IP " + address + " je z CZ/SK, hrac pusten na server.");
                 return;
             }
 
@@ -65,6 +70,17 @@ public class VPNListener implements Listener {
                     Matcher matcher = ip.getAddress().matcher(address);
                     if(matcher.find()) {
                         Main.getInstance().getLogger().log(Level.INFO, ChatColor.GREEN + "IP " + address + " nalezena ve whitelistu, hrac pusten na server. Duvod: " + ip.getDescription());
+                        return;
+                    }
+                }
+            }
+
+            // Kontrola UUID na whitelistu
+            if(!allowedUUIDs.isEmpty()) {
+                for(WhitelistedUUID id : allowedUUIDs) {
+                    Matcher matcher = id.getUUID().matcher(uuid);
+                    if(matcher.find()) {
+                        Main.getInstance().getLogger().log(Level.INFO, ChatColor.GREEN + "UUID " + uuid + " nalazeno na whitelistu, hrac pusten na server!");
                         return;
                     }
                 }
@@ -83,5 +99,13 @@ public class VPNListener implements Listener {
 
     public static List<WhitelistedIP> getAllowedIps() {
         return allowedIps;
+    }
+
+    public static void setAllowedUUIDs(List<WhitelistedUUID> allowedUUIDs) {
+        VPNListener.allowedUUIDs = allowedUUIDs;
+    }
+
+    public static List<WhitelistedUUID> getAllowedUUIDs() {
+        return allowedUUIDs;
     }
 }

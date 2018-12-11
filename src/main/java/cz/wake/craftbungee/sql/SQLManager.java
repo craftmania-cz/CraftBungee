@@ -4,6 +4,7 @@ import com.zaxxer.hikari.HikariDataSource;
 import cz.wake.craftbungee.Main;
 import cz.wake.craftbungee.utils.BungeeUtils;
 import cz.wake.craftbungee.utils.WhitelistedIP;
+import cz.wake.craftbungee.utils.WhitelistedUUID;
 import net.md_5.bungee.api.connection.ProxiedPlayer;
 
 import java.sql.Connection;
@@ -127,6 +128,25 @@ public class SQLManager {
             pool.close(conn, ps, null);
         }
         return whitelistedIPS;
+    }
+
+    public final List<WhitelistedUUID> getWhitelistedUUIDs() {
+        List<WhitelistedUUID> whitelistedUUIDS = new ArrayList<>();
+        Connection conn = null;
+        PreparedStatement ps = null;
+        try {
+            conn = pool.getConnection();
+            ps = conn.prepareStatement("SELECT * FROM uuid_whitelist;");
+            ps.executeQuery();
+            while (ps.getResultSet().next()) {
+                whitelistedUUIDS.add(new WhitelistedUUID(Pattern.compile(ps.getResultSet().getString("uuid")), ps.getResultSet().getString("description")));
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            pool.close(conn, ps, null);
+        }
+        return whitelistedUUIDS;
     }
 
     public final long getLastVote(final String p) {
