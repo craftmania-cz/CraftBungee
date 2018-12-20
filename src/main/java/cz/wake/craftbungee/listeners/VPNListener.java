@@ -26,7 +26,7 @@ public class VPNListener implements Listener {
     @EventHandler
     public void onLogin(PreLoginEvent e) {
         final String address = e.getConnection().getAddress().getAddress().getHostAddress();
-        final String uuid = e.getConnection().getUniqueId().toString();
+        final String uuid = /*e.getConnection().getUniqueId().toString()*/ "NEEXISTUJE";
         final String name = e.getConnection().getName();
 
         Main.getInstance().getLogger().log(Level.INFO, ChatColor.YELLOW + "Kontrola hrace s IP: " + address);
@@ -63,6 +63,13 @@ public class VPNListener implements Listener {
 
             // Hrac ma CZ / SK IP
             if(state.equalsIgnoreCase("CZ") || state.equalsIgnoreCase("SK")) {
+                if(isVPN){
+                    Logger.danger("IP " + address + " je z CZ/SK, ale je to VPN, hrac nebyl pusten na server");
+                    e.setCancelReason("§c§lTato IP je vedena jako VPN.\n§fPokud si myslis, ze to tak neni, napis\n§fna webu nebo na Discordu uzivateli §e§lMrWakeCZ §rnebo §e§lKrosta8");
+                    e.setCancelled(true);
+                    return;
+                }
+
                 Logger.success("IP " + address + " je z CZ/SK, hrac pusten na server.");
                 return;
             }
@@ -80,7 +87,7 @@ public class VPNListener implements Listener {
             }
 
             // Kontrola UUID na whitelistu
-            if(!allowedUUIDs.isEmpty()) {
+            /*if(!allowedUUIDs.isEmpty()) {
                 for(WhitelistedUUID id : allowedUUIDs) {
                     Matcher matcher = id.getUUID().matcher(uuid);
                     if(matcher.find()) {
@@ -88,7 +95,7 @@ public class VPNListener implements Listener {
                         return;
                     }
                 }
-            }
+            }*/
 
             // Hráč není na IP whitelistu a nema CZ / SK IP
             Main.getInstance().getLogger().log(Level.INFO, ChatColor.RED + "Zahranicni IP / VPN (IP: " + address + ", NICK: " + e.getConnection().getName() + "). Hrac zablokovan!");
