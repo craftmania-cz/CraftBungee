@@ -30,12 +30,12 @@ public class VPNListener implements Listener {
         final String name = e.getConnection().getName();
 
         Main.getInstance().getLogger().log(Level.INFO, ChatColor.YELLOW + "Kontrola hrace s IP: " + address);
-        Logger.info("Whitelist Checker - [name=" + name + ", uuid=" + uuid + ", address=" + address + "]");
+        Logger.info("Whitelist Checker - [name=" + name + ", uuid=null, address=" + address + "]");
+
+        OkHttpClient caller = new OkHttpClient();
+        Request request = new Request.Builder().url("https://api.vpnblocker.net/v2/json/" + address + "/" + Main.getAPIKey()).build();
 
         try {
-
-            OkHttpClient caller = new OkHttpClient();
-            Request request = new Request.Builder().url("https://api.vpnblocker.net/v2/json/" + address + "/" + Main.getAPIKey()).build();
 
             Response response = caller.newCall(request).execute();
             JSONObject json = new JSONObject(response.body().string());
