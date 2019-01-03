@@ -154,7 +154,7 @@ public class SQLManager {
         PreparedStatement ps = null;
         try {
             conn = pool.getConnection();
-            ps = conn.prepareStatement("SELECT last_vote FROM votes WHERE last_name = ?;");
+            ps = conn.prepareStatement("SELECT last_vote FROM player_profile WHERE nick = ?;");
             ps.setString(1, p);
             ps.executeQuery();
             if (ps.getResultSet().next()) {
@@ -175,7 +175,7 @@ public class SQLManager {
                 PreparedStatement ps = null;
                 try {
                     conn = pool.getConnection();
-                    ps = conn.prepareStatement("UPDATE votes SET votes= votes + 1, week = week + 1, month = month + 1, last_vote = '" + String.valueOf(System.currentTimeMillis() + 3600000L) + "' WHERE last_name = '" + p + "';");
+                    ps = conn.prepareStatement("UPDATE player_profile SET total_votes = total_votes + 1, week_votes = week_votes + 1, month_votes = month_votes + 1, last_vote = '" + String.valueOf(System.currentTimeMillis() + 3600000L) + "' WHERE last_name = '" + p + "';");
                     ps.executeUpdate();
                 } catch (Exception e) {
                     e.printStackTrace();
