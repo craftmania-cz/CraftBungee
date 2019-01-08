@@ -109,9 +109,12 @@ public class AT_command extends net.md_5.bungee.api.plugin.Command {
                 } else if (players.size() == x) {
                     component = new TextComponent("§7" + players.get(x - 1).getName());
                 }
-                component.setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new ComponentBuilder("§7Pripojen na §f" + BungeeUtils.getServer(players.get(x - 1))).create()));
                 if (BungeeUtils.getGroupBool(receiver)) {
+                    component.setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new ComponentBuilder("§7Pripojen na §f" + players.get(x - 1).getServer().getInfo().getName()).create()));
                     component.setClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/server " + players.get(x - 1).getServer().getInfo().getName()));
+                }
+                else {
+                    component.setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new ComponentBuilder("§7Pripojen na §f" + BungeeUtils.getServer(players.get(x - 1))).create()));
                 }
                 components.add(component);
             }
