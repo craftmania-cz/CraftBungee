@@ -64,6 +64,9 @@ public class VPNListener implements Listener {
             // Hrac ma CZ / SK IP
             if(state.equalsIgnoreCase("CZ") || state.equalsIgnoreCase("SK")) {
                 if(isVPN){
+                    if (isOnWhitelist(address)) {
+                        return;
+                    }
                     Logger.danger("IP " + address + " je z CZ/SK, ale je to VPN, hrac nebyl pusten na server");
                     e.setCancelReason("§c§lTato IP je vedena jako VPN.\n§fPokud si myslis, ze to tak neni, napis\n§fna webu nebo na Discordu uzivateli §e§lMrWakeCZ §rnebo §e§lKrosta8");
                     e.setCancelled(true);
@@ -76,14 +79,8 @@ public class VPNListener implements Listener {
 
             // Hráč nema CZ / SK IP
             // Kontrola whitelisted IPs
-            if(!allowedIps.isEmpty()) {
-                for(WhitelistedIP ip : allowedIps) {
-                    Matcher matcher = ip.getAddress().matcher(address);
-                    if(matcher.find()) {
-                        Logger.success("IP " + address + " nalezena ve whitelistu, hrac pusten na server. Duvod: " + ip.getDescription());
-                        return;
-                    }
-                }
+            if (isOnWhitelist(address)) {
+                return;
             }
 
             // Kontrola UUID na whitelistu
@@ -102,6 +99,19 @@ public class VPNListener implements Listener {
             e.setCancelReason("§c§lTva IP dle overeni nepochazi z CZ/SK.\n§fPokud si myslis, ze to tak neni, napis\n§fna webu nebo na Discordu uzivateli §e§lMrWakeCZ §rnebo §e§lKrosta8");
             e.setCancelled(true);
         }
+    }
+
+    private boolean isOnWhitelist(String address) {
+        if(!allowedIps.isEmpty()) {
+            for(WhitelistedIP ip : allowedIps) {
+                Matcher matcher = ip.getAddress().matcher(address);
+                if(matcher.find()) {
+                    Logger.success("IP " + address + " nalezena ve whitelistu, hrac pusten na server. Duvod: " + ip.getDescription());
+                    return true;
+                }
+            }
+        }
+        return false;
     }
 
     public static void setAllowedIps(List<WhitelistedIP> allowedIps) {
