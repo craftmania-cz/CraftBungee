@@ -45,6 +45,12 @@ public class VPNListener implements Listener {
 
             vpn = (boolean) json.get("host-ip");
 
+            try {
+               String hostname = (String) json.get("hostname");
+            } catch (Exception ex){
+                vpn = true;
+            }
+
             JSONObject countyObject = json.getJSONObject("country");
             countryCode = (String) countyObject.get("code"); // cz, sk atd.
 
