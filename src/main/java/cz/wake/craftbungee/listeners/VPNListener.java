@@ -3,7 +3,7 @@ package cz.wake.craftbungee.listeners;
 import cz.wake.craftbungee.Main;
 import cz.wake.craftbungee.utils.Logger;
 import cz.wake.craftbungee.utils.WhitelistedIP;
-import cz.wake.craftbungee.utils.WhitelistedUUID;
+import cz.wake.craftbungee.utils.WhitelistedNames;
 import net.md_5.bungee.api.ChatColor;
 import net.md_5.bungee.api.event.PreLoginEvent;
 import net.md_5.bungee.api.plugin.Listener;
@@ -21,48 +21,52 @@ import java.util.regex.Matcher;
 public class VPNListener implements Listener {
 
     private static List<WhitelistedIP> allowedIps = new ArrayList<>();
-    private static List<WhitelistedUUID> allowedUUIDs = new ArrayList<>();
+    private static List<WhitelistedNames> allowedNames = new ArrayList<>();
 
     @EventHandler
     public void onLogin(PreLoginEvent e) {
         final String address = e.getConnection().getAddress().getAddress().getHostAddress();
-        final String uuid = /*e.getConnection().getUniqueId().toString()*/ "NEEXISTUJE";
         final String name = e.getConnection().getName();
 
         Main.getInstance().getLogger().log(Level.INFO, ChatColor.YELLOW + "Kontrola hrace s IP: " + address);
-        Logger.info("Whitelist Checker - [name=" + name + ", uuid=null, address=" + address + "]");
+        Logger.info("Whitelist Checker - [name=" + name + ", address=" + address + "]");
 
         OkHttpClient caller = new OkHttpClient();
-        Request request = new Request.Builder().url("https://api.vpnblocker.net/v2/json/" + address + "/" + Main.getAPIKey()).build();
+        Request request = new Request.Builder().url("https://proxycheck.io/v2/" + address + "?key=" + Main.getAPIKey()
+            + "&vpn=1&asn=1&node=1&time=1&inf=0&risk=1&port=1&seen=1&days=7&tag=Bungeecord").build();
 
         try {
 
             Response response = caller.newCall(request).execute();
             JSONObject json = new JSONObject(response.body().string());
+            JSONObject adressInfo = json.getJSONObject(address);
 
-            boolean vpn;
-            String countryCode;
+            boolean vpn = false;
+            String countryCode = null;
 
-            vpn = (boolean) json.get("host-ip");
+            if (adressInfo.has("proxy")) {
+                if (adressInfo.get("proxy").equals("yes")) { // Kdyz je proxy true, tak se jedná o VPN/Proxy.
+                    vpn = true;
+                }
+            }
 
-            try {
-               String hostname = (String) json.get("hostname");
-            } catch (Exception ex){
+            if (adressInfo.get("isocode") == JSONObject.NULL) { // Nezjistitelna IP?
                 vpn = true;
             }
 
-            JSONObject countyObject = json.getJSONObject("country");
-            countryCode = (String) countyObject.get("code"); // cz, sk atd.
+            if (adressInfo.has("isocode")) {
+                countryCode = (String) adressInfo.get("isocode");
+            }
 
             // Finalni kontrola IP
-            finalCheck(e, address, uuid, countryCode, vpn);
+            finalCheck(e, address, name, countryCode, vpn);
 
         } catch (Exception ex) {
             //ex.printStackTrace();
         }
     }
 
-    private void finalCheck(PreLoginEvent e, String address, String uuid, String state, boolean isVPN) {
+    private void finalCheck(PreLoginEvent e, String address, String name, String state, boolean isVPN) {
 
         // Kdyz je povoleno jenom CZ/SK tak se vše kontroluje, jinak jsou kontroly off!
         if(Main.allowOnlyCZSK()) {
@@ -89,16 +93,10 @@ public class VPNListener implements Listener {
                 return;
             }
 
-            // Kontrola UUID na whitelistu
-            /*if(!allowedUUIDs.isEmpty()) {
-                for(WhitelistedUUID id : allowedUUIDs) {
-                    Matcher matcher = id.getUUID().matcher(uuid);
-                    if(matcher.find()) {
-                        Logger.success("UUID " + uuid + " nalezeno ve whitelistu, hrac pusten na server. Duvod: " + id.getDescription());
-                        return;
-                    }
-                }
-            }*/
+            // Kontrola nicku na whitelistu
+            if (isOnNameWhitelist(name)) {
+                return;
+            }
 
             // Hráč není na IP whitelistu a nema CZ / SK IP
             Main.getInstance().getLogger().log(Level.INFO, ChatColor.RED + "Zahranicni IP / VPN (IP: " + address + ", NICK: " + e.getConnection().getName() + "). Hrac zablokovan!");
@@ -120,6 +118,18 @@ public class VPNListener implements Listener {
         return false;
     }
 
+    private boolean isOnNameWhitelist(String playerName) {
+        if (!allowedNames.isEmpty()) {
+            for (WhitelistedNames name : allowedNames) {
+                if (name.getName().equals(playerName)) {
+                    Logger.success("Nick " + playerName + " nalezena ve whitelistu, hrac pusten na server. Duvod: " + name.getDescription());
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+
     public static void setAllowedIps(List<WhitelistedIP> allowedIps) {
         VPNListener.allowedIps = allowedIps;
     }
@@ -128,11 +138,11 @@ public class VPNListener implements Listener {
         return allowedIps;
     }
 
-    public static void setAllowedUUIDs(List<WhitelistedUUID> allowedUUIDs) {
-        VPNListener.allowedUUIDs = allowedUUIDs;
+    public static void setAllowedNames(List<WhitelistedNames> allowedNames) {
+        VPNListener.allowedNames = allowedNames;
     }
 
-    public static List<WhitelistedUUID> getAllowedUUIDs() {
-        return allowedUUIDs;
+    public static List<WhitelistedNames> getAllowedNames() {
+        return allowedNames;
     }
 }

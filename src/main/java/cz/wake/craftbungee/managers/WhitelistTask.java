@@ -4,7 +4,7 @@ import cz.wake.craftbungee.Main;
 import cz.wake.craftbungee.listeners.VPNListener;
 import cz.wake.craftbungee.utils.Logger;
 import cz.wake.craftbungee.utils.WhitelistedIP;
-import cz.wake.craftbungee.utils.WhitelistedUUID;
+import cz.wake.craftbungee.utils.WhitelistedNames;
 
 import java.util.List;
 
@@ -19,12 +19,12 @@ public class WhitelistTask implements Runnable {
         VPNListener.setAllowedIps(ips);
         Logger.info("Update IP adres na whitelistu, celkem (" + ips.size() + ").");
 
-        // UUID Whitelist
-        List<WhitelistedUUID> uuids = Main.getInstance().getSQLManager().getWhitelistedUUIDs();
-        VPNListener.getAllowedUUIDs().clear();
-        VPNListener.setAllowedUUIDs(uuids);
-        Logger.info("Update UUID adres na whitelistu, celkem (" + uuids.size() + ").");
+        // Nick Whitelist
+        List<WhitelistedNames> names = Main.getInstance().getSQLManager().getWhitelistedNames();
+        VPNListener.getAllowedNames().clear();
+        VPNListener.setAllowedNames(names);
+        Logger.info("Update Nicku na whitelistu, celkem (" + names.size() + ").");
 
-        Logger.success("Update IP & UUID Whitelistu dokoncen!");
+        Logger.success("Update IP & Nick Whitelistu dokoncen!");
     }
 }

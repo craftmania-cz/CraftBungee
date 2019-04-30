@@ -4,16 +4,13 @@ import com.zaxxer.hikari.HikariDataSource;
 import cz.wake.craftbungee.Main;
 import cz.wake.craftbungee.utils.BungeeUtils;
 import cz.wake.craftbungee.utils.WhitelistedIP;
-import cz.wake.craftbungee.utils.WhitelistedUUID;
+import cz.wake.craftbungee.utils.WhitelistedNames;
 import net.md_5.bungee.api.connection.ProxiedPlayer;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
-import java.sql.SQLException;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.UUID;
 import java.util.regex.Pattern;
 
 public class SQLManager {
@@ -130,23 +127,23 @@ public class SQLManager {
         return whitelistedIPS;
     }
 
-    public final List<WhitelistedUUID> getWhitelistedUUIDs() {
-        List<WhitelistedUUID> whitelistedUUIDS = new ArrayList<>();
+    public final List<WhitelistedNames> getWhitelistedNames() {
+        List<WhitelistedNames> whitelistedNames = new ArrayList<>();
         Connection conn = null;
         PreparedStatement ps = null;
         try {
             conn = pool.getConnection();
-            ps = conn.prepareStatement("SELECT * FROM uuid_whitelist;");
+            ps = conn.prepareStatement("SELECT * FROM name_whitelist;");
             ps.executeQuery();
             while (ps.getResultSet().next()) {
-                whitelistedUUIDS.add(new WhitelistedUUID(Pattern.compile(ps.getResultSet().getString("uuid")), ps.getResultSet().getString("description")));
+                whitelistedNames.add(new WhitelistedNames(ps.getResultSet().getString("nick"), ps.getResultSet().getString("description")));
             }
         } catch (Exception e) {
             e.printStackTrace();
         } finally {
             pool.close(conn, ps, null);
         }
-        return whitelistedUUIDS;
+        return whitelistedNames;
     }
 
     public final long getLastVote(final String p) {
