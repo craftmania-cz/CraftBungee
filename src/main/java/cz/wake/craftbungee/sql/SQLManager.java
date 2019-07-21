@@ -215,4 +215,23 @@ public class SQLManager {
             }
         });
     }
+
+    public final String getConfigValue(final String name) {
+        Connection conn = null;
+        PreparedStatement ps = null;
+        try {
+            conn = pool.getConnection();
+            ps = conn.prepareStatement("SELECT `from` FROM craftbungee_config WHERE `name` = ?;");
+            ps.setString(1, name);
+            ps.executeQuery();
+            if (ps.getResultSet().next()) {
+                return ps.getResultSet().getString("value");
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            pool.close(conn, ps, null);
+        }
+        return "";
+    }
 }
