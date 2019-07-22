@@ -27,6 +27,7 @@ repositories {
     maven { url "https://oss.sonatype.org/content/repositories/snapshots" }
     maven { url "http://repo.md-5.net/content/repositories/snapshots/" }
     maven { url "http://repo.maven.apache.org/maven2" }
+    maven { url "https://repo.destroystokyo.com/repository/maven-public/" }
 }
 
 dependencies {
@@ -37,6 +38,7 @@ dependencies {
     compile group: 'io.prometheus', name: 'simpleclient_common', version:'0.5.0'
     compile group: 'org.slf4j', name: 'slf4j-api', version:'1.7.5'
     compile group: 'org.slf4j', name: 'slf4j-log4j12', version:'1.7.5'
-    compileOnly group: 'net.md-5', name: 'bungeecord-api', version:'1.12-SNAPSHOT'
+    compileOnly group: 'net.md-5', name: 'bungeecord-api', version:'1.14-SNAPSHOT'
     compileOnly name: 'nuvotifier-universal-2.3.4'
+    compileOnly 'io.github.waterfallmc:waterfall-api:1.14-SNAPSHOT'
 }
