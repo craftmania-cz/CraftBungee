@@ -29,7 +29,7 @@ public class Main extends Plugin {
     private SQLManager sql;
     private static HashSet<ProxiedPlayer> online_players = new HashSet<>();
     private static String iphubKey = "";
-    private static boolean blockCountry = false;
+    public static boolean blockCountry = false;
     private static List<String> voteServers = new ArrayList<>();
     private Server server;
 
@@ -45,7 +45,6 @@ public class Main extends Plugin {
         // Nacteni configu
         loadConfig();
         iphubKey = getConfig().getString("iphub-key");
-        blockCountry = getConfig().getBoolean("block-country");
         voteServers = getConfig().getStringList("vote-servers");
 
         this.getProxy().registerChannel("craftbungee"); // Channel pro channeling hlasu
@@ -63,6 +62,9 @@ public class Main extends Plugin {
         // Napojeni na MySQL
         initDatabase();
 
+        // Nacteni block-country z db
+        blockCountry = Boolean.valueOf(getSQLManager().getConfigValue("block_country"));
+
         // IP Whitelist
         VPNListener.setAllowedIps(getSQLManager().getWhitelistedIPs());
 
@@ -78,6 +80,7 @@ public class Main extends Plugin {
         ProxyServer.getInstance().getScheduler().schedule(Main.getInstance(), new PlayerUpdateTask(), 1L, 1L, TimeUnit.MINUTES);
         ProxyServer.getInstance().getScheduler().schedule(Main.getInstance(), new WhitelistTask(), 10L, 60L, TimeUnit.SECONDS);
         ProxyServer.getInstance().getScheduler().schedule(Main.getInstance(), new CooldownUpdateTask(), 1L, 1L, TimeUnit.SECONDS);
+        ProxyServer.getInstance().getScheduler().schedule(Main.getInstance(), new BlockCountryTask(), 1L, 5L, TimeUnit.MINUTES);
         //ProxyServer.getInstance().getScheduler().schedule(Main.getInstance(), new BroadcastTask(), 1L, getConfig().getSection("automessages").getLong("sendevery"), TimeUnit.MINUTES);
 
         // Jetty server
