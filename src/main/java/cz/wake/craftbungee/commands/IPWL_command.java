@@ -26,22 +26,22 @@ public class IPWL_command extends Command {
         ProxiedPlayer p = plugin.getProxy().getPlayer(commandSender.getName());
 
         if (strings.length < 1) {
-            p.sendMessage("§eSeznam vsech IP Adres na whitelistu");
+            p.sendMessage("§e§l[*] §eSeznam vsech IP Adres na whitelistu");
             for (WhitelistedIP ip : VPNListener.getAllowedIps()) {
-                p.sendMessage("§eIP: §f" + ip.getAddress() + " §8| §eDuvod: §f" + ip.getDescription());
+                p.sendMessage("§e§l[*] §eIP: §f" + ip.getAddress() + " §8| §eDuvod: §f" + ip.getDescription());
             }
             return;
         }
 
         if (strings[0].equals("add")) {
             if (strings.length < 3) {
-                p.sendMessage("§c§l(!) §cNespravne napsane argumenty! Pr. /ipwl add 1.1.1.1 Testovaci Zprava");
+                p.sendMessage("§c§l[!] §cNespravne napsane argumenty! Pr. /ipwl add 1.1.1.1 Testovaci Zprava");
                 return;
             }
 
             for (WhitelistedIP ip : Main.getInstance().getSQLManager().getWhitelistedIPs()) {
                 if (strings[1].equals(ip.getAddress())) {
-                    p.sendMessage("§c§l(!) §cIP Adresa je davno pridana!");
+                    p.sendMessage("§c§l[!] §cIP Adresa je davno pridana!");
                     return;
                 }
             }
@@ -54,13 +54,13 @@ public class IPWL_command extends Command {
             List<WhitelistedIP> ips = VPNListener.getAllowedIps();
             ips.add(new WhitelistedIP(Pattern.compile(strings[1]), description));
             VPNListener.setAllowedIps(ips);
-            p.sendMessage("§aAdresa " + strings[1] + " byla uspesne pridana!");
+            p.sendMessage("§e§l[*] §eAdresa " + strings[1] + " byla uspesne pridana!");
             Main.getInstance().getLogger().log(Level.INFO, ChatColor.YELLOW + "IP adresa " + strings[1] + " byla pridana na ip whitelist");
         }
 
         if (strings[0].equals("remove")) {
             if (strings.length < 2) {
-                p.sendMessage("§c§l(!) §cNespravne napsane argumenty! Pr. /ipwl remove 1.1.1.1");
+                p.sendMessage("§c§l[!] §cNespravne napsane argumenty! Pr. /ipwl remove 1.1.1.1");
                 return;
             }
 
@@ -74,28 +74,28 @@ public class IPWL_command extends Command {
                             whitelistedIP = w;
                             ips.remove(whitelistedIP);
                             VPNListener.setAllowedIps(ips);
-                            p.sendMessage("§aAdresa " + strings[1] + " byla uspesne odebrana!");
+                            p.sendMessage("§e§l[*] §eAdresa " + strings[1] + " byla uspesne odebrana!");
                             Main.getInstance().getLogger().log(Level.INFO, ChatColor.YELLOW + "IP adresa " + strings[1] + " byla odebrana z ip whitelistu");
                             return;
                         }
                     }
                 }
             }
-            p.sendMessage("§c§l(!) §cIP Adresa nebyla nalezena!");
+            p.sendMessage("§c§l[!] §cIP Adresa nebyla nalezena!");
         }
         if(strings[0].equals("check")){
             if(strings.length < 2){
-                p.sendMessage("§c§l(!) §cNespravne napsane argumenty! Pr. /ipwl check 1.1.1.1");
+                p.sendMessage("§c§l[!] §cNespravne napsane argumenty! Pr. /ipwl check 1.1.1.1");
                 return;
             }
 
             for(WhitelistedIP ip : Main.getInstance().getSQLManager().getWhitelistedIPs()){
                 if(strings[1].equals(ip.getAddress())){
-                    p.sendMessage("§eIP: §f" + ip.getAddress() + " §8| §eDuvod: §f" + ip.getDescription());
+                    p.sendMessage("§e§l[*] §eIP: §f" + ip.getAddress() + " §8| §eDuvod: §f" + ip.getDescription());
                     return;
                 }
             }
-            p.sendMessage("§c§l(!) §cIP Adresa neni na whitelistu!");
+            p.sendMessage("§c§l[!] §cIP Adresa neni na whitelistu!");
             return;
         }
     }

@@ -22,7 +22,7 @@ public class GBC_command extends Command {
     @Override
     public void execute(CommandSender commandSender, String[] strings) {
         if (strings.length == 0) {
-            commandSender.sendMessage("§c§l(!) §cNespravny format! Pouzij /gbc <text>");
+            commandSender.sendMessage("§c§l[!] §cNespravny format! Pouzij /gbc <text>");
             return;
         }
 

@@ -27,7 +27,7 @@ public class GA_command extends Command {
         ProxiedPlayer p = plugin.getProxy().getPlayer(commandSender.getName());
 
         if (strings.length == 0) {
-            p.sendMessage("§c§l(!) §cNespravny format! Pouzij /ga <text>");
+            p.sendMessage("§c§l[!] §cNespravny format! Pouzij /ga <text>");
             return;
         }
 

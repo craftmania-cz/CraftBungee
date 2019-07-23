@@ -74,12 +74,12 @@ public class GHelp_command extends Command {
         }
 
         if (cooldowns.containsKey(p)) {
-            p.sendMessage("§c§l(!) §cMusis pockat jeste " + cooldowns.get(p) + " sekund!");
+            p.sendMessage("§c§l[!] §cMusis pockat jeste " + cooldowns.get(p) + " sekund!");
             return;
         }
 
         if (strings.length == 0) {
-            p.sendMessage("§c§l(!) §cNespravny format! Pouzij /ghelp <text>");
+            p.sendMessage("§c§l[!] §cNespravny format! Pouzij /ghelp <text>");
             return;
         }
 
