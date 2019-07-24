@@ -53,7 +53,7 @@ public class EventNotifyListener implements Listener {
             p.sendMessage("");
             p.sendMessage("§b\u25ac\u25ac\u25ac\u25ac\u25ac\u25ac\u25ac\u25ac\u25ac\u25ac\u25ac\u25ac\u25ac\u25ac\u25ac\u25ac\u25ac\u25ac\u25ac\u25ac\u25ac\u25ac\u25ac\u25ac\u25ac\u25ac\u25ac\u25ac\u25ac\u25ac\u25ac\u25ac\u25ac\u25ac\u25ac\u25ac\u25ac\u25ac\u25ac\u25ac\u25ac\u25ac\u25ac\u25ac\u25ac\u25ac\u25ac\u25ac\u25ac\u25ac\u25ac\u25ac\u25ac\u25ac\u25ac\u25ac\u25ac\u25ac\u25ac\u25ac\u25ac\u25ac\u25ac\u25ac\u25ac\u25ac\u25ac\u25ac\u25ac\u25ac\u25ac\u25ac\u25ac\u25ac\u25ac\u25ac\u25ac");
             p.sendMessage("");
-            p.sendMessage("§a§lEvent brzy zacne!");
+            p.sendMessage("§e§l[*] §e§lEvent brzy zacne!");
             if (eventType.equals("") && reward.equals("") && eventer.equals("")) {
                 p.sendMessage("§fPozor! Na Event serveru brzo zacne celoserverovy event!");
             }
