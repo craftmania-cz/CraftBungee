@@ -77,6 +77,9 @@ public class VPNListener implements Listener {
                     if (isOnWhitelist(address)) {
                         return;
                     }
+                    if (isOnNameWhitelist(address)) {
+                        return;
+                    }
                     Logger.danger("IP " + address + " je z CZ/SK, ale je to VPN, hrac nebyl pusten na server");
                     e.setCancelReason("§c§lTato IP je vedena jako VPN.\n§fPokud si myslis, ze to tak neni, napis\n§fna webu nebo na Discordu uzivateli §e§lMrWakeCZ §rnebo §e§lKrosta8");
                     e.setCancelled(true);
