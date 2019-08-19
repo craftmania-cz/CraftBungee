@@ -82,3 +82,19 @@ broadcast-format:
    - " "
    - "=================================================="
    - " "
+
+# Blokace nebo povoleni zobrazování příkazů z bungee.
+# Default skupina platí pro všechny, pokud je blacklist na true, tak glist nepůjde nikomu jako nápověda,
+# pokud je na false, tak půjde nápověda jenom na /glist.
+help-commands:
+  defaults:
+    blacklist: true
+    completions:
+      - glist
+
+  # Rozrazeni podle skupin, co by měli mít za nápovědy (blacklist: false), jinak jim nepujdou jenom ty nize vypsane.
+  groups:
+    staff: # craftbungee.completions.group.staff
+      blacklist: false
+      completions:
+        - glist

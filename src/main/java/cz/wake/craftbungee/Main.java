@@ -9,6 +9,7 @@ import cz.wake.craftbungee.prometheus.MetricsController;
 import cz.wake.craftbungee.sql.SQLManager;
 import net.md_5.bungee.api.ProxyServer;
 import net.md_5.bungee.api.connection.ProxiedPlayer;
+import net.md_5.bungee.api.plugin.Command;
 import net.md_5.bungee.api.plugin.Plugin;
 import net.md_5.bungee.config.Configuration;
 import net.md_5.bungee.config.ConfigurationProvider;
@@ -16,9 +17,7 @@ import net.md_5.bungee.config.YamlConfiguration;
 import org.eclipse.jetty.server.Server;
 
 import java.io.*;
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
+import java.util.*;
 import java.util.concurrent.TimeUnit;
 
 public class Main extends Plugin {
@@ -32,6 +31,10 @@ public class Main extends Plugin {
     public static boolean blockCountry = false;
     private static List<String> voteServers = new ArrayList<>();
     private Server server;
+    private boolean isDefaultBlacklist = false;
+    private boolean isDebug = false;
+    private final Set<String> defaults = new HashSet<>();
+    private final Map<String, GroupData> groups = new HashMap<>();
 
     // Channels
     public final static String CRAFTEVENTS_CHANNEL = "craftevents:plugin"; // Channel pro zasilani notifikaci pro zacatek eventu
@@ -42,10 +45,31 @@ public class Main extends Plugin {
         // Instance
         instance = this;
 
+        // Kontrola Watterfall eventů
+        try {
+            Class.forName("io.github.waterfallmc.waterfall.event.ProxyDefineCommandsEvent");
+        } catch (ClassNotFoundException e) {
+            getLogger().warning("Bungeecord neni Watterfall, plugin nebude fungovat!");
+            return;
+        }
+
         // Nacteni configu
         loadConfig();
         iphubKey = getConfig().getString("iphub-key");
         voteServers = getConfig().getStringList("vote-servers");
+        this.isDebug = getConfig().getBoolean("debug", false);
+
+        final Configuration defaultsSection = getConfig().getSection("help-commands.defaults");
+        this.isDefaultBlacklist = defaultsSection.getBoolean("blacklist", false);
+        this.defaults.addAll(defaultsSection.getStringList("completions"));
+
+        final Configuration groupsSection = getConfig().getSection("help-commands.groups");
+        for (String key : groupsSection.getKeys()) {
+            final Configuration groupSection = groupsSection.getSection(key);
+            boolean isWhitelist = !groupSection.getBoolean("blacklist", isDefaultBlacklist);
+            Set<String> completions = new HashSet<>(groupSection.getStringList("completions"));
+            this.groups.put(key, new GroupData(completions, isWhitelist));
+        }
 
         this.getProxy().registerChannel("craftbungee"); // Channel pro channeling hlasu
         this.getProxy().registerChannel(CRAFTEVENTS_CHANNEL);
@@ -80,7 +104,7 @@ public class Main extends Plugin {
         ProxyServer.getInstance().getScheduler().schedule(Main.getInstance(), new PlayerUpdateTask(), 1L, 1L, TimeUnit.MINUTES);
         ProxyServer.getInstance().getScheduler().schedule(Main.getInstance(), new WhitelistTask(), 10L, 60L, TimeUnit.SECONDS);
         ProxyServer.getInstance().getScheduler().schedule(Main.getInstance(), new CooldownUpdateTask(), 1L, 1L, TimeUnit.SECONDS);
-        ProxyServer.getInstance().getScheduler().schedule(Main.getInstance(), new BlockCountryTask(), 1L, 5L, TimeUnit.MINUTES);
+        ProxyServer.getInstance().getScheduler().schedule(Main.getInstance(), new BlockCountryTask(), 1L, 1L, TimeUnit.MINUTES);
         //ProxyServer.getInstance().getScheduler().schedule(Main.getInstance(), new BroadcastTask(), 1L, getConfig().getSection("automessages").getLong("sendevery"), TimeUnit.MINUTES);
 
         // Jetty server
@@ -176,5 +200,47 @@ public class Main extends Plugin {
 
     public static List<String> getVoteServers() {
         return voteServers;
+    }
+
+    public synchronized boolean checkCommand(ProxiedPlayer player, String label, Command command) {
+        boolean isAllowed = true;
+
+        if (this.defaults.contains(label) && this.isDefaultBlacklist) {
+            isAllowed = false;
+            debug(player.getName() + " got '" + label + "' as blacklisted by default");
+        }
+
+        for (Map.Entry<String, GroupData> entry : this.groups.entrySet()) {
+            String groupName = entry.getKey();
+            GroupData groupData = entry.getValue();
+
+            if (player.hasPermission("craftbungee.completions.group." + groupName)) {
+                if (isDebug()) {
+                    debug("Processing group '" + groupName + "'{" + groupData + "} for " + player.getName());
+                }
+
+                debug(groupData.toString());
+                // Povoleno, ale skupina neni whitelist, kill
+                if (!groupData.isWhitelist() && isAllowed && groupData.has(label)) {
+                    isAllowed = false;
+                    debug(player.getName() + " was denied '" + label + "' by group " + groupName);
+                } else if (!isAllowed && groupData.isWhitelist() && groupData.has(label)) {
+                    debug(player.getName() + " was granted '" + label + "' by group " + groupName);
+                    isAllowed = true;
+                }
+            }
+
+        }
+        return isAllowed;
+    }
+
+    public boolean isDebug() {
+        return isDebug;
+    }
+
+    public void debug(String message) {
+        if (isDebug) {
+            getLogger().info(String.format("[debug] %s", message));
+        }
     }
 }
