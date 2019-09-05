@@ -221,7 +221,7 @@ public class SQLManager {
         PreparedStatement ps = null;
         try {
             conn = pool.getConnection();
-            ps = conn.prepareStatement("SELECT `from` FROM craftbungee_config WHERE `name` = ?;");
+            ps = conn.prepareStatement("SELECT value FROM craftbungee_config WHERE name = ?;");
             ps.setString(1, name);
             ps.executeQuery();
             if (ps.getResultSet().next()) {
