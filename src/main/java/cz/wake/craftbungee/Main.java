@@ -98,6 +98,7 @@ public class Main extends Plugin {
         ProxyServer.getInstance().getPluginManager().registerListener(this, new PingListener());
         ProxyServer.getInstance().getPluginManager().registerListener(this, new VoteListener());
         ProxyServer.getInstance().getPluginManager().registerListener(this, new EventNotifyListener(this));
+        ProxyServer.getInstance().getPluginManager().registerListener(this, new HelpCommandListener(this));
 
         // Tasks
         ProxyServer.getInstance().getScheduler().schedule(Main.getInstance(), new SQLChecker(), 1L, 1L, TimeUnit.MINUTES);
@@ -132,7 +133,7 @@ public class Main extends Plugin {
             try {
                 server.stop();
             } catch (Exception e) {
-                e.printStackTrace();
+                //e.printStackTrace();
             }
         }
 
@@ -202,12 +203,19 @@ public class Main extends Plugin {
         return voteServers;
     }
 
+    /**
+     * Kontrola zda hráč obrží nápovědu pro příkaz (dle configu)
+     * @param player Hráč
+     * @param label Název příkazu
+     * @param command Bungeecord Command class
+     * @return boolean zda bude mít nápovědu nebo ne
+     */
     public synchronized boolean checkCommand(ProxiedPlayer player, String label, Command command) {
-        boolean isAllowed = true;
+        boolean isAllowed = false; // Default blokace všeho!
 
-        if (this.defaults.contains(label) && this.isDefaultBlacklist) {
-            isAllowed = false;
-            debug(player.getName() + " got '" + label + "' as blacklisted by default");
+        // Pokud je na default whitelistu vzdy povoleno!
+        if (this.defaults.contains(label)) {
+            return true;
         }
 
         for (Map.Entry<String, GroupData> entry : this.groups.entrySet()) {
@@ -216,20 +224,16 @@ public class Main extends Plugin {
 
             if (player.hasPermission("craftbungee.completions.group." + groupName)) {
                 if (isDebug()) {
-                    debug("Processing group '" + groupName + "'{" + groupData + "} for " + player.getName());
+                    System.out.println("Processing group '" + groupName + "'{" + groupData + "} for " + player.getName());
                 }
 
-                debug(groupData.toString());
-                // Povoleno, ale skupina neni whitelist, kill
-                if (!groupData.isWhitelist() && isAllowed && groupData.has(label)) {
+                // Pokud je prikaz na seznamu, bude povolen, jinak blokovan
+                if (!groupData.has(label)) {
                     isAllowed = false;
-                    debug(player.getName() + " was denied '" + label + "' by group " + groupName);
-                } else if (!isAllowed && groupData.isWhitelist() && groupData.has(label)) {
-                    debug(player.getName() + " was granted '" + label + "' by group " + groupName);
+                } else {
                     isAllowed = true;
                 }
             }
-
         }
         return isAllowed;
     }

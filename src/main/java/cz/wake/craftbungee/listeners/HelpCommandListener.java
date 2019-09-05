@@ -25,12 +25,11 @@ public class HelpCommandListener implements Listener {
         ProxiedPlayer player = (ProxiedPlayer) event.getReceiver();
 
         if (player.hasPermission("craftbungee.completions.whitelist")) {
-            plugin.debug(player.getName() + " is whitelisted");
             return;
         }
 
+        //TODO: Ccominuty profile nastavení.
         if (player.hasPermission("craftbungee.completions.blacklist")) {
-            plugin.debug(player.getName() + " is blacklisted");
             event.getCommands().clear();
             return;
         }
