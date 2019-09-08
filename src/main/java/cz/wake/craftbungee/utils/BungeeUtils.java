@@ -51,7 +51,8 @@ public class BungeeUtils {
         } catch (IOException e) {
             e.printStackTrace();
         }
-        server.sendData("craftbungee", stream.toByteArray());
+        server.sendData("craftbungee", stream.toByteArray()); // 1.8-1.12 servery
+        server.sendData("craftbungee:vote", stream.toByteArray()); // 1.13+ servery
     }
 
     public static String getGroup(ProxiedPlayer p) {

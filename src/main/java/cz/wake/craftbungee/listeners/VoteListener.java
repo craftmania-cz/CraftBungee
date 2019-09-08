@@ -53,6 +53,7 @@ public class VoteListener implements Listener {
             // Kdyz je offline force to DB (obejit CraftEconomy)
             Main.getInstance().getSQLManager().addPlayerVote(e.getVote().getUsername());
             Main.getInstance().getSQLManager().addVoteToken(e.getVote().getUsername());
+            Main.getInstance().getSQLManager().addVoteToken2(e.getVote().getUsername());
             Main.getInstance().getSQLManager().addCraftCoins(e.getVote().getUsername(), 20);
         }
 
