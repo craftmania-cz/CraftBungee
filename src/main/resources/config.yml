@@ -98,3 +98,7 @@ help-commands:
       blacklist: false
       completions:
         - glist
+
+queue-system:
+  # Kolik hráčů se může připojit za 3 sekundy
+  max-players: 1
