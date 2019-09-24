@@ -42,8 +42,6 @@ public class VoteListener implements Listener {
                     BungeeUtils.sendMessageToBukkit("vote", player.getName(), String.valueOf(coins), player.getServer().getInfo());
                 }
             }
-            // Prida hraci Vote za hlas
-            Main.getInstance().getSQLManager().addPlayerVote(player.getName());
         } else {
             if (!(System.currentTimeMillis() > Main.getInstance().getSQLManager().getLastVote(e.getVote().getUsername()))) {
                 Main.getInstance().getLogger().log(Level.INFO, ChatColor.AQUA + "Hrac " + e.getVote().getUsername() + " hlasoval driv nez za 2h.");
@@ -56,8 +54,6 @@ public class VoteListener implements Listener {
             Main.getInstance().getSQLManager().addVoteToken2(e.getVote().getUsername());
             Main.getInstance().getSQLManager().addCraftCoins(e.getVote().getUsername(), 20);
         }
-
-
     }
 
     private int getChanceCoins(int chance) {
