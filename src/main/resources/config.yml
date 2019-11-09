@@ -98,3 +98,12 @@ help-commands:
       blacklist: false
       completions:
         - glist
+
+queue-system:
+  # Kolik hráčů se může připojit za x sekund
+  max-players: 1
+  # V sekundách
+  interval: 3
+  # Kde bude queue fungovat
+  servers:
+    - "event-server"

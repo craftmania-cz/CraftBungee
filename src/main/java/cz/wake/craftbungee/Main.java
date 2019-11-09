@@ -5,6 +5,9 @@ import cz.wake.craftbungee.commands.*;
 import cz.wake.craftbungee.commands.internal.Eventserver_tp_command;
 import cz.wake.craftbungee.listeners.*;
 import cz.wake.craftbungee.managers.*;
+import cz.wake.craftbungee.managers.queue.CraftQueue;
+import cz.wake.craftbungee.managers.queue.QueueListener;
+import cz.wake.craftbungee.managers.queue.QueueManager;
 import cz.wake.craftbungee.prometheus.MetricsController;
 import cz.wake.craftbungee.sql.SQLManager;
 import net.md_5.bungee.api.ProxyServer;
@@ -35,6 +38,8 @@ public class Main extends Plugin {
     private boolean isDebug = false;
     private final Set<String> defaults = new HashSet<>();
     private final Map<String, GroupData> groups = new HashMap<>();
+    public static final List<CraftQueue> queues = new ArrayList<>();
+    public static final HashMap<ProxiedPlayer, CraftQueue> playerQueues = new HashMap<>();
 
     // Channels
     public final static String CRAFTEVENTS_CHANNEL = "craftevents:plugin"; // Channel pro zasilani notifikaci pro zacatek eventu
@@ -99,6 +104,7 @@ public class Main extends Plugin {
         ProxyServer.getInstance().getPluginManager().registerListener(this, new VoteListener());
         ProxyServer.getInstance().getPluginManager().registerListener(this, new EventNotifyListener(this));
         ProxyServer.getInstance().getPluginManager().registerListener(this, new HelpCommandListener(this));
+        ProxyServer.getInstance().getPluginManager().registerListener(this, new QueueListener());
 
         // Tasks
         ProxyServer.getInstance().getScheduler().schedule(Main.getInstance(), new SQLChecker(), 1L, 1L, TimeUnit.MINUTES);
@@ -120,6 +126,9 @@ public class Main extends Plugin {
                 getLogger().severe("Could not start embedded Jetty server");
             }
         }
+
+        // Queue system
+        new QueueManager();
     }
 
     @Override
