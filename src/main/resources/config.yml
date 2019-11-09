@@ -100,5 +100,10 @@ help-commands:
         - glist
 
 queue-system:
-  # Kolik hráčů se může připojit za 3 sekundy
+  # Kolik hráčů se může připojit za x sekund
   max-players: 1
+  # V sekundách
+  interval: 3
+  # Kde bude queue fungovat
+  servers:
+    - "event-server"

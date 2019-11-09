@@ -15,7 +15,7 @@ public class QueueManager {
         }
 
         if (!Main.queues.isEmpty()) {
-            ProxyServer.getInstance().getScheduler().schedule(Main.getInstance(), new QueueTask(), 0L, 3L, TimeUnit.SECONDS);
+            ProxyServer.getInstance().getScheduler().schedule(Main.getInstance(), new QueueTask(), 0L, Main.getConfig().getInt("queue-system.interval"), TimeUnit.SECONDS);
         }
     }
 }

@@ -9,18 +9,14 @@ public class QueueTask implements Runnable {
 
     @Override
     public void run() {
-        Main.getInstance().getLogger().info("TASK");
         for (CraftQueue craftQueue : Main.queues) {
             if (!craftQueue.enoughPlayers()) return;
             java.util.Queue<ProxiedPlayer> queue = craftQueue.getQueue();
-            Main.getInstance().getLogger().info(queue.toString());
             for (int i = 0; i <= craftQueue.getMaxPerWave(); i++) {
-                Main.getInstance().getLogger().info("" + i);
                 ProxiedPlayer chosenPlayer = queue.peek();
                 if (previousPlayer == chosenPlayer) continue;
                 previousPlayer = chosenPlayer;
                 if (chosenPlayer == null) continue;
-                Main.getInstance().getLogger().info("po continue");
                 craftQueue.connectPlayer(chosenPlayer);
             }
         }
