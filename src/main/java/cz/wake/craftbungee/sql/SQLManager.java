@@ -38,7 +38,7 @@ public class SQLManager {
             PreparedStatement ps = null;
             try {
                 conn = pool.getConnection();
-                ps = conn.prepareStatement("UPDATE player_profile SET last_server = ?, last_online = ?, is_online = ? WHERE nick = '" + p.getName() + "';");
+                ps = conn.prepareStatement("UPDATE minigames.player_profile SET last_server = ?, last_online = ?, is_online = ? WHERE nick = '" + p.getName() + "';");
                 ps.setString(1, BungeeUtils.getPlayerServer(p));
                 ps.setLong(2, System.currentTimeMillis());
                 if (online) {
@@ -61,7 +61,7 @@ public class SQLManager {
             PreparedStatement ps = null;
             try {
                 conn = pool.getConnection();
-                ps = conn.prepareStatement("UPDATE player_profile SET played_time = played_time + 1, last_server = ? WHERE nick = ?;");
+                ps = conn.prepareStatement("UPDATE minigames.player_profile SET played_time = played_time + 1, last_server = ? WHERE nick = ?;");
                 ps.setString(1, BungeeUtils.getPlayerServer(p));
                 ps.setString(2, p.getName());
                 ps.executeUpdate();
@@ -79,7 +79,7 @@ public class SQLManager {
             PreparedStatement ps = null;
             try {
                 conn = pool.getConnection();
-                ps = conn.prepareStatement("INSERT INTO ip_whitelist (address, description) VALUES (?, ?);");
+                ps = conn.prepareStatement("INSERT INTO minigames.ip_whitelist (address, description) VALUES (?, ?);");
                 ps.setString(1, address);
                 ps.setString(2, description);
                 ps.executeUpdate();
@@ -97,7 +97,7 @@ public class SQLManager {
             PreparedStatement ps = null;
             try {
                 conn = pool.getConnection();
-                ps = conn.prepareStatement("DELETE FROM ip_whitelist WHERE address = ?;");
+                ps = conn.prepareStatement("DELETE FROM minigames.ip_whitelist WHERE address = ?;");
                 ps.setString(1, address);
                 ps.executeUpdate();
             } catch (Exception e) {
@@ -114,7 +114,7 @@ public class SQLManager {
         PreparedStatement ps = null;
         try {
             conn = pool.getConnection();
-            ps = conn.prepareStatement("SELECT * FROM ip_whitelist;");
+            ps = conn.prepareStatement("SELECT * FROM minigames.ip_whitelist;");
             ps.executeQuery();
             while (ps.getResultSet().next()) {
                 whitelistedIPS.add(new WhitelistedIP(Pattern.compile(ps.getResultSet().getString("address")), ps.getResultSet().getString("description")));
@@ -133,7 +133,7 @@ public class SQLManager {
         PreparedStatement ps = null;
         try {
             conn = pool.getConnection();
-            ps = conn.prepareStatement("SELECT * FROM name_whitelist;");
+            ps = conn.prepareStatement("SELECT * FROM minigames.name_whitelist;");
             ps.executeQuery();
             while (ps.getResultSet().next()) {
                 whitelistedNames.add(new WhitelistedNames(ps.getResultSet().getString("nick"), ps.getResultSet().getString("description")));
@@ -151,7 +151,7 @@ public class SQLManager {
         PreparedStatement ps = null;
         try {
             conn = pool.getConnection();
-            ps = conn.prepareStatement("SELECT last_vote FROM player_profile WHERE nick = ?;");
+            ps = conn.prepareStatement("SELECT last_vote FROM minigames.player_profile WHERE nick = ?;");
             ps.setString(1, p);
             ps.executeQuery();
             if (ps.getResultSet().next()) {
@@ -172,7 +172,7 @@ public class SQLManager {
                 PreparedStatement ps = null;
                 try {
                     conn = pool.getConnection();
-                    ps = conn.prepareStatement("UPDATE player_profile SET total_votes = total_votes + 1, week_votes = week_votes + 1, month_votes = month_votes + 1, last_vote = '" + System.currentTimeMillis() + "' WHERE nick = '" + p + "';");
+                    ps = conn.prepareStatement("UPDATE minigames.player_profile SET total_votes = total_votes + 1, week_votes = week_votes + 1, month_votes = month_votes + 1, last_vote = '" + System.currentTimeMillis() + "' WHERE nick = '" + p + "';");
                     ps.executeUpdate();
                 } catch (Exception e) {
                     e.printStackTrace();
@@ -188,7 +188,7 @@ public class SQLManager {
             PreparedStatement ps = null;
             try {
                 conn = pool.getConnection();
-                ps = conn.prepareStatement("UPDATE player_profile SET votetokens = votetokens + 1 WHERE nick = ?;");
+                ps = conn.prepareStatement("UPDATE minigames.player_profile SET votetokens = votetokens + 1 WHERE nick = ?;");
                 ps.setString(1, p);
                 ps.executeUpdate();
             } catch (Exception e) {
@@ -205,7 +205,7 @@ public class SQLManager {
             PreparedStatement ps = null;
             try {
                 conn = pool.getConnection();
-                ps = conn.prepareStatement("UPDATE player_profile SET votetokens_2 = votetokens_2 + 1 WHERE nick = ?;");
+                ps = conn.prepareStatement("UPDATE minigames.player_profile SET votetokens_2 = votetokens_2 + 1 WHERE nick = ?;");
                 ps.setString(1, p);
                 ps.executeUpdate();
             } catch (Exception e) {
@@ -222,7 +222,7 @@ public class SQLManager {
             PreparedStatement ps = null;
             try {
                 conn = pool.getConnection();
-                ps = conn.prepareStatement("UPDATE player_profile SET craftcoins = craftcoins + " + coins + " WHERE nick = ?;");
+                ps = conn.prepareStatement("UPDATE minigames.player_profile SET craftcoins = craftcoins + " + coins + " WHERE nick = ?;");
                 ps.setString(1, p);
                 ps.executeUpdate();
             } catch (Exception e) {
@@ -238,7 +238,7 @@ public class SQLManager {
         PreparedStatement ps = null;
         try {
             conn = pool.getConnection();
-            ps = conn.prepareStatement("SELECT value FROM craftbungee_config WHERE name = ?;");
+            ps = conn.prepareStatement("SELECT value FROM minigames.craftbungee_config WHERE name = ?;");
             ps.setString(1, name);
             ps.executeQuery();
             if (ps.getResultSet().next()) {
