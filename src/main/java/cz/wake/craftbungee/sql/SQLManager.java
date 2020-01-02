@@ -146,6 +146,44 @@ public class SQLManager {
         return whitelistedNames;
     }
 
+    public final List<String> getAllowedBlacklistedNames() {
+        List<String> allowedNames = new ArrayList<>();
+        Connection conn = null;
+        PreparedStatement ps = null;
+        try {
+            conn = pool.getConnection();
+            ps = conn.prepareStatement("SELECT * FROM minigames.allowed_blacklisted_names;");
+            ps.executeQuery();
+            while (ps.getResultSet().next()) {
+                allowedNames.add(ps.getResultSet().getString("nick"));
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            pool.close(conn, ps, null);
+        }
+        return allowedNames;
+    }
+
+    public final List<String> getBlacklistedNameWords() {
+        List<String> blacklistedWords = new ArrayList<>();
+        Connection conn = null;
+        PreparedStatement ps = null;
+        try {
+            conn = pool.getConnection();
+            ps = conn.prepareStatement("SELECT * FROM minigames.blacklisted_name_words;");
+            ps.executeQuery();
+            while (ps.getResultSet().next()) {
+                blacklistedWords.add(ps.getResultSet().getString("word"));
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            pool.close(conn, ps, null);
+        }
+        return blacklistedWords;
+    }
+
     public final long getLastVote(final String p) {
         Connection conn = null;
         PreparedStatement ps = null;
