@@ -29,7 +29,7 @@ public class NameBlacklistListener implements Listener {
             if(name.toLowerCase().contains(blacklisted.toLowerCase())) {
                 if(!whitelistedNames.stream().map(String::toLowerCase).collect(Collectors.toList()).contains(name.toLowerCase())) {
                     Main.getInstance().getLogger().log(Level.INFO, ChatColor.RED + "Jmeno hrace " + name + " obsahuje nepovolene slovo (" + blacklisted +"), proto nebyl pusten na server.");
-                    e.setCancelReason("&c&lTvé jmeno obsahuje nepovolená slova\n§fPokud si myslis, ze to tak neni, napis\n§fna webu nebo na Discordu uzivateli §e§lMrWakeCZ\n&fDetekovane slovo: §e§l" + blacklisted);
+                    e.setCancelReason("§c§lTvé jmeno obsahuje nepovolená slova\n§fPokud si myslis, ze to tak neni, napis\n§fna webu nebo na Discordu uzivateli §e§lMrWakeCZ\n§fDetekovane slovo: §e§l" + blacklisted);
                     e.setCancelled(true);
                     return;
                 } else {
