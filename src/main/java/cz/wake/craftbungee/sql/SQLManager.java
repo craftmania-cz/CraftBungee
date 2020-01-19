@@ -251,4 +251,44 @@ public class SQLManager {
         }
         return "";
     }
+
+    public final void createNotesTable() {
+        Connection conn = null;
+        PreparedStatement ps = null;
+        try {
+            conn = pool.getConnection();
+            ps = conn.prepareStatement("create table if not exists notes_data\n" +
+                    "(\n" +
+                    "    id     int auto_increment\n" +
+                    "        primary key,\n" +
+                    "    player varchar(32)                          not null,\n" +
+                    "    note   longtext                             not null,\n" +
+                    "    admin  varchar(32)                          null,\n" +
+                    "    date   datetime default current_timestamp() null\n" +
+                    ");\n" +
+                    "\n");
+            ps.executeUpdate();
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            pool.close(conn, ps, null);
+        }
+    }
+
+    public boolean hasNotes(String player) {
+        Connection conn = null;
+        PreparedStatement ps = null;
+        try {
+            conn = pool.getConnection();
+            ps = conn.prepareStatement("SELECT * FROM bungeecord.notes_data WHERE player = ?;");
+            ps.setString(1, player);
+            ps.executeQuery();
+            return ps.getResultSet().next();
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            pool.close(conn, ps, null);
+        }
+        return false;
+    }
 }

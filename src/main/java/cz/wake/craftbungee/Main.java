@@ -5,6 +5,8 @@ import cz.wake.craftbungee.commands.*;
 import cz.wake.craftbungee.commands.internal.Eventserver_tp_command;
 import cz.wake.craftbungee.listeners.*;
 import cz.wake.craftbungee.managers.*;
+import cz.wake.craftbungee.managers.notes.Note;
+import cz.wake.craftbungee.managers.notes.NoteManager;
 import cz.wake.craftbungee.managers.queue.CraftQueue;
 import cz.wake.craftbungee.managers.queue.QueueListener;
 import cz.wake.craftbungee.managers.queue.QueueManager;
@@ -40,6 +42,7 @@ public class Main extends Plugin {
     private final Map<String, GroupData> groups = new HashMap<>();
     public static final List<CraftQueue> queues = new ArrayList<>();
     public static final HashMap<ProxiedPlayer, CraftQueue> playerQueues = new HashMap<>();
+    private static NoteManager noteManager;
 
     // Channels
     public final static String CRAFTEVENTS_CHANNEL = "craftevents:plugin"; // Channel pro zasilani notifikaci pro zacatek eventu
@@ -87,6 +90,7 @@ public class Main extends Plugin {
         getProxy().getPluginManager().registerCommand(this, new CB_command(this));
         getProxy().getPluginManager().registerCommand(this, new IPWL_command(this));
         getProxy().getPluginManager().registerCommand(this, new Eventserver_tp_command(this));
+        getProxy().getPluginManager().registerCommand(this, new Note_command(this));
 
         // Napojeni na MySQL
         initDatabase();
@@ -129,6 +133,9 @@ public class Main extends Plugin {
 
         // Queue system
         new QueueManager();
+
+        // Note manager
+        noteManager = new NoteManager();
     }
 
     @Override
@@ -255,5 +262,9 @@ public class Main extends Plugin {
         if (isDebug) {
             getLogger().info(String.format("[debug] %s", message));
         }
+    }
+
+    public static NoteManager getNoteManager() {
+        return noteManager;
     }
 }
