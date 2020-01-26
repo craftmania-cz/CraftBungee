@@ -97,9 +97,14 @@ public class Main extends Plugin {
         // IP Whitelist
         VPNListener.setAllowedIps(getSQLManager().getWhitelistedIPs());
 
+        // NameBlacklist
+        NameBlacklistListener.setWhitelistedNames(getSQLManager().getAllowedBlacklistedNames());
+        NameBlacklistListener.setBlacklistedWords(getSQLManager().getBlacklistedNameWords());
+
         // Registrace eventu
         ProxyServer.getInstance().getPluginManager().registerListener(this, new PlayerListener(this));
         ProxyServer.getInstance().getPluginManager().registerListener(this, new VPNListener());
+        ProxyServer.getInstance().getPluginManager().registerListener(this, new NameBlacklistListener());
         ProxyServer.getInstance().getPluginManager().registerListener(this, new PingListener());
         ProxyServer.getInstance().getPluginManager().registerListener(this, new VoteListener());
         ProxyServer.getInstance().getPluginManager().registerListener(this, new EventNotifyListener(this));
@@ -110,6 +115,7 @@ public class Main extends Plugin {
         ProxyServer.getInstance().getScheduler().schedule(Main.getInstance(), new SQLChecker(), 1L, 1L, TimeUnit.MINUTES);
         ProxyServer.getInstance().getScheduler().schedule(Main.getInstance(), new PlayerUpdateTask(), 1L, 1L, TimeUnit.MINUTES);
         ProxyServer.getInstance().getScheduler().schedule(Main.getInstance(), new WhitelistTask(), 10L, 60L, TimeUnit.SECONDS);
+        ProxyServer.getInstance().getScheduler().schedule(Main.getInstance(), new NameBlacklistTask(), 10L, 60L, TimeUnit.SECONDS);
         ProxyServer.getInstance().getScheduler().schedule(Main.getInstance(), new CooldownUpdateTask(), 1L, 1L, TimeUnit.SECONDS);
         ProxyServer.getInstance().getScheduler().schedule(Main.getInstance(), new BlockCountryTask(), 1L, 1L, TimeUnit.MINUTES);
         //ProxyServer.getInstance().getScheduler().schedule(Main.getInstance(), new BroadcastTask(), 1L, getConfig().getSection("automessages").getLong("sendevery"), TimeUnit.MINUTES);
