@@ -88,7 +88,7 @@ public class NotePlayer {
             conn = Main.getInstance().getSQLManager().getPool().getConnection();
             ps = conn.prepareStatement("DELETE FROM bungeecord.notes_data WHERE player = ?;");
             ps.setString(1, this.player);
-            ps.executeQuery();
+            ps.executeUpdate();
         } catch (Exception e) {
             e.printStackTrace();
         } finally {
