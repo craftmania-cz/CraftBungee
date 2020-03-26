@@ -11,6 +11,5 @@ public class PingListener implements Listener {
 
         // Oznacovani serveru jako Vanilla type
         e.getResponse().getModinfo().setType("VANILLA");
-
     }
 }

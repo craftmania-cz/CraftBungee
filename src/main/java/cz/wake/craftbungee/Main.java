@@ -33,7 +33,7 @@ public class Main extends Plugin {
     private SQLManager sql;
     private static HashSet<ProxiedPlayer> online_players = new HashSet<>();
     private static String iphubKey = "";
-    public static boolean blockCountry = false;
+    public static boolean blockCountry = true;
     private static List<String> voteServers = new ArrayList<>();
     private Server server;
     private boolean isDefaultBlacklist = false;

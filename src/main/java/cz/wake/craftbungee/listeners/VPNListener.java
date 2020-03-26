@@ -69,7 +69,7 @@ public class VPNListener implements Listener {
     private void finalCheck(PreLoginEvent e, String address, String name, String state, boolean isVPN) {
 
         // Kdyz je povoleno jenom CZ/SK tak se vše kontroluje, jinak jsou kontroly off!
-        if(Main.allowOnlyCZSK()) {
+        if(true) {
 
             // Hrac ma CZ / SK IP
             if(state.equalsIgnoreCase("CZ") || state.equalsIgnoreCase("SK")) {
