@@ -2,7 +2,7 @@ package cz.wake.craftbungee.commands;
 
 import cz.wake.craftbungee.Main;
 import cz.wake.craftbungee.listeners.VPNListener;
-import cz.wake.craftbungee.utils.WhitelistedIP;
+import cz.wake.craftbungee.objects.WhitelistedIP;
 import net.md_5.bungee.api.ChatColor;
 import net.md_5.bungee.api.CommandSender;
 import net.md_5.bungee.api.connection.ProxiedPlayer;

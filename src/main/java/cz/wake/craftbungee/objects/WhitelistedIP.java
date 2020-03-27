@@ -1,4 +1,4 @@
-package cz.wake.craftbungee.utils;
+package cz.wake.craftbungee.objects;
 
 import java.util.regex.Pattern;
 

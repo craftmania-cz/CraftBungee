@@ -2,9 +2,10 @@ package cz.wake.craftbungee.sql;
 
 import com.zaxxer.hikari.HikariDataSource;
 import cz.wake.craftbungee.Main;
+import cz.wake.craftbungee.objects.BlacklistedASN;
 import cz.wake.craftbungee.utils.BungeeUtils;
-import cz.wake.craftbungee.utils.WhitelistedIP;
-import cz.wake.craftbungee.utils.WhitelistedNames;
+import cz.wake.craftbungee.objects.WhitelistedIP;
+import cz.wake.craftbungee.objects.WhitelistedNames;
 import net.md_5.bungee.api.connection.ProxiedPlayer;
 
 import java.sql.Connection;
@@ -156,6 +157,25 @@ public class SQLManager {
             ps.executeQuery();
             while (ps.getResultSet().next()) {
                 allowedNames.add(ps.getResultSet().getString("nick"));
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            pool.close(conn, ps, null);
+        }
+        return allowedNames;
+    }
+
+    public final List<BlacklistedASN> getBlacklistedASNs() {
+        List<BlacklistedASN> allowedNames = new ArrayList<>();
+        Connection conn = null;
+        PreparedStatement ps = null;
+        try {
+            conn = pool.getConnection();
+            ps = conn.prepareStatement("SELECT * FROM minigames.blacklisted_asns;");
+            ps.executeQuery();
+            while (ps.getResultSet().next()) {
+                allowedNames.add(new BlacklistedASN(ps.getResultSet().getString("asn")));
             }
         } catch (Exception e) {
             e.printStackTrace();

@@ -1,4 +1,4 @@
-package cz.wake.craftbungee.utils;
+package cz.wake.craftbungee.objects;
 
 public class WhitelistedNames {
 

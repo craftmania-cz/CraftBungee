@@ -1,9 +1,10 @@
 package cz.wake.craftbungee.listeners;
 
 import cz.wake.craftbungee.Main;
+import cz.wake.craftbungee.objects.BlacklistedASN;
 import cz.wake.craftbungee.utils.Logger;
-import cz.wake.craftbungee.utils.WhitelistedIP;
-import cz.wake.craftbungee.utils.WhitelistedNames;
+import cz.wake.craftbungee.objects.WhitelistedIP;
+import cz.wake.craftbungee.objects.WhitelistedNames;
 import net.md_5.bungee.api.ChatColor;
 import net.md_5.bungee.api.event.PreLoginEvent;
 import net.md_5.bungee.api.plugin.Listener;
@@ -22,9 +23,10 @@ public class VPNListener implements Listener {
 
     private static List<WhitelistedIP> allowedIps = new ArrayList<>();
     private static List<WhitelistedNames> allowedNames = new ArrayList<>();
+    private static List<BlacklistedASN> blacklistedASNs = new ArrayList<>();
 
     @EventHandler
-    public void onLogin(PreLoginEvent e) {
+    public void onLogin(final PreLoginEvent e) {
         final String address = e.getConnection().getAddress().getAddress().getHostAddress();
         final String name = e.getConnection().getName();
 
@@ -43,6 +45,23 @@ public class VPNListener implements Listener {
 
             boolean vpn = false;
             String countryCode = null;
+
+            // Pokud hráč má zablokovaný ASN
+            if (isASNBlacklisted(adressInfo.getString("asn"))) {
+                if (isOnNameWhitelist(name)) { // Pokud je na whitelistu může na server
+                    return;
+                }
+                Request craftApiRequest = new Request.Builder().url("https://api.craftmania.cz/player/" + name).build();
+                Response craftApiResponse = caller.newCall(craftApiRequest).execute();
+                JSONObject craftApiJson = new JSONObject(craftApiResponse.body().string());
+                JSONObject playerData = craftApiJson.getJSONObject("data");
+                if (playerData.getInt("played_time") <= 720) {
+                    Logger.info("Hráč " + name + " nemá odehráno na serveru 12h, nebyl puštěn na server!");
+                    e.setCancelReason("§c§lTvuj pokytovatel je na blacklistu §7+ §e§lnemas odehrano 12h na serveru!\n§fPokud chces pristup a server, musis si vytvorit ticket s zadosti o pridani na whitelist u nas na Discordu: §ehttps://discord.gg/craftmania");
+                    e.setCancelled(true);
+                    return;
+                }
+            }
 
             if (adressInfo.has("proxy")) {
                 if (adressInfo.get("proxy").equals("yes")) { // Kdyz je proxy true, tak se jedná o VPN/Proxy.
@@ -133,6 +152,18 @@ public class VPNListener implements Listener {
         return false;
     }
 
+    private boolean isASNBlacklisted(String asn) {
+        if (!blacklistedASNs.isEmpty()) {
+            for (BlacklistedASN blacklistedASN : blacklistedASNs) {
+                if (blacklistedASN.getAsn().equalsIgnoreCase(asn)) {
+                    Logger.success("Detekovan zablokovany ASN Provider.");
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+
     public static void setAllowedIps(List<WhitelistedIP> allowedIps) {
         VPNListener.allowedIps = allowedIps;
     }
@@ -147,5 +178,13 @@ public class VPNListener implements Listener {
 
     public static List<WhitelistedNames> getAllowedNames() {
         return allowedNames;
+    }
+
+    public static List<BlacklistedASN> getBlacklistedASNs() {
+        return blacklistedASNs;
+    }
+
+    public static void setBlacklistedASNs(List<BlacklistedASN> blacklistedASNs) {
+        VPNListener.blacklistedASNs = blacklistedASNs;
     }
 }
