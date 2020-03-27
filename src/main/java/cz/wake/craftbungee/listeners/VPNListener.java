@@ -81,7 +81,7 @@ public class VPNListener implements Listener {
                         return;
                     }
                     Logger.danger("IP " + address + " je z CZ/SK, ale je to VPN, hrac nebyl pusten na server");
-                    e.setCancelReason("§c§lTato IP je vedena jako VPN.\n§fPokud si myslis, ze to tak neni, napis\n§fna webu nebo na Discordu uzivateli §e§lMrWakeCZ §rnebo §e§lKrosta8");
+                    e.setCancelReason("§c§lTato IP je vedena jako VPN.\n§fPokud si myslis, ze to tak neni, zaloz\n§fsi ticket u nas na Discordu: §ehttps://discord.gg/craftmania");
                     e.setCancelled(true);
                     return;
                 }
@@ -103,7 +103,7 @@ public class VPNListener implements Listener {
 
             // Hráč není na IP whitelistu a nema CZ / SK IP
             Main.getInstance().getLogger().log(Level.INFO, ChatColor.RED + "Zahranicni IP / VPN (IP: " + address + ", NICK: " + e.getConnection().getName() + "). Hrac zablokovan!");
-            e.setCancelReason("§c§lTva IP dle overeni nepochazi z CZ/SK.\n§fPokud si myslis, ze to tak neni, napis\n§fna webu nebo na Discordu uzivateli §e§lMrWakeCZ");
+            e.setCancelReason("§c§lTva IP dle overeni nepochazi z CZ/SK.\n§fPokud si myslis, ze to tak neni, zaloz\n§fsi ticket u nas na Discordu: §ehttps://discord.gg/craftmania");
             e.setCancelled(true);
         }
     }
