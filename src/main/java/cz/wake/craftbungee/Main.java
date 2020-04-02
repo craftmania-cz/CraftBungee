@@ -41,8 +41,8 @@ public class Main extends Plugin {
     private final Set<String> defaults = new HashSet<>();
     private final Map<String, GroupData> groups = new HashMap<>();
     public static final List<CraftQueue> queues = new ArrayList<>();
-    public static final HashMap<ProxiedPlayer, CraftQueue> playerQueues = new HashMap<>();
     private static NoteManager noteManager;
+    private static QueueManager queueManager;
 
     // Channels
     public final static String CRAFTEVENTS_CHANNEL = "craftevents:plugin"; // Channel pro zasilani notifikaci pro zacatek eventu
@@ -91,6 +91,7 @@ public class Main extends Plugin {
         getProxy().getPluginManager().registerCommand(this, new IPWL_command(this));
         getProxy().getPluginManager().registerCommand(this, new Eventserver_tp_command(this));
         getProxy().getPluginManager().registerCommand(this, new Note_command(this));
+        getProxy().getPluginManager().registerCommand(this, new Queue_command());
 
         // Napojeni na MySQL
         initDatabase();
@@ -138,7 +139,7 @@ public class Main extends Plugin {
         }
 
         // Queue system
-        new QueueManager();
+        queueManager = new QueueManager();
 
         // Note manager
         noteManager = new NoteManager();
@@ -272,5 +273,9 @@ public class Main extends Plugin {
 
     public static NoteManager getNoteManager() {
         return noteManager;
+    }
+
+    public static QueueManager getQueueManager() {
+        return queueManager;
     }
 }

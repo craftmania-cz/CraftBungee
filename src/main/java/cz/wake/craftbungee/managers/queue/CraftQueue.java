@@ -90,4 +90,8 @@ public class CraftQueue {
         }
         return pos;
     }
+
+    public void removePlayer(ProxiedPlayer player) {
+        this.queue.remove(player);
+    }
 }

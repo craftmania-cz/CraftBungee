@@ -30,5 +30,7 @@ public class PlayerListener implements Listener {
 
         Main.getInstance().getSQLManager().updateStats(p, false);
         Main.getInstance().getOnlinePlayers().remove(p);
+
+        Main.getQueueManager().unregisterPlayer(p);
     }
 }
