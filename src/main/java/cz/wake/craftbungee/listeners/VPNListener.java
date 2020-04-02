@@ -55,7 +55,7 @@ public class VPNListener implements Listener {
                 Response craftApiResponse = caller.newCall(craftApiRequest).execute();
                 JSONObject craftApiJson = new JSONObject(craftApiResponse.body().string());
                 JSONObject playerData = craftApiJson.getJSONObject("data");
-                if (playerData.getInt("played_time") <= 720) {
+                if (playerData.getInt("played_time") <= 60) {
                     Logger.info("Hráč " + name + " nemá odehráno na serveru 12h, nebyl puštěn na server!");
                     e.setCancelReason("§c§lTvuj pokytovatel je na blacklistu §7+ §e§lnemas odehrano 12h na serveru!\n§fPokud chces pristup a server, musis si vytvorit ticket s zadosti o pridani na whitelist u nas na Discordu: §ehttps://discord.gg/craftmania");
                     e.setCancelled(true);
