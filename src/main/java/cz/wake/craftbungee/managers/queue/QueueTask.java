@@ -17,7 +17,7 @@ public class QueueTask implements Runnable {
                 if (previousPlayer == chosenPlayer) continue;
                 previousPlayer = chosenPlayer;
                 if (chosenPlayer == null) continue;
-                craftQueue.connectPlayer(chosenPlayer);
+                craftQueue.connectPlayer(chosenPlayer, false);
             }
         }
     }
