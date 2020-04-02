@@ -26,7 +26,10 @@ public class CraftQueue {
     }
 
     public void addToQueue(ProxiedPlayer player) {
-        if (this.queue.contains(player)) return;
+        if (this.queue.contains(player)) {
+            player.sendMessage(QueueManager.PREFIX + "Již čekáš ve frontě (pozice: " + getPosition(player) + ")");
+            return;
+        }
         this.queue.add(player);
         Main.getInstance().getLogger().info("" + queue.size());
         if (player.hasPermission("craftbungee.queue.ignore")) {
@@ -76,5 +79,15 @@ public class CraftQueue {
 
     public Queue<ProxiedPlayer> getQueue() {
         return queue;
+    }
+
+    public int getPosition(ProxiedPlayer player) {
+        if (!this.queue.contains(player)) return -1;
+        int pos = 1;
+        for (ProxiedPlayer queuedPlayer : this.queue) {
+            if (queuedPlayer.equals(player)) return pos;
+            pos++;
+        }
+        return pos;
     }
 }
