@@ -101,7 +101,7 @@ help-commands:
 
 queue-system:
   # Kolik hráčů se může připojit za x sekund
-  max-players: 1
+  max-players: 2
   # V sekundách
   interval: 3
   # Kde bude queue fungovat

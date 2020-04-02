@@ -26,14 +26,20 @@ public class CraftQueue {
     }
 
     public void addToQueue(ProxiedPlayer player) {
-        if (this.queue.contains(player)) return;
+        if (this.queue.contains(player)) {
+            player.sendMessage(QueueManager.PREFIX + "Již čekáš ve frontě (pozice: " + getPosition(player) + ")");
+            return;
+        }
         this.queue.add(player);
         Main.getInstance().getLogger().info("" + queue.size());
-        if (queue.size() <= Main.getConfig().getInt("queue-system.max-players")) {
-            this.connectPlayer(player);
+        if (player.hasPermission("craftbungee.queue.ignore")) {
+            this.connectPlayer(player, true);
+            return;
+        } else if (queue.size() <= Main.getConfig().getInt("queue-system.max-players")) {
+            this.connectPlayer(player, false);
             return;
         } else {
-            player.sendMessage(QueueManager.PREFIX + "Na tento server se snazi pripojit mnoho lidi najednou, proto sme te dali do fronty (pocet cekajicich hracu: " + this.queue.size() + ").");
+            player.sendMessage(QueueManager.PREFIX + "Na tento server se snaží připojit mnoho lidí najednou, proto jsme tě dali do fronty (počet čekajících hráčů: " + this.queue.size() + ").");
         }
     }
 
@@ -41,16 +47,21 @@ public class CraftQueue {
         return this.queue.size() >= Main.getConfig().getInt("queue-system.max-players");
     }
 
-    public void connectPlayer(ProxiedPlayer player) {
-        player.sendMessage(QueueManager.PREFIX + "Budes presmerovan na server za 3 vteriny...");
+    public void connectPlayer(ProxiedPlayer player, boolean force) {
+        if (force) {
+            player.connect(this.serverInfo, ServerConnectEvent.Reason.PLUGIN_MESSAGE);
+            queue.remove(player);
+            return;
+        }
+        player.sendMessage(QueueManager.PREFIX + "Budeš přesměrován na server za 3 vteřiny...");
         ProxyServer.getInstance().getScheduler().schedule(Main.getInstance(), () -> player.connect(this.serverInfo, ServerConnectEvent.Reason.PLUGIN_MESSAGE), 3L, 0L, TimeUnit.SECONDS);
         ProxyServer.getInstance().getScheduler().schedule(Main.getInstance(), () -> queue.remove(player), 3L, 0L, TimeUnit.SECONDS);
         return;
     }
 
-    public void connectPlayers(List<ProxiedPlayer> players) {
+    public void connectPlayers(List<ProxiedPlayer> players, boolean force) {
         for (ProxiedPlayer player : players) {
-            this.connectPlayer(player);
+            this.connectPlayer(player, force);
         }
     }
 
@@ -68,5 +79,19 @@ public class CraftQueue {
 
     public Queue<ProxiedPlayer> getQueue() {
         return queue;
+    }
+
+    public int getPosition(ProxiedPlayer player) {
+        if (!this.queue.contains(player)) return -1;
+        int pos = 1;
+        for (ProxiedPlayer queuedPlayer : this.queue) {
+            if (queuedPlayer.equals(player)) return pos;
+            pos++;
+        }
+        return pos;
+    }
+
+    public void removePlayer(ProxiedPlayer player) {
+        this.queue.remove(player);
     }
 }
