@@ -12,7 +12,7 @@ public class QueueTask implements Runnable {
             if (!craftQueue.enoughPlayers()) return;
             java.util.Queue<ProxiedPlayer> queue = craftQueue.getQueue();
             for (int i = 0; i <= craftQueue.getMaxPerWave(); i++) {
-                ProxiedPlayer chosenPlayer = queue.peek();
+                ProxiedPlayer chosenPlayer = queue.poll();
                 if (chosenPlayer == null) continue;
                 if (!chosenPlayer.isConnected()) continue;
                 craftQueue.connectPlayer(chosenPlayer, false);
