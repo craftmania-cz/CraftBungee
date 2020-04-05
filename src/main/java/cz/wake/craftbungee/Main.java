@@ -5,6 +5,7 @@ import cz.wake.craftbungee.commands.*;
 import cz.wake.craftbungee.commands.internal.Eventserver_tp_command;
 import cz.wake.craftbungee.listeners.*;
 import cz.wake.craftbungee.managers.*;
+import cz.wake.craftbungee.managers.events.EventManager;
 import cz.wake.craftbungee.managers.notes.Note;
 import cz.wake.craftbungee.managers.notes.NoteManager;
 import cz.wake.craftbungee.managers.queue.CraftQueue;
@@ -43,6 +44,7 @@ public class Main extends Plugin {
     public static final List<CraftQueue> queues = new ArrayList<>();
     private static NoteManager noteManager;
     private static QueueManager queueManager;
+    private static EventManager eventManager;
 
     // Channels
     public final static String CRAFTEVENTS_CHANNEL = "craftevents:plugin"; // Channel pro zasilani notifikaci pro zacatek eventu
@@ -92,6 +94,7 @@ public class Main extends Plugin {
         getProxy().getPluginManager().registerCommand(this, new Eventserver_tp_command(this));
         getProxy().getPluginManager().registerCommand(this, new Note_command(this));
         getProxy().getPluginManager().registerCommand(this, new Queue_command());
+        getProxy().getPluginManager().registerCommand(this, new Event_command());
 
         // Napojeni na MySQL
         initDatabase();
@@ -115,6 +118,7 @@ public class Main extends Plugin {
         ProxyServer.getInstance().getPluginManager().registerListener(this, new EventNotifyListener(this));
         ProxyServer.getInstance().getPluginManager().registerListener(this, new HelpCommandListener(this));
         ProxyServer.getInstance().getPluginManager().registerListener(this, new QueueListener());
+        ProxyServer.getInstance().getPluginManager().registerListener(this, new EventManager());
 
         // Tasks
         ProxyServer.getInstance().getScheduler().schedule(Main.getInstance(), new SQLChecker(), 1L, 1L, TimeUnit.MINUTES);
@@ -143,6 +147,9 @@ public class Main extends Plugin {
 
         // Note manager
         noteManager = new NoteManager();
+
+        // Event manager
+        eventManager = new EventManager();
     }
 
     @Override
@@ -277,5 +284,9 @@ public class Main extends Plugin {
 
     public static QueueManager getQueueManager() {
         return queueManager;
+    }
+
+    public static EventManager getEventManager() {
+        return eventManager;
     }
 }
