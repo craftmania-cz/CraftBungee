@@ -93,8 +93,10 @@ public class Main extends Plugin {
         getProxy().getPluginManager().registerCommand(this, new IPWL_command(this));
         getProxy().getPluginManager().registerCommand(this, new Eventserver_tp_command(this));
         getProxy().getPluginManager().registerCommand(this, new Note_command(this));
-        getProxy().getPluginManager().registerCommand(this, new Queue_command());
         getProxy().getPluginManager().registerCommand(this, new Event_command());
+        if (getConfig().getBoolean("queue-system.enabled")) {
+            getProxy().getPluginManager().registerCommand(this, new Queue_command());
+        }
 
         // Napojeni na MySQL
         initDatabase();
@@ -117,8 +119,11 @@ public class Main extends Plugin {
         ProxyServer.getInstance().getPluginManager().registerListener(this, new VoteListener());
         ProxyServer.getInstance().getPluginManager().registerListener(this, new EventNotifyListener(this));
         ProxyServer.getInstance().getPluginManager().registerListener(this, new HelpCommandListener(this));
-        ProxyServer.getInstance().getPluginManager().registerListener(this, new QueueListener());
         ProxyServer.getInstance().getPluginManager().registerListener(this, new EventManager());
+
+        if (getConfig().getBoolean("queue-system.enabled")) {
+            ProxyServer.getInstance().getPluginManager().registerListener(this, new QueueListener());
+        }
 
         // Tasks
         ProxyServer.getInstance().getScheduler().schedule(Main.getInstance(), new SQLChecker(), 1L, 1L, TimeUnit.MINUTES);

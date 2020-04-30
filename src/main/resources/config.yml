@@ -100,6 +100,7 @@ help-commands:
         - glist
 
 queue-system:
+  enabled: true
   # Kolik hráčů se může připojit za x sekund
   max-players: 2
   # V sekundách
