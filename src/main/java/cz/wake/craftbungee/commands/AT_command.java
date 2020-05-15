@@ -10,6 +10,7 @@ import net.md_5.bungee.api.chat.TextComponent;
 import net.md_5.bungee.api.connection.ProxiedPlayer;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 
 public class AT_command extends net.md_5.bungee.api.plugin.Command {
 
@@ -38,7 +39,9 @@ public class AT_command extends net.md_5.bungee.api.plugin.Command {
         sender.sendMessage("    §7§oStaci najet na nick clena a uvidis, na jakem serveru je.");
         sender.sendMessage("§r");
 
-        for (ProxiedPlayer p : plugin.getOnlinePlayers()) {
+        Iterator<ProxiedPlayer> playerIterator = plugin.getOnlinePlayers().iterator();
+        while (playerIterator.hasNext()) {
+            ProxiedPlayer p = playerIterator.next();
             if (BungeeUtils.getGroupBool(p)) {
 
                 String group = BungeeUtils.getGroup(p);
@@ -71,8 +74,8 @@ public class AT_command extends net.md_5.bungee.api.plugin.Command {
                     builder.add(p);
                     players.add(p);
                 }
-
             }
+            playerIterator.remove();
         }
 
         jsonMessage(sender, majitel, "§3§lMajitel");
@@ -88,7 +91,7 @@ public class AT_command extends net.md_5.bungee.api.plugin.Command {
             sender.sendMessage(" §7§lAktualne jsou vsichni cleni AT offline :(");
         } else if (players.size() == 1) {
             sender.sendMessage(" §a§lAktualne je pripojen " + players.size() + " clen AT.");
-        } else if (players.size() >= 2 && players.size() <= 4) {
+        } else if (players.size() <= 4) {
             sender.sendMessage(" §a§lAktualne jsou pripojeni " + players.size() + " cleni AT.");
         } else {
             sender.sendMessage(" §a§lAktualne je pripojeno " + players.size() + " clenu AT.");
@@ -106,7 +109,7 @@ public class AT_command extends net.md_5.bungee.api.plugin.Command {
             for (int x = 1; x <= players.size(); x++) { //TODO: Prejmenovat nejak normalne...
                 if (players.size() > x) {
                     component = new TextComponent("§7" + players.get(x - 1) + ", ");
-                } else if (players.size() == x) {
+                } else {
                     component = new TextComponent("§7" + players.get(x - 1).getName());
                 }
                 if (BungeeUtils.getGroupBool(receiver)) {
