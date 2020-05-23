@@ -22,30 +22,33 @@ public class EventManager implements Listener {
             ByteArrayInputStream stream = new ByteArrayInputStream(e.getData());
             DataInputStream data = new DataInputStream(stream);
             String eventStateString = data.readUTF();
-            Event.EventState eventState = Event.EventState.valueOf(eventStateString);
-
-            event.setEventState(eventState);
-
-            Logger.info("Updating event...");
-            // Event is selected
+            if (eventStateString.equalsIgnoreCase("announce")) return;
             try {
-                String name = String.copyValueOf(data.readUTF().toCharArray());
-                String category = String.copyValueOf(data.readUTF().toCharArray());
-                int reward = Integer.parseInt(String.copyValueOf(data.readUTF().toCharArray()));
+                Event.EventState eventState = Event.EventState.valueOf(eventStateString);
 
-                event.setName(name);
-                event.setCategory(category);
-                event.setReward(reward);
-            } catch (EOFException er) {
-                // No other values
-                Logger.warning("Null event.");
-                event.setName(null);
-                event.setCategory(null);
-                event.setReward(0);
-            }
+                event.setEventState(eventState);
 
-            data.close();
-            stream.close();
+                Logger.info("Updating event...");
+                // Event is selected
+                try {
+                    String name = String.copyValueOf(data.readUTF().toCharArray());
+                    String category = String.copyValueOf(data.readUTF().toCharArray());
+                    int reward = Integer.parseInt(String.copyValueOf(data.readUTF().toCharArray()));
+
+                    event.setName(name);
+                    event.setCategory(category);
+                    event.setReward(reward);
+                } catch (EOFException er) {
+                    // No other values
+                    Logger.warning("Null event.");
+                    event.setName(null);
+                    event.setCategory(null);
+                    event.setReward(0);
+                }
+
+                data.close();
+                stream.close();
+            } catch (IllegalArgumentException ignored) {}
         } catch (Exception er) {
             er.printStackTrace();
         }

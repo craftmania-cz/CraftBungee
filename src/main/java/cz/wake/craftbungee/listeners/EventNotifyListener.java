@@ -25,7 +25,7 @@ public class EventNotifyListener implements Listener {
         this.plugin = plugin;
     }
 
-    @EventHandler
+    @EventHandler(priority = 5)
     public void onPluginMessage(PluginMessageEvent message) {
         if(!message.getTag().equals(Main.CRAFTEVENTS_CHANNEL)) {
             return;

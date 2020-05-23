@@ -67,7 +67,7 @@ public class Event {
         return new Event(eventState, name, category, reward);
     }
 
-    public static enum EventState {
+    public enum EventState {
         LOBBY,
         STARTING,
         INGAME,
