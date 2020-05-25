@@ -81,8 +81,10 @@ public class Main extends Plugin {
             this.groups.put(key, new GroupData(completions, isWhitelist));
         }
 
+        // Event manager & eventy
         this.getProxy().registerChannel("craftbungee"); // Channel pro channeling hlasu
         this.getProxy().registerChannel(CRAFTEVENTS_CHANNEL);
+        eventManager = new EventManager();
 
         getProxy().getPluginManager().registerCommand(this, new GA_command(this));
         getProxy().getPluginManager().registerCommand(this, new AT_command(this));
@@ -94,9 +96,6 @@ public class Main extends Plugin {
         getProxy().getPluginManager().registerCommand(this, new Eventserver_tp_command(this));
         getProxy().getPluginManager().registerCommand(this, new Note_command(this));
         getProxy().getPluginManager().registerCommand(this, new Event_command());
-        if (getConfig().getBoolean("queue-system.enabled")) {
-            getProxy().getPluginManager().registerCommand(this, new Queue_command());
-        }
 
         // Napojeni na MySQL
         initDatabase();
@@ -120,8 +119,11 @@ public class Main extends Plugin {
         ProxyServer.getInstance().getPluginManager().registerListener(this, new HelpCommandListener(this));
         ProxyServer.getInstance().getPluginManager().registerListener(this, new EventManager());
 
+        // Queue system
         if (getConfig().getBoolean("queue-system.enabled")) {
+            getProxy().getPluginManager().registerCommand(this, new Queue_command());
             ProxyServer.getInstance().getPluginManager().registerListener(this, new QueueListener());
+            queueManager = new QueueManager();
         }
 
         // Tasks
@@ -146,14 +148,8 @@ public class Main extends Plugin {
             }
         }
 
-        // Queue system
-        queueManager = new QueueManager();
-
         // Note manager
         noteManager = new NoteManager();
-
-        // Event manager
-        eventManager = new EventManager();
     }
 
     @Override
