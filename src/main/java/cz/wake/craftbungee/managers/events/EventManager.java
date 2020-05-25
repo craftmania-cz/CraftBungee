@@ -78,7 +78,7 @@ public class EventManager implements Listener {
             p.sendMessage("");
             p.sendMessage("§c§lEvent brzy začne!");
             //p.sendMessage("§fPozor! Na Event serveru brzo začne celoserverový event!");
-            p.sendMessage("§7Typ: §f" + eventType + ", §7odměna: §f" + reward);
+            p.sendMessage("§7Typ: §f" + eventType + "§7, odměna: §f" + reward);
             p.sendMessage("§7Eventer: §f" + eventer);
             p.sendMessage("");
             TextComponent textComponent = new TextComponent();
