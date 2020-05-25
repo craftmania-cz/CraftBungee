@@ -117,7 +117,6 @@ public class Main extends Plugin {
         ProxyServer.getInstance().getPluginManager().registerListener(this, new NameBlacklistListener());
         ProxyServer.getInstance().getPluginManager().registerListener(this, new PingListener());
         ProxyServer.getInstance().getPluginManager().registerListener(this, new VoteListener());
-        ProxyServer.getInstance().getPluginManager().registerListener(this, new EventNotifyListener(this));
         ProxyServer.getInstance().getPluginManager().registerListener(this, new HelpCommandListener(this));
         ProxyServer.getInstance().getPluginManager().registerListener(this, new EventManager());
 
