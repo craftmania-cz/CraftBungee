@@ -76,19 +76,10 @@ public class EventManager implements Listener {
             p.sendMessage("");
             p.sendMessage("§b\u25ac\u25ac\u25ac\u25ac\u25ac\u25ac\u25ac\u25ac\u25ac\u25ac\u25ac\u25ac\u25ac\u25ac\u25ac\u25ac\u25ac\u25ac\u25ac\u25ac\u25ac\u25ac\u25ac\u25ac\u25ac\u25ac\u25ac\u25ac\u25ac\u25ac\u25ac\u25ac\u25ac\u25ac\u25ac\u25ac\u25ac\u25ac\u25ac\u25ac\u25ac\u25ac\u25ac\u25ac\u25ac\u25ac\u25ac\u25ac\u25ac\u25ac\u25ac\u25ac\u25ac\u25ac\u25ac\u25ac\u25ac\u25ac\u25ac\u25ac\u25ac\u25ac\u25ac\u25ac\u25ac\u25ac\u25ac\u25ac\u25ac\u25ac\u25ac\u25ac\u25ac\u25ac\u25ac\u25ac\u25ac");
             p.sendMessage("");
-            p.sendMessage("§e§l[*] §e§lEvent brzy začne!");
-            if (eventType.equals("") && reward.equals("") && eventer.equals("")) {
-                p.sendMessage("§fPozor! Na Event serveru brzo začne celoserverový event!");
-            }
-            if (!eventType.equals("")) {
-                p.sendMessage("§7Typ: §f" + eventType);
-            }
-            if (!reward.equals("")) {
-                p.sendMessage("§7Odměna: §f" + reward);
-            }
-            if (!eventer.equals("")) {
-                p.sendMessage("§7Eventer: §f" + eventer);
-            }
+            p.sendMessage("§c§lEvent brzy začne!");
+            //p.sendMessage("§fPozor! Na Event serveru brzo začne celoserverový event!");
+            p.sendMessage("§7Typ: §f" + eventType + ", §7odměna: §f" + reward);
+            p.sendMessage("§7Eventer: §f" + eventer);
             p.sendMessage("");
             TextComponent textComponent = new TextComponent();
             textComponent.setText("§eKliknutím zde se připojíš na server!");
