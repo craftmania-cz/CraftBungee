@@ -26,44 +26,49 @@ public class EventManager implements Listener {
             ByteArrayInputStream stream = new ByteArrayInputStream(e.getData());
             DataInputStream data = new DataInputStream(stream);
             String type = data.readUTF();
-            if (type.equalsIgnoreCase("announce")) {
-                try {
-                    String eventType = data.readUTF();
-                    String reward = data.readUTF();
-                    String eventer = data.readUTF();
-                    announceMessage(eventType, reward, eventer);
-
-                } catch (Exception err) {
-                    err.printStackTrace();
+            switch (type.toLowerCase()) {
+                case "announce": {
+                    try {
+                        String eventType = data.readUTF();
+                        int reward = data.read();
+                        String eventer = data.readUTF();
+                        announceMessage(eventType, reward, eventer);
+                        break;
+                    } catch (Exception err) {
+                        err.printStackTrace();
+                    }
+                    break;
                 }
-                return;
-            }
-            try {
-                Event.EventState eventState = Event.EventState.valueOf(type);
+                case "eventcommand": {
+                    try {
+                        Event.EventState eventState = Event.EventState.valueOf(data.readUTF());
+                        event.setEventState(eventState);
 
-                event.setEventState(eventState);
+                        Logger.info("Updating event...");
+                        // Event is selected
+                        try {
+                            String name = data.readUTF();
+                            String category = data.readUTF();
+                            int reward = data.read();
 
-                Logger.info("Updating event...");
-                // Event is selected
-                try {
-                    String name = data.readUTF();
-                    String category = data.readUTF();
-                    int reward = Integer.parseInt(data.readUTF());
+                            event.setName(name);
+                            event.setCategory(category);
+                            event.setReward(reward);
+                        } catch (Exception er) {
+                            er.printStackTrace();
+                            // No other values
+                            Logger.warning("Null event.");
+                            event.setName(null);
+                            event.setCategory(null);
+                            event.setReward(0);
+                        }
 
-                    event.setName(name);
-                    event.setCategory(category);
-                    event.setReward(reward);
-                } catch (Exception er) {
-                    // No other values
-                    Logger.warning("Null event.");
-                    event.setName(null);
-                    event.setCategory(null);
-                    event.setReward(0);
+                        data.close();
+                        stream.close();
+                    } catch (IllegalArgumentException err) {
+                        err.printStackTrace();
+                    }
                 }
-
-                data.close();
-                stream.close();
-            } catch (IllegalArgumentException ignored) {
             }
         } catch (Exception er) {
             er.printStackTrace();
@@ -71,14 +76,15 @@ public class EventManager implements Listener {
         Logger.info(event.toString());
     }
 
-    private void announceMessage(final String eventType, final String reward, final String eventer) {
+    private void announceMessage(final String eventType, final int reward, final String eventer) {
+        Logger.info("Announcing event (" + eventType + "), reward: " + reward + ", eventer: " + eventer);
         for (ProxiedPlayer p : Main.getInstance().getOnlinePlayers()) {
             p.sendMessage("");
             p.sendMessage("§b\u25ac\u25ac\u25ac\u25ac\u25ac\u25ac\u25ac\u25ac\u25ac\u25ac\u25ac\u25ac\u25ac\u25ac\u25ac\u25ac\u25ac\u25ac\u25ac\u25ac\u25ac\u25ac\u25ac\u25ac\u25ac\u25ac\u25ac\u25ac\u25ac\u25ac\u25ac\u25ac\u25ac\u25ac\u25ac\u25ac\u25ac\u25ac\u25ac\u25ac\u25ac\u25ac\u25ac\u25ac\u25ac\u25ac\u25ac\u25ac\u25ac\u25ac\u25ac\u25ac\u25ac\u25ac\u25ac\u25ac\u25ac\u25ac\u25ac\u25ac\u25ac\u25ac\u25ac\u25ac\u25ac\u25ac\u25ac\u25ac\u25ac\u25ac\u25ac\u25ac\u25ac\u25ac\u25ac\u25ac\u25ac");
             p.sendMessage("");
             p.sendMessage("§c§lEvent brzy začne!");
             //p.sendMessage("§fPozor! Na Event serveru brzo začne celoserverový event!");
-            p.sendMessage("§7Typ: §f" + eventType + "§7, odměna: §f" + reward);
+            p.sendMessage("§7Typ: §f" + eventType + "§7, odměna: §f" + reward + " EP");
             p.sendMessage("§7Eventer: §f" + eventer);
             p.sendMessage("");
             TextComponent textComponent = new TextComponent();
