@@ -17,8 +17,6 @@ import java.io.EOFException;
 
 public class EventManager implements Listener {
 
-    public static Event event = new Event();
-
     @EventHandler
     public void onPluginMessage(PluginMessageEvent e) {
         if (!e.getTag().equalsIgnoreCase(Main.CRAFTEVENTS_CHANNEL)) return;
@@ -39,41 +37,10 @@ public class EventManager implements Listener {
                     }
                     break;
                 }
-                case "eventcommand": {
-                    try {
-                        Event.EventState eventState = Event.EventState.valueOf(data.readUTF());
-                        event.setEventState(eventState);
-
-                        Logger.info("Updating event...");
-                        // Event is selected
-                        try {
-                            String name = data.readUTF();
-                            String category = data.readUTF();
-                            int reward = data.read();
-
-                            event.setName(name);
-                            event.setCategory(category);
-                            event.setReward(reward);
-                        } catch (Exception er) {
-                            er.printStackTrace();
-                            // No other values
-                            Logger.warning("Null event.");
-                            event.setName(null);
-                            event.setCategory(null);
-                            event.setReward(0);
-                        }
-
-                        data.close();
-                        stream.close();
-                    } catch (IllegalArgumentException err) {
-                        err.printStackTrace();
-                    }
-                }
             }
         } catch (Exception er) {
             er.printStackTrace();
         }
-        Logger.info(event.toString());
     }
 
     private void announceMessage(final String eventType, final int reward, final String eventer) {
