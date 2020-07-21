@@ -28,7 +28,7 @@ public class EventManager implements Listener {
                 case "announce": {
                     try {
                         String eventType = data.readUTF();
-                        int reward = data.read();
+                        int reward = data.readInt();
                         String eventer = data.readUTF();
                         announceMessage(eventType, reward, eventer);
                         break;
