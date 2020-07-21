@@ -95,7 +95,6 @@ public class Main extends Plugin {
         getProxy().getPluginManager().registerCommand(this, new IPWL_command(this));
         getProxy().getPluginManager().registerCommand(this, new Eventserver_tp_command(this));
         getProxy().getPluginManager().registerCommand(this, new Note_command(this));
-        getProxy().getPluginManager().registerCommand(this, new Event_command());
 
         // Napojeni na MySQL
         initDatabase();
