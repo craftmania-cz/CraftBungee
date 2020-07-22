@@ -6,11 +6,7 @@ import cz.wake.craftbungee.commands.internal.Eventserver_tp_command;
 import cz.wake.craftbungee.listeners.*;
 import cz.wake.craftbungee.managers.*;
 import cz.wake.craftbungee.managers.events.EventManager;
-import cz.wake.craftbungee.managers.notes.Note;
 import cz.wake.craftbungee.managers.notes.NoteManager;
-import cz.wake.craftbungee.managers.queue.CraftQueue;
-import cz.wake.craftbungee.managers.queue.QueueListener;
-import cz.wake.craftbungee.managers.queue.QueueManager;
 import cz.wake.craftbungee.prometheus.MetricsController;
 import cz.wake.craftbungee.sql.SQLManager;
 import net.md_5.bungee.api.ProxyServer;
@@ -41,9 +37,7 @@ public class Main extends Plugin {
     private boolean isDebug = false;
     private final Set<String> defaults = new HashSet<>();
     private final Map<String, GroupData> groups = new HashMap<>();
-    public static final List<CraftQueue> queues = new ArrayList<>();
     private static NoteManager noteManager;
-    private static QueueManager queueManager;
     private static EventManager eventManager;
 
     // Channels
@@ -100,7 +94,7 @@ public class Main extends Plugin {
         initDatabase();
 
         // Nacteni block-country z db
-        blockCountry = Boolean.valueOf(getSQLManager().getConfigValue("block_country"));
+        blockCountry = Boolean.parseBoolean(getSQLManager().getConfigValue("block_country"));
 
         // IP Whitelist
         VPNListener.setAllowedIps(getSQLManager().getWhitelistedIPs());
@@ -117,13 +111,6 @@ public class Main extends Plugin {
         ProxyServer.getInstance().getPluginManager().registerListener(this, new VoteListener());
         ProxyServer.getInstance().getPluginManager().registerListener(this, new HelpCommandListener(this));
         ProxyServer.getInstance().getPluginManager().registerListener(this, new EventManager());
-
-        // Queue system
-        if (getConfig().getBoolean("queue-system.enabled")) {
-            getProxy().getPluginManager().registerCommand(this, new Queue_command());
-            ProxyServer.getInstance().getPluginManager().registerListener(this, new QueueListener());
-            queueManager = new QueueManager();
-        }
 
         // Tasks
         ProxyServer.getInstance().getScheduler().schedule(Main.getInstance(), new SQLChecker(), 1L, 1L, TimeUnit.MINUTES);
@@ -279,10 +266,6 @@ public class Main extends Plugin {
 
     public static NoteManager getNoteManager() {
         return noteManager;
-    }
-
-    public static QueueManager getQueueManager() {
-        return queueManager;
     }
 
     public static EventManager getEventManager() {
