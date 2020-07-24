@@ -5,7 +5,6 @@ import cz.wake.craftbungee.commands.*;
 import cz.wake.craftbungee.commands.internal.Eventserver_tp_command;
 import cz.wake.craftbungee.listeners.*;
 import cz.wake.craftbungee.managers.*;
-import cz.wake.craftbungee.managers.events.EventManager;
 import cz.wake.craftbungee.managers.notes.NoteManager;
 import cz.wake.craftbungee.prometheus.MetricsController;
 import cz.wake.craftbungee.sql.SQLManager;
@@ -38,7 +37,6 @@ public class Main extends Plugin {
     private final Set<String> defaults = new HashSet<>();
     private final Map<String, GroupData> groups = new HashMap<>();
     private static NoteManager noteManager;
-    private static EventManager eventManager;
 
     // Channels
     public final static String CRAFTEVENTS_CHANNEL = "craftevents:plugin"; // Channel pro zasilani notifikaci pro zacatek eventu
@@ -78,7 +76,6 @@ public class Main extends Plugin {
         // Event manager & eventy
         this.getProxy().registerChannel("craftbungee"); // Channel pro channeling hlasu
         this.getProxy().registerChannel(CRAFTEVENTS_CHANNEL);
-        eventManager = new EventManager();
 
         getProxy().getPluginManager().registerCommand(this, new GA_command(this));
         getProxy().getPluginManager().registerCommand(this, new AT_command(this));
@@ -111,7 +108,6 @@ public class Main extends Plugin {
         ProxyServer.getInstance().getPluginManager().registerListener(this, new VoteListener());
         ProxyServer.getInstance().getPluginManager().registerListener(this, new EventNotifyListener(this));
         ProxyServer.getInstance().getPluginManager().registerListener(this, new HelpCommandListener(this));
-        ProxyServer.getInstance().getPluginManager().registerListener(this, new EventManager());
 
         // Tasks
         ProxyServer.getInstance().getScheduler().schedule(Main.getInstance(), new SQLChecker(), 1L, 1L, TimeUnit.MINUTES);
@@ -267,9 +263,5 @@ public class Main extends Plugin {
 
     public static NoteManager getNoteManager() {
         return noteManager;
-    }
-
-    public static EventManager getEventManager() {
-        return eventManager;
     }
 }
