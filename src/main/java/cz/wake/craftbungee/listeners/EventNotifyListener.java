@@ -51,7 +51,7 @@ public class EventNotifyListener implements Listener {
 
     private void announceMessage(final String eventType, final int reward, final String eventer) {
         Logger.info("Announcing event (" + eventType + "), reward: " + reward + ", eventer: " + eventer);
-        for (ProxiedPlayer p : Main.getInstance().getOnlinePlayers()) {
+        for (ProxiedPlayer p : Main.getInstance().getProxy().getPlayers()) {
             p.sendMessage("");
             p.sendMessage("§b\u25ac\u25ac\u25ac\u25ac\u25ac\u25ac\u25ac\u25ac\u25ac\u25ac\u25ac\u25ac\u25ac\u25ac\u25ac\u25ac\u25ac\u25ac\u25ac\u25ac\u25ac\u25ac\u25ac\u25ac\u25ac\u25ac\u25ac\u25ac\u25ac\u25ac\u25ac\u25ac\u25ac\u25ac\u25ac\u25ac\u25ac\u25ac\u25ac\u25ac\u25ac\u25ac\u25ac\u25ac\u25ac\u25ac\u25ac\u25ac\u25ac\u25ac\u25ac\u25ac\u25ac\u25ac\u25ac\u25ac\u25ac\u25ac\u25ac\u25ac\u25ac\u25ac\u25ac\u25ac\u25ac\u25ac\u25ac\u25ac\u25ac\u25ac\u25ac\u25ac\u25ac\u25ac\u25ac\u25ac\u25ac");
             p.sendMessage("");

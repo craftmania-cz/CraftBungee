@@ -39,7 +39,7 @@ public class AT_command extends net.md_5.bungee.api.plugin.Command {
         sender.sendMessage("    §7§oStaci najet na nick clena a uvidis, na jakem serveru je.");
         sender.sendMessage("§r");
 
-        Iterator<ProxiedPlayer> playerIterator = plugin.getOnlinePlayers().iterator();
+        Iterator<ProxiedPlayer> playerIterator = new ArrayList<>(plugin.getProxy().getPlayers()).iterator();
         while (playerIterator.hasNext()) {
             ProxiedPlayer p = playerIterator.next();
             if (BungeeUtils.getGroupBool(p)) {
