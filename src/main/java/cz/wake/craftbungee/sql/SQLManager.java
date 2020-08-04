@@ -349,4 +349,21 @@ public class SQLManager {
         }
         return false;
     }
+
+    public boolean isIPBanned(String ipAddress) {
+        Connection conn = null;
+        PreparedStatement ps = null;
+        try {
+            conn = pool.getConnection();
+            ps = conn.prepareStatement("SELECT * FROM bungeecord.`litebans_bans` WHERE ip = ? AND `active` = 1;");
+            ps.setString(1, ipAddress);
+            ps.executeQuery();
+            return ps.getResultSet().next();
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            pool.close(conn, ps, null);
+        }
+        return false;
+    }
 }

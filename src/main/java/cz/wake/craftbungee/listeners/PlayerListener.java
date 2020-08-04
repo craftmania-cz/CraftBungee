@@ -1,6 +1,9 @@
 package cz.wake.craftbungee.listeners;
 
 import cz.wake.craftbungee.Main;
+import cz.wake.craftbungee.utils.Logger;
+import net.md_5.bungee.api.ChatColor;
+import net.md_5.bungee.api.chat.TextComponent;
 import net.md_5.bungee.api.connection.ProxiedPlayer;
 import net.md_5.bungee.api.event.PlayerDisconnectEvent;
 import net.md_5.bungee.api.event.PostLoginEvent;
@@ -18,10 +21,22 @@ public class PlayerListener implements Listener {
     @EventHandler
     public void onLogin(final PostLoginEvent e) {
         ProxiedPlayer p = e.getPlayer();
+        final String address = e.getPlayer().getAddress().getAddress().getHostAddress();
 
         Main.getInstance().getOnlinePlayers().add(p);
         Main.getInstance().getSQLManager().updateStats(p, true);
 
+        if (Main.getInstance().getSQLManager().isIPBanned(address)) {
+            TextComponent exclamationMark = new TextComponent("[!]");
+            exclamationMark.setColor(ChatColor.RED);
+            exclamationMark.setBold(true);
+            TextComponent message = new TextComponent(" Na tvé IP adrese je zabanovaný nějaký účet. Pokud nevlastníš dynamickou IP adresu tak se může jednat o obcházení banu a můžeš mít problém.");
+            message.setColor(ChatColor.RED);
+            message.setBold(false);
+
+            exclamationMark.addExtra(message);
+            p.sendMessage(exclamationMark);
+        }
     }
 
     @EventHandler
