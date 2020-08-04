@@ -77,6 +77,6 @@ public class GHelp {
                 }
             }
         }
-        helps.add(new GHelp(GHelp.helps.size() +1, p, zprava, System.currentTimeMillis()));
+        helps.add(new GHelp(GHelp.helps.size() + 1, p, zprava, System.currentTimeMillis()));
     }
 }
