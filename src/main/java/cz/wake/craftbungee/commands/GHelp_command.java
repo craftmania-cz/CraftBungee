@@ -48,12 +48,12 @@ public class GHelp_command extends Command {
 
                 for (GHelp help : GHelp.helps) {
                     TextComponent component1 = new TextComponent("§e" + help.getPlayer().getName() + "§7:");
-                    component1.setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new ComponentBuilder("§7Odesláno ze serveru: §f" + help.getPlayer().getServer().getInfo().getName()).create()));
+                    component1.setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new ComponentBuilder("§7Odesláno: §f" + BungeeUtils.getDate(help.getLong()) + "\n§7Po kliknutí budeš přesunut na server: §f" + help.getPlayer().getServer().getInfo().getName()).create()));
                     component1.setClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/server " + help.getPlayer().getServer().getInfo().getName()));
 
                     TextComponent component2 = new TextComponent(" §f" + help.getMessage());
-                    component2.setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new ComponentBuilder("§7Odesláno: §f" + BungeeUtils.getDate(help.getLong()) + "\n§7Po kliknutí budeš přesunut na server: §f" + help.getPlayer().getServer().getInfo().getName()).create()));
-                    component2.setClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/server " + help.getPlayer().getServer().getInfo().getName()));
+                    component2.setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new ComponentBuilder("§7Kliknutím začneš odepisovat na zprávu §f#" + help.getId()).create()));
+                    component2.setClickEvent(new ClickEvent(ClickEvent.Action.SUGGEST_COMMAND, "/respond " + help.getId()));
 
                     TextComponent component = new TextComponent();
                     component.addExtra(component1);
