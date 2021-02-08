@@ -43,8 +43,6 @@ public class PlayerListener implements Listener {
 
         if (Via.getAPI() != null) {
             Main.getInstance().getSQLManager().updateMCVersion(p, Via.getAPI().getPlayerVersion(p.getUniqueId()));
-        } else {
-            System.out.println("Null");
         }
     }
 

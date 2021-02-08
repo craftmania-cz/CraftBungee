@@ -63,7 +63,6 @@ public class SQLManager {
             try {
                 conn = pool.getConnection();
                 ps = conn.prepareStatement("UPDATE minigames.player_profile SET mc_version = ? WHERE nick = ?;");
-                //ps = conn.prepareStatement("UPDATE player_profile SET mc_version = ? WHERE nick = ?;");
                 ps.setString(1, protocolVersion + "");
                 ps.setString(2, p.getName());
                 ps.executeUpdate();
