@@ -29,7 +29,6 @@ public class PlayerListener implements Listener {
         Main.getInstance().getOnlinePlayers().add(p);
         Main.getInstance().getSQLManager().updateStats(p, true);
 
-        /**
         if (Main.getInstance().getSQLManager().isIPBanned(address)) {
             TextComponent exclamationMark = new TextComponent("[!]");
             exclamationMark.setColor(ChatColor.RED);
@@ -40,7 +39,7 @@ public class PlayerListener implements Listener {
 
             exclamationMark.addExtra(message);
             p.sendMessage(exclamationMark);
-        }*/
+        }
 
         if (Via.getAPI() != null) {
             Main.getInstance().getSQLManager().updateMCVersion(p, Via.getAPI().getPlayerVersion(p.getUniqueId()));
