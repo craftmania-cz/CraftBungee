@@ -3,12 +3,15 @@ package cz.wake.craftbungee.listeners;
 import cz.wake.craftbungee.Main;
 import cz.wake.craftbungee.utils.Logger;
 import net.md_5.bungee.api.ChatColor;
+import net.md_5.bungee.api.ProxyServer;
 import net.md_5.bungee.api.chat.TextComponent;
 import net.md_5.bungee.api.connection.ProxiedPlayer;
 import net.md_5.bungee.api.event.PlayerDisconnectEvent;
 import net.md_5.bungee.api.event.PostLoginEvent;
 import net.md_5.bungee.api.plugin.Listener;
 import net.md_5.bungee.event.EventHandler;
+import us.myles.ViaVersion.api.Via;
+import us.myles.ViaVersion.api.ViaAPI;
 
 public class PlayerListener implements Listener {
 
@@ -26,6 +29,7 @@ public class PlayerListener implements Listener {
         Main.getInstance().getOnlinePlayers().add(p);
         Main.getInstance().getSQLManager().updateStats(p, true);
 
+        /**
         if (Main.getInstance().getSQLManager().isIPBanned(address)) {
             TextComponent exclamationMark = new TextComponent("[!]");
             exclamationMark.setColor(ChatColor.RED);
@@ -36,6 +40,12 @@ public class PlayerListener implements Listener {
 
             exclamationMark.addExtra(message);
             p.sendMessage(exclamationMark);
+        }*/
+
+        if (Via.getAPI() != null) {
+            Main.getInstance().getSQLManager().updateMCVersion(p, Via.getAPI().getPlayerVersion(p.getUniqueId()));
+        } else {
+            System.out.println("Null");
         }
     }
 

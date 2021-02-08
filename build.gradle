@@ -40,5 +40,6 @@ dependencies {
     compile group: 'org.slf4j', name: 'slf4j-log4j12', version:'1.7.5'
     compileOnly group: 'net.md-5', name: 'bungeecord-api', version:'1.14-SNAPSHOT'
     compileOnly name: 'nuvotifier-universal-2.3.4'
+    implementation name: 'ViaVersion-3.2.1'
     compileOnly 'io.github.waterfallmc:waterfall-api:1.15-SNAPSHOT'
 }
