@@ -41,8 +41,8 @@ public class PlayerListener implements Listener {
             p.sendMessage(exclamationMark);
         }
 
-        if (Via.getAPI() != null) {
-            Main.getInstance().getSQLManager().updateMCVersion(p, Via.getAPI().getPlayerVersion(p.getUniqueId()));
+        if (Main.getViaAPI() != null) {
+            Main.getInstance().getSQLManager().updateMCVersion(p, Main.getViaAPI().getPlayerVersion(p.getUniqueId()));
         }
     }
 
