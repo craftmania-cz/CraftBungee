@@ -24,6 +24,7 @@ task compilePlugin(type: Jar) {
 repositories {
     flatDir {dirs 'lib'}
     mavenCentral()
+    maven { url "https://repo.viaversion.com/" }
     maven { url "https://oss.sonatype.org/content/repositories/snapshots" }
     maven { url "http://repo.md-5.net/content/repositories/snapshots/" }
     maven { url "https://papermc.io/repo/repository/maven-public/" }
@@ -31,6 +32,8 @@ repositories {
 }
 
 dependencies {
+    compileOnly 'org.projectlombok:lombok:1.18.12'
+    annotationProcessor 'org.projectlombok:lombok:1.18.12'
     compile group: 'com.zaxxer', name: 'HikariCP', version:'2.6.2'
     compile group: 'com.mashape.unirest', name: 'unirest-java', version:'1.4.9'
     compile group: 'com.squareup.okhttp3', name: 'okhttp', version:'3.9.1'
@@ -40,5 +43,6 @@ dependencies {
     compile group: 'org.slf4j', name: 'slf4j-log4j12', version:'1.7.5'
     compileOnly group: 'net.md-5', name: 'bungeecord-api', version:'1.14-SNAPSHOT'
     compileOnly name: 'nuvotifier-universal-2.3.4'
+    implementation 'us.myles:viaversion:3.2.1'
     compileOnly 'io.github.waterfallmc:waterfall-api:1.15-SNAPSHOT'
 }
