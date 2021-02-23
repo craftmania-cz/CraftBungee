@@ -40,7 +40,7 @@ public class VoteListener implements Listener {
             for (String configServer : Main.getVoteServers()) {
                 if (configServer.equalsIgnoreCase(server)) {
                     BungeeUtils.sendMessageToBukkit("vote", player.getName(), String.valueOf(coins), player.getServer().getInfo());
-                }
+                } // no mělo by se taky započítat
             }
         } else {
             if (!(System.currentTimeMillis() > Main.getInstance().getSQLManager().getLastVote(e.getVote().getUsername()))) {
