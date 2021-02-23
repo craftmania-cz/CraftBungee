@@ -8,6 +8,7 @@ import cz.wake.craftbungee.managers.*;
 import cz.wake.craftbungee.managers.notes.NoteManager;
 import cz.wake.craftbungee.prometheus.MetricsController;
 import cz.wake.craftbungee.sql.SQLManager;
+import lombok.Getter;
 import net.md_5.bungee.api.ProxyServer;
 import net.md_5.bungee.api.connection.ProxiedPlayer;
 import net.md_5.bungee.api.plugin.Command;
@@ -16,6 +17,8 @@ import net.md_5.bungee.config.Configuration;
 import net.md_5.bungee.config.ConfigurationProvider;
 import net.md_5.bungee.config.YamlConfiguration;
 import org.eclipse.jetty.server.Server;
+import us.myles.ViaVersion.api.Via;
+import us.myles.ViaVersion.api.ViaAPI;
 
 import java.io.*;
 import java.util.*;
@@ -37,6 +40,8 @@ public class Main extends Plugin {
     private final Set<String> defaults = new HashSet<>();
     private final Map<String, GroupData> groups = new HashMap<>();
     private static NoteManager noteManager;
+
+    private static @Getter ViaAPI viaAPI;
 
     // Channels
     public final static String CRAFTEVENTS_CHANNEL = "craftevents:plugin"; // Channel pro zasilani notifikaci pro zacatek eventu
@@ -102,6 +107,7 @@ public class Main extends Plugin {
 
         // Registrace eventu
         ProxyServer.getInstance().getPluginManager().registerListener(this, new PlayerListener(this));
+
         ProxyServer.getInstance().getPluginManager().registerListener(this, new VPNListener());
         ProxyServer.getInstance().getPluginManager().registerListener(this, new NameBlacklistListener());
         ProxyServer.getInstance().getPluginManager().registerListener(this, new PingListener());
@@ -133,6 +139,13 @@ public class Main extends Plugin {
 
         // Note manager
         noteManager = new NoteManager();
+
+        // ViaAPI
+        try {
+            viaAPI = Via.getAPI();
+        } catch (Exception ignored) {
+            System.out.println("ViaVersion není nainstalované! Ukládání hráčovo verze nebude funkční.1");
+        }
     }
 
     @Override
