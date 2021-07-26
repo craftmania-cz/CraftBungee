@@ -21,6 +21,7 @@ import us.myles.ViaVersion.api.Via;
 import us.myles.ViaVersion.api.ViaAPI;
 
 import java.io.*;
+import java.lang.reflect.Proxy;
 import java.util.*;
 import java.util.concurrent.TimeUnit;
 
@@ -109,20 +110,22 @@ public class Main extends Plugin {
         ProxyServer.getInstance().getPluginManager().registerListener(this, new PlayerListener(this));
 
         ProxyServer.getInstance().getPluginManager().registerListener(this, new VPNListener());
-        ProxyServer.getInstance().getPluginManager().registerListener(this, new NameBlacklistListener());
+        //ProxyServer.getInstance().getPluginManager().registerListener(this, new NameBlacklistListener());
         ProxyServer.getInstance().getPluginManager().registerListener(this, new PingListener());
         ProxyServer.getInstance().getPluginManager().registerListener(this, new VoteListener());
         ProxyServer.getInstance().getPluginManager().registerListener(this, new EventNotifyListener(this));
         ProxyServer.getInstance().getPluginManager().registerListener(this, new HelpCommandListener(this));
+        ProxyServer.getInstance().getPluginManager().registerListener(this, new RateLimitJoinListener());
 
         // Tasks
         ProxyServer.getInstance().getScheduler().schedule(Main.getInstance(), new SQLChecker(), 1L, 1L, TimeUnit.MINUTES);
         ProxyServer.getInstance().getScheduler().schedule(Main.getInstance(), new PlayerUpdateTask(), 1L, 1L, TimeUnit.MINUTES);
         ProxyServer.getInstance().getScheduler().schedule(Main.getInstance(), new WhitelistTask(), 10L, 60L, TimeUnit.SECONDS);
-        ProxyServer.getInstance().getScheduler().schedule(Main.getInstance(), new NameBlacklistTask(), 10L, 60L, TimeUnit.SECONDS);
+        //ProxyServer.getInstance().getScheduler().schedule(Main.getInstance(), new NameBlacklistTask(), 10L, 60L, TimeUnit.SECONDS);
         ProxyServer.getInstance().getScheduler().schedule(Main.getInstance(), new CooldownUpdateTask(), 1L, 1L, TimeUnit.SECONDS);
         ProxyServer.getInstance().getScheduler().schedule(Main.getInstance(), new BlockCountryTask(), 1L, 1L, TimeUnit.MINUTES);
         //ProxyServer.getInstance().getScheduler().schedule(Main.getInstance(), new BroadcastTask(), 1L, getConfig().getSection("automessages").getLong("sendevery"), TimeUnit.MINUTES);
+        ProxyServer.getInstance().getScheduler().schedule(Main.getInstance(), new RateLimitTask(), 1L, 1L, TimeUnit.SECONDS);
 
         // Jetty server
         if (getConfig().getBoolean("prometheus.state")) {
