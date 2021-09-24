@@ -58,11 +58,11 @@ public class VoteListener implements Listener {
 
     private int getChanceCoins(int chance) {
         if (chance == 1) { //1% sance
-            return 200;
-        } else if (chance <= 5 && chance >= 2) { //5% sance
             return 100;
-        } else if (chance <= 25 && chance >= 6) { //25% sance
+        } else if (chance <= 5 && chance >= 2) { //5% sance
             return 50;
+        } else if (chance <= 25 && chance >= 6) { //25% sance
+            return 25;
         } else {
             return 10;
         }
