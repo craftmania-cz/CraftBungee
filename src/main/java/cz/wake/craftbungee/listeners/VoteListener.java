@@ -25,6 +25,9 @@ public class VoteListener implements Listener {
             player = null;
         }
 
+        int coins = getChanceCoins(randRange(1, 100));
+        int votetokens = Main.getConfig().getInt("votetokens-per-vote");
+
         if (player != null) {
 
             System.out.println("Hrac je na serveru...");
@@ -36,10 +39,9 @@ public class VoteListener implements Listener {
 
             // Server na kterem je hrac
             String server = player.getServer().getInfo().getName();
-            int coins = getChanceCoins(randRange(1, 100));
             for (String configServer : Main.getVoteServers()) {
                 if (configServer.equalsIgnoreCase(server)) {
-                    BungeeUtils.sendMessageToBukkit("vote", player.getName(), String.valueOf(coins), player.getServer().getInfo());
+                    BungeeUtils.sendMessageToBukkit("vote", player.getName(), String.valueOf(coins), String.valueOf(votetokens), player.getServer().getInfo());
                 } // no mělo by se taky započítat
             }
         } else {
@@ -50,9 +52,9 @@ public class VoteListener implements Listener {
 
             // Kdyz je offline force to DB (obejit CraftEconomy)
             Main.getInstance().getSQLManager().addPlayerVote(e.getVote().getUsername());
-            Main.getInstance().getSQLManager().addVoteToken(e.getVote().getUsername());
-            Main.getInstance().getSQLManager().addVoteToken2(e.getVote().getUsername());
-            Main.getInstance().getSQLManager().addCraftCoins(e.getVote().getUsername(), 20);
+            Main.getInstance().getSQLManager().addVoteToken(e.getVote().getUsername(), votetokens);
+            Main.getInstance().getSQLManager().addVoteToken2(e.getVote().getUsername(), votetokens);
+            Main.getInstance().getSQLManager().addCraftCoins(e.getVote().getUsername(), coins);
         }
     }
 
