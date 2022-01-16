@@ -258,13 +258,13 @@ public class SQLManager {
         });
     }
 
-    public final void addVoteToken(final String p) {
+    public final void addVoteToken(final String p, final int votetokens) {
         Main.getInstance().getProxy().getScheduler().runAsync(Main.getInstance(), () -> {
             Connection conn = null;
             PreparedStatement ps = null;
             try {
                 conn = pool.getConnection();
-                ps = conn.prepareStatement("UPDATE minigames.player_profile SET votetokens = votetokens + 1 WHERE nick = ?;");
+                ps = conn.prepareStatement("UPDATE minigames.player_profile SET votetokens = votetokens + " + votetokens + " WHERE nick = ?;");
                 ps.setString(1, p);
                 ps.executeUpdate();
             } catch (Exception e) {
@@ -275,13 +275,13 @@ public class SQLManager {
         });
     }
 
-    public final void addVoteToken2(final String p) {
+    public final void addVoteToken2(final String p, final int votetokens) {
         Main.getInstance().getProxy().getScheduler().runAsync(Main.getInstance(), () -> {
             Connection conn = null;
             PreparedStatement ps = null;
             try {
                 conn = pool.getConnection();
-                ps = conn.prepareStatement("UPDATE minigames.player_profile SET votetokens_2 = votetokens_2 + 1 WHERE nick = ?;");
+                ps = conn.prepareStatement("UPDATE minigames.player_profile SET votetokens_2 = votetokens_2 + " + votetokens + " WHERE nick = ?;");
                 ps.setString(1, p);
                 ps.executeUpdate();
             } catch (Exception e) {

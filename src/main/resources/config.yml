@@ -108,3 +108,6 @@ queue-system:
   # Kde bude queue fungovat
   servers:
     - "event-server"
+
+# PoČet votetokenů za 1 hlas
+votetokens-per-vote: 1

@@ -41,13 +41,14 @@ public class BungeeUtils {
         return ProxyServer.getInstance().getServers().containsKey(serverName);
     }
 
-    public static void sendMessageToBukkit(String channel, String nick, String token, ServerInfo server) {
+    public static void sendMessageToBukkit(String channel, String nick, String coins, String votetokens, ServerInfo server) {
         ByteArrayOutputStream stream = new ByteArrayOutputStream();
         DataOutputStream out = new DataOutputStream(stream);
         try {
             out.writeUTF(channel);
             out.writeUTF(nick);
-            out.writeUTF(token);
+            out.writeUTF(coins);
+            out.writeUTF(votetokens);
         } catch (IOException e) {
             e.printStackTrace();
         }
