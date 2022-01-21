@@ -9,6 +9,7 @@ import net.md_5.bungee.api.ChatColor;
 import net.md_5.bungee.api.event.PreLoginEvent;
 import net.md_5.bungee.api.plugin.Listener;
 import net.md_5.bungee.event.EventHandler;
+import net.md_5.bungee.event.EventPriority;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.Response;
@@ -24,16 +25,19 @@ public class VPNListener implements Listener {
     private static List<WhitelistedIP> allowedIps = new ArrayList<>();
     private static List<WhitelistedNames> allowedNames = new ArrayList<>();
     private static List<BlacklistedASN> blacklistedASNs = new ArrayList<>();
+    private final OkHttpClient caller = new OkHttpClient();
 
-    @EventHandler
+    @EventHandler(priority = EventPriority.NORMAL)
     public void onLogin(final PreLoginEvent e) {
+        if (e.isCancelled()) {
+            return;
+        }
         final String address = e.getConnection().getAddress().getAddress().getHostAddress();
         final String name = e.getConnection().getName();
 
         Main.getInstance().getLogger().log(Level.INFO, ChatColor.YELLOW + "Kontrola hrace s IP: " + address);
         Logger.info("Whitelist Checker - [name=" + name + ", address=" + address + "]");
 
-        OkHttpClient caller = new OkHttpClient();
         Request request = new Request.Builder().url("https://proxycheck.io/v2/" + address + "?key=" + Main.getAPIKey()
             + "&vpn=1&asn=1&node=1&time=1&inf=0&risk=1&port=1&seen=1&days=7&tag=Bungeecord").build();
 
@@ -56,8 +60,8 @@ public class VPNListener implements Listener {
                 JSONObject craftApiJson = new JSONObject(craftApiResponse.body().string());
                 JSONObject playerData = craftApiJson.getJSONObject("data");
                 if (playerData.getInt("played_time") <= 60) {
-                    Logger.info("Hráč " + name + " nemá odehráno na serveru 12h, nebyl puštěn na server!");
-                    e.setCancelReason("§c§lTvuj pokytovatel je na blacklistu §7+ §e§lnemas odehrano 12h na serveru!\n§fPokud chces pristup a server, musis si vytvorit ticket s zadosti o pridani na whitelist u nas na Discordu: §ehttps://discord.gg/craftmania");
+                    Logger.info("Hráč " + name + " nemá odehráno na serveru 1h, nebyl puštěn na server!");
+                    e.setCancelReason("§c§lTvuj pokytovatel je na blacklistu §7+ §e§lnemas odehrano 1h na serveru!\n§fPokud chces pristup a server, musis si vytvorit ticket s zadosti o pridani na whitelist u nas na Discordu: §ehttps://discord.gg/craftmania");
                     e.setCancelled(true);
                     return;
                 }

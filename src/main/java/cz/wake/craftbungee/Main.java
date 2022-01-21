@@ -8,6 +8,7 @@ import cz.wake.craftbungee.managers.*;
 import cz.wake.craftbungee.managers.notes.NoteManager;
 import cz.wake.craftbungee.prometheus.MetricsController;
 import cz.wake.craftbungee.sql.SQLManager;
+import cz.wake.craftbungee.utils.Logger;
 import lombok.Getter;
 import net.md_5.bungee.api.ProxyServer;
 import net.md_5.bungee.api.connection.ProxiedPlayer;
@@ -122,10 +123,15 @@ public class Main extends Plugin {
         ProxyServer.getInstance().getScheduler().schedule(Main.getInstance(), new PlayerUpdateTask(), 1L, 1L, TimeUnit.MINUTES);
         ProxyServer.getInstance().getScheduler().schedule(Main.getInstance(), new WhitelistTask(), 10L, 60L, TimeUnit.SECONDS);
         //ProxyServer.getInstance().getScheduler().schedule(Main.getInstance(), new NameBlacklistTask(), 10L, 60L, TimeUnit.SECONDS);
-        ProxyServer.getInstance().getScheduler().schedule(Main.getInstance(), new CooldownUpdateTask(), 1L, 1L, TimeUnit.SECONDS);
-        ProxyServer.getInstance().getScheduler().schedule(Main.getInstance(), new BlockCountryTask(), 1L, 1L, TimeUnit.MINUTES);
+        //ProxyServer.getInstance().getScheduler().schedule(Main.getInstance(), new CooldownUpdateTask(), 1L, 1L, TimeUnit.SECONDS);
+        //ProxyServer.getInstance().getScheduler().schedule(Main.getInstance(), new BlockCountryTask(), 1L, 1L, TimeUnit.MINUTES);
         //ProxyServer.getInstance().getScheduler().schedule(Main.getInstance(), new BroadcastTask(), 1L, getConfig().getSection("automessages").getLong("sendevery"), TimeUnit.MINUTES);
-        ProxyServer.getInstance().getScheduler().schedule(Main.getInstance(), new RateLimitTask(), 1L, 1L, TimeUnit.SECONDS);
+        if (getConfig().getBoolean("start-rate-limit-late", true)) {
+            Logger.info("Rate limit se spustí později, o 120s");
+            ProxyServer.getInstance().getScheduler().schedule(Main.getInstance(), new RateLimitTask(), 120L, 3L, TimeUnit.SECONDS);
+        } else {
+            ProxyServer.getInstance().getScheduler().schedule(Main.getInstance(), new RateLimitTask(), 3L, 3L, TimeUnit.SECONDS);
+        }
 
         // Jetty server
         if (getConfig().getBoolean("prometheus.state")) {

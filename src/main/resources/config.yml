@@ -12,6 +12,8 @@ settings:
  maximumConnections: 10
  timeout: 30000
 
+start-rate-limit-late: true
+
 # Klic k API na detekci VPN
 iphub-key: key
 
