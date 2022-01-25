@@ -22,7 +22,6 @@ import us.myles.ViaVersion.api.Via;
 import us.myles.ViaVersion.api.ViaAPI;
 
 import java.io.*;
-import java.lang.reflect.Proxy;
 import java.util.*;
 import java.util.concurrent.TimeUnit;
 
@@ -43,7 +42,7 @@ public class Main extends Plugin {
     private final Map<String, GroupData> groups = new HashMap<>();
     private static NoteManager noteManager;
 
-    private static @Getter ViaAPI viaAPI;
+    private static @Getter ViaAPI<?> viaAPI;
 
     // Channels
     public final static String CRAFTEVENTS_CHANNEL = "craftevents:plugin"; // Channel pro zasilani notifikaci pro zacatek eventu

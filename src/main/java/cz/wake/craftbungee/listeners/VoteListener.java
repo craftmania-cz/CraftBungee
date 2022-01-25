@@ -31,6 +31,7 @@ public class VoteListener implements Listener {
         if (player != null) {
 
             System.out.println("Hrac je na serveru...");
+            Main.getInstance().getLogger().log(Level.INFO, ChatColor.AQUA + "Zpracování hlasu pro: " + player.getName());
 
             if (!(System.currentTimeMillis() > Main.getInstance().getSQLManager().getLastVote(player.getName()))) {
                 Main.getInstance().getLogger().log(Level.INFO, ChatColor.AQUA + "Hrac " + player.getName() + " hlasoval driv nez za 2h.");
@@ -42,7 +43,9 @@ public class VoteListener implements Listener {
             for (String configServer : Main.getVoteServers()) {
                 if (configServer.equalsIgnoreCase(server)) {
                     BungeeUtils.sendMessageToBukkit("vote", player.getName(), String.valueOf(coins), String.valueOf(votetokens), player.getServer().getInfo());
-                } // no mělo by se taky započítat
+                } else { // Hráč je na serveru, kde není votifier
+                    this.addOfflineVotes(e.getVote().getUsername(), votetokens, coins);
+                }
             }
         } else {
             if (!(System.currentTimeMillis() > Main.getInstance().getSQLManager().getLastVote(e.getVote().getUsername()))) {
@@ -51,10 +54,7 @@ public class VoteListener implements Listener {
             }
 
             // Kdyz je offline force to DB (obejit CraftEconomy)
-            Main.getInstance().getSQLManager().addPlayerVote(e.getVote().getUsername());
-            Main.getInstance().getSQLManager().addVoteToken(e.getVote().getUsername(), votetokens);
-            Main.getInstance().getSQLManager().addVoteToken2(e.getVote().getUsername(), votetokens);
-            Main.getInstance().getSQLManager().addCraftCoins(e.getVote().getUsername(), coins);
+            this.addOfflineVotes(e.getVote().getUsername(), votetokens, coins);
         }
     }
 
@@ -73,6 +73,13 @@ public class VoteListener implements Listener {
     private static int randRange(int min, int max) {
         Random rand = new Random();
         return rand.nextInt(max - min + 1) + min;
+    }
+
+    private void addOfflineVotes(String nick, int voteTokens, int coins) {
+        Main.getInstance().getSQLManager().addPlayerVote(nick);
+        Main.getInstance().getSQLManager().addVoteToken(nick, voteTokens);
+        Main.getInstance().getSQLManager().addVoteToken2(nick, voteTokens);
+        Main.getInstance().getSQLManager().addCraftCoins(nick, coins);
     }
 
 }
