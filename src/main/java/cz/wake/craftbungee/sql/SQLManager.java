@@ -74,15 +74,19 @@ public class SQLManager {
         });
     }
 
-    public final void updateTime(final ProxiedPlayer p) {
+    public final void updateTime(final ProxiedPlayer proxiedPlayer) {
+        String playerServer = BungeeUtils.getPlayerServer(proxiedPlayer);
+        if (playerServer == null) {
+            return;
+        }
         Main.getInstance().getProxy().getScheduler().runAsync(Main.getInstance(), () -> {
             Connection conn = null;
             PreparedStatement ps = null;
             try {
                 conn = pool.getConnection();
                 ps = conn.prepareStatement("UPDATE minigames.player_profile SET played_time = played_time + 1, last_server = ? WHERE nick = ?;");
-                ps.setString(1, BungeeUtils.getPlayerServer(p));
-                ps.setString(2, p.getName());
+                ps.setString(1, playerServer);
+                ps.setString(2, proxiedPlayer.getName());
                 ps.executeUpdate();
             } catch (Exception e) {
                 e.printStackTrace();
