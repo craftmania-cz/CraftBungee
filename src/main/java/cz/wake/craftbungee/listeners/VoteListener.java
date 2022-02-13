@@ -29,31 +29,36 @@ public class VoteListener implements Listener {
         int votetokens = Main.getConfig().getInt("votetokens-per-vote");
 
         if (player != null) {
-
-            System.out.println("Hrac je na serveru...");
-            Main.getInstance().getLogger().log(Level.INFO, ChatColor.AQUA + "Zpracování hlasu pro: " + player.getName());
+            Main.getInstance().getLogger().log(Level.INFO, ChatColor.AQUA + "[Hlasovani]: Zpracování hlasu pro: " + player.getName());
 
             if (!(System.currentTimeMillis() > Main.getInstance().getSQLManager().getLastVote(player.getName()))) {
-                Main.getInstance().getLogger().log(Level.INFO, ChatColor.AQUA + "Hrac " + player.getName() + " hlasoval driv nez za 2h.");
+                Main.getInstance().getLogger().log(Level.INFO, ChatColor.AQUA + "[Hlasovani]: Hrac " + player.getName() + " hlasoval driv nez za 2h.");
                 return;
             }
 
             // Server na kterem je hrac
             String server = player.getServer().getInfo().getName();
+            boolean voteAdded = false;
             for (String configServer : Main.getVoteServers()) {
                 if (configServer.equalsIgnoreCase(server)) {
+                    Main.getInstance().getLogger().log(Level.INFO, ChatColor.AQUA + "[Hlasovani]: Online zpracovani hlasu pro: " + player.getName() + ", coins: " + coins + ", votetokens: " + votetokens);
                     BungeeUtils.sendMessageToBukkit("vote", player.getName(), String.valueOf(coins), String.valueOf(votetokens), player.getServer().getInfo());
-                } else { // Hráč je na serveru, kde není votifier
-                    this.addOfflineVotes(e.getVote().getUsername(), votetokens, coins);
+                    voteAdded = true;
+                    break;
                 }
+            }
+            if (!voteAdded) {
+                Main.getInstance().getLogger().log(Level.INFO, ChatColor.AQUA + "[Hlasovani]: Offline (online na serveru) zpracovani hlasu: " + player.getName() + ", coins: " + coins + ", votetokens: " + votetokens);
+                this.addOfflineVotes(e.getVote().getUsername(), votetokens, coins);
             }
         } else {
             if (!(System.currentTimeMillis() > Main.getInstance().getSQLManager().getLastVote(e.getVote().getUsername()))) {
-                Main.getInstance().getLogger().log(Level.INFO, ChatColor.AQUA + "Hrac " + e.getVote().getUsername() + " hlasoval driv nez za 2h.");
+                Main.getInstance().getLogger().log(Level.INFO, ChatColor.AQUA + "[Hlasovani]: Hrac " + e.getVote().getUsername() + " hlasoval driv nez za 2h.");
                 return;
             }
 
             // Kdyz je offline force to DB (obejit CraftEconomy)
+            Main.getInstance().getLogger().log(Level.INFO, ChatColor.AQUA + "[Hlasovani]: Offline zpracovani hlasu: " + e.getVote().getUsername() + ", coins: " + coins + ", votetokens: " + votetokens);
             this.addOfflineVotes(e.getVote().getUsername(), votetokens, coins);
         }
     }
