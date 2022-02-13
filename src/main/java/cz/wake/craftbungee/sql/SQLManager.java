@@ -268,7 +268,7 @@ public class SQLManager {
             PreparedStatement ps = null;
             try {
                 conn = pool.getConnection();
-                ps = conn.prepareStatement("UPDATE minigames.player_profile SET votetokens = votetokens + " + votetokens + " WHERE nick = ?;");
+                ps = conn.prepareStatement("UPDATE minigames.player_profile SET vote_tokens = vote_tokens + " + votetokens + " WHERE nick = ?;");
                 ps.setString(1, p);
                 ps.executeUpdate();
             } catch (Exception e) {
@@ -285,7 +285,7 @@ public class SQLManager {
             PreparedStatement ps = null;
             try {
                 conn = pool.getConnection();
-                ps = conn.prepareStatement("UPDATE minigames.player_profile SET votetokens_2 = votetokens_2 + " + votetokens + " WHERE nick = ?;");
+                ps = conn.prepareStatement("UPDATE minigames.player_profile SET vote_tokens_2 = vote_tokens_2 + " + votetokens + " WHERE nick = ?;");
                 ps.setString(1, p);
                 ps.executeUpdate();
             } catch (Exception e) {
@@ -302,7 +302,7 @@ public class SQLManager {
             PreparedStatement ps = null;
             try {
                 conn = pool.getConnection();
-                ps = conn.prepareStatement("UPDATE minigames.player_profile SET craftcoins = craftcoins + " + coins + " WHERE nick = ?;");
+                ps = conn.prepareStatement("UPDATE minigames.player_profile SET craft_coins = craft_coins + " + coins + " WHERE nick = ?;");
                 ps.setString(1, p);
                 ps.executeUpdate();
             } catch (Exception e) {
