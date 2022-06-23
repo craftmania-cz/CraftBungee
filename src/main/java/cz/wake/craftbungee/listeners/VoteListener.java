@@ -84,6 +84,7 @@ public class VoteListener implements Listener {
         Main.getInstance().getSQLManager().addPlayerVote(nick);
         Main.getInstance().getSQLManager().addVoteToken(nick, voteTokens);
         Main.getInstance().getSQLManager().addVoteToken2(nick, voteTokens);
+        Main.getInstance().getSQLManager().addVoteToken3(nick, voteTokens);
         Main.getInstance().getSQLManager().addCraftCoins(nick, coins);
     }
 
